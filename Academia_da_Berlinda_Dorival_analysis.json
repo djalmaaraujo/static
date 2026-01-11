@@ -1,0 +1,839 @@
+{
+  "track_name": "Dorival",
+  "artist_name": "Academia da Berlinda",
+  "aggregated_data": {
+    "track": {
+      "name": "Dorival",
+      "artists": [
+        "Academia da Berlinda"
+      ],
+      "lastfm_url": "https://www.last.fm/music/Academia+da+Berlinda/_/Dorival",
+      "listeners": 43919,
+      "playcount": 401015,
+      "discogs_url": "https://www.discogs.com/release/15557454-Academia-da-Berlinda-Nada-sem-ela",
+      "year": 2016,
+      "country": "Brazil",
+      "labels": [
+        {
+          "name": "Vinil Brasil",
+          "catno": "none"
+        }
+      ],
+      "recording_id": "3b7f9895-3a34-4529-a597-578d54473bfc",
+      "deezer_url": "https://www.deezer.com/track/128242055",
+      "preview_url": "https://cdnt-preview.dzcdn.net/api/1/1/3/4/6/0/346e4aeffef1b4937a790b722910756a.mp3?hdnea=exp=1768096598~acl=/api/1/1/3/4/6/0/346e4aeffef1b4937a790b722910756a.mp3*~data=user_id=0,application_id=42~hmac=4f2214f6679265ad2dd5873b80c3a42f8e6ab3478dcc86e6da3e46e9e0d968e8",
+      "cover_url": "https://cdn-images.dzcdn.net/images/cover/d28f34b2b59778b3d49cbfb99af96d31/500x500-000000-80-0-0.jpg",
+      "genius_url": "https://genius.com/Academia-da-berlinda-dorival-annotated"
+    },
+    "artists": {
+      "lastfm": {
+        "name": "Academia da Berlinda",
+        "tags": [
+          "cumbia",
+          "brasil",
+          "latino",
+          "brazilian",
+          "pernambuco"
+        ],
+        "listeners": 74175,
+        "playcount": 2000661,
+        "bio_summary": "Formed in 2004 in Olinda, the group consists of musicians from a number of famous bands all from Pernambuco\u2019s musical scene (Mundo Livre S/A, Eddie, A Roda, Variant). From the beginning, the band invested in a repertory from the bregas music from the 60\u2019s, which soon named it as an original band that played \u201cbrega roots\u201d in creative and innovating versions, full of cumbias, guarachas and loads of afrobeats. \n\nThis experimental fusion of styles <a href=\"https://www.last.fm/music/Academia+da+Berlinda\">Read more on Last.fm</a>",
+        "lastfm_url": "https://www.last.fm/music/Academia+da+Berlinda"
+      },
+      "discogs": {
+        "name": "Academia da Berlinda",
+        "real_name": null,
+        "profile": "",
+        "discogs_url": "https://www.discogs.com/artist/7756188-Academia-da-Berlinda",
+        "members": [],
+        "members_detailed": [],
+        "groups": []
+      },
+      "musicbrainz": {
+        "name": "Academia da Berlinda",
+        "sort_name": "Academia da Berlinda",
+        "type": "Group",
+        "country": "BR",
+        "tags": [],
+        "genres": [],
+        "relationships": []
+      },
+      "genius": {
+        "song_id": 2823502,
+        "title": "Dorival",
+        "artist": "Academia da Berlinda",
+        "album": "Nada Sem Ela",
+        "description": ""
+      }
+    },
+    "genres": [
+      "Cumbia",
+      "Latin",
+      "Latin Music"
+    ],
+    "tags": [
+      "Olinda",
+      "pernambuco",
+      "Carimb\u00f3",
+      "cumbia",
+      "Cumbia",
+      "Compas",
+      "Merengue",
+      "latino",
+      "brazilian",
+      "recife",
+      "alternative",
+      "brazil",
+      "Salsa",
+      "brasil",
+      "vi ao vivo",
+      "Guaracha"
+    ],
+    "influences": [
+      {
+        "name": "Na\u00e7\u00e3o Zumbi",
+        "source": "lastfm_similar",
+        "confidence": 1.0,
+        "strength": 1.0,
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/003ed6aa04d70faceda955e5d967400b/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Fino Coletivo",
+        "source": "lastfm_similar",
+        "confidence": 0.875036,
+        "strength": 0.875036,
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/59a14f9aa8bd199091f66b7bd0eefcb3/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Cordel do Fogo Encantado",
+        "source": "lastfm_similar",
+        "confidence": 0.839726,
+        "strength": 0.839726,
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/59f52f9f434b9f3f14f173797d809582/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Otto",
+        "source": "lastfm_similar",
+        "confidence": 0.600211,
+        "strength": 0.600211,
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/d742e2c4d501e9a74aedeeea02dc5003/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Mundo Livre S/A",
+        "source": "lastfm_similar",
+        "confidence": 0.516203,
+        "strength": 0.516203,
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/cee2e4f2267b61a58cad4fd28ed74e52/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Lamparina",
+        "source": "lastfm_similar",
+        "confidence": 0.463918,
+        "strength": 0.463918,
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/ae9d61a920bbe218ce56fd3c73279fd1/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Chico C\u00e9sar",
+        "source": "lastfm_similar",
+        "confidence": 0.451935,
+        "strength": 0.451935,
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/0016710e0a8799f06497acbf14e45095/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Karina Buhr",
+        "source": "lastfm_similar",
+        "confidence": 0.443913,
+        "strength": 0.443913,
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/8ae985cf1cf50fb96e7b54741537a50a/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Momboj\u00f3",
+        "source": "lastfm_similar",
+        "confidence": 0.413925,
+        "strength": 0.413925,
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/4b9aeea6741282cf7d2aec291a2440ef/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Cidad\u00e3o Instigado",
+        "source": "lastfm_similar",
+        "confidence": 0.324271,
+        "strength": 0.324271,
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/abb977f17fbcad188151897ca965ecfa/1000x1000-000000-80-0-0.jpg"
+      }
+    ],
+    "audio_features": {
+      "deezer": {
+        "bpm": null,
+        "duration_seconds": 307
+      }
+    },
+    "metadata": {},
+    "sources": [
+      "lastfm",
+      "discogs",
+      "musicbrainz",
+      "deezer",
+      "genius"
+    ]
+  },
+  "research_findings": {
+    "influences": [],
+    "genre_history": [],
+    "artist_background": "The page \"Academia da Berlinda\" does not exist. You can create a draft and submit it for review or request that a redirect be created, but consider checking the search results below to see whether the topic is already covered. ",
+    "sources": [
+      {
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/w/index.php?search=Academia%20da%20Berlinda&ns0=1",
+        "type": "encyclopedia"
+      },
+      {
+        "name": "AllMusic",
+        "url": "https://www.allmusic.com/artist/coro-infantil-da-academia-de-musica-de-almada-mn0003926021",
+        "type": "music_database"
+      }
+    ],
+    "enriched_influences": [
+      {
+        "name": "Na\u00e7\u00e3o Zumbi",
+        "source": "lastfm_similar",
+        "confidence": 1.0,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Na\u00e7\u00e3o_Zumbi"
+      },
+      {
+        "name": "Fino Coletivo",
+        "source": "lastfm_similar",
+        "confidence": 0.875036,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Fino_Coletivo"
+      },
+      {
+        "name": "Cordel do Fogo Encantado",
+        "source": "lastfm_similar",
+        "confidence": 0.839726,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Cordel_do_Fogo_Encantado"
+      },
+      {
+        "name": "Otto",
+        "source": "lastfm_similar",
+        "confidence": 0.600211,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Otto"
+      },
+      {
+        "name": "Mundo Livre S/A",
+        "source": "lastfm_similar",
+        "confidence": 0.516203,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Mundo_Livre_S/A"
+      },
+      {
+        "name": "Lamparina",
+        "source": "lastfm_similar",
+        "confidence": 0.463918,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Lamparina"
+      },
+      {
+        "name": "Chico C\u00e9sar",
+        "source": "lastfm_similar",
+        "confidence": 0.451935,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Chico_C\u00e9sar"
+      },
+      {
+        "name": "Karina Buhr",
+        "source": "lastfm_similar",
+        "confidence": 0.443913,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Karina_Buhr"
+      },
+      {
+        "name": "Momboj\u00f3",
+        "source": "lastfm_similar",
+        "confidence": 0.413925,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Momboj\u00f3"
+      },
+      {
+        "name": "Cidad\u00e3o Instigado",
+        "source": "lastfm_similar",
+        "confidence": 0.324271,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Cidad\u00e3o_Instigado"
+      }
+    ]
+  },
+  "deep_research": {
+    "influences": {
+      "generation_1_roots": {
+        "period": "1940s-1960s",
+        "title": "Roots",
+        "influences": [
+          {
+            "name": "Na\u00e7\u00e3o Zumbi",
+            "source": "lastfm_similar",
+            "confidence": 1.0,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Fino Coletivo",
+            "source": "lastfm_similar",
+            "confidence": 0.875036,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Cordel do Fogo Encantado",
+            "source": "lastfm_similar",
+            "confidence": 0.839726,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          }
+        ]
+      },
+      "generation_2_evolution": {
+        "period": "1970s-1980s",
+        "title": "Evolution",
+        "influences": [
+          {
+            "name": "Otto",
+            "source": "lastfm_similar",
+            "confidence": 0.600211,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Mundo Livre S/A",
+            "source": "lastfm_similar",
+            "confidence": 0.516203,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Lamparina",
+            "source": "lastfm_similar",
+            "confidence": 0.463918,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Chico C\u00e9sar",
+            "source": "lastfm_similar",
+            "confidence": 0.451935,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Karina Buhr",
+            "source": "lastfm_similar",
+            "confidence": 0.443913,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Momboj\u00f3",
+            "source": "lastfm_similar",
+            "confidence": 0.413925,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          }
+        ]
+      },
+      "generation_3_current": {
+        "period": "1990s-2000s",
+        "title": "Contemporary Context",
+        "artist": "Academia da Berlinda",
+        "track": "Dorival"
+      },
+      "generation_4_legacy": {
+        "period": "Modern",
+        "title": "Legacy",
+        "influenced": []
+      },
+      "genre_context": {
+        "primary_genre": "Cumbia",
+        "subgenres": [
+          "Latin",
+          "Latin Music"
+        ],
+        "description": "Cumbia music tradition"
+      },
+      "_claude_prompt": "You are a music historian and ethnomusicologist. Analyze this track and provide deep influence research.\n\nTrack: Dorival\nArtist: Academia da Berlinda\nGenres: Cumbia, Latin, Latin Music\nYear: None\n\nKnown Influences from APIs:\n- Na\u00e7\u00e3o Zumbi (from lastfm_similar, 100% confidence)\n- Fino Coletivo (from lastfm_similar, 87% confidence)\n- Cordel do Fogo Encantado (from lastfm_similar, 83% confidence)\n- Otto (from lastfm_similar, 60% confidence)\n- Mundo Livre S/A (from lastfm_similar, 51% confidence)\n- Lamparina (from lastfm_similar, 46% confidence)\n- Chico C\u00e9sar (from lastfm_similar, 45% confidence)\n- Karina Buhr (from lastfm_similar, 44% confidence)\n- Momboj\u00f3 (from lastfm_similar, 41% confidence)\n- Cidad\u00e3o Instigado (from lastfm_similar, 32% confidence)\n\nWeb Research Context:\nThe page \"Academia da Berlinda\" does not exist. You can create a draft and submit it for review or request that a redirect be created, but consider checking the search results below to see whether the topic is already covered. \n\nTask: Trace the musical lineage across 4 generations:\n\nGeneration 1 (Roots - 1940s-1960s): Who were the foundational artists/movements that created the genre traditions this artist draws from? Be specific about musical elements.\n\nGeneration 2 (Evolution - 1970s-1980s): Who evolved and modernized those traditions? How did they bridge the gap?\n\nGeneration 3 (Current - 1990s-2000s): This artist/track\n\nGeneration 4 (Legacy - Modern): Who has this artist influenced? What's their impact?\n\nFor each influence, provide:\n- WHY they influenced (specific musical elements: rhythm, harmony, instrumentation, vocal style, production)\n- CONNECTION to the track (cite concrete musical features you can hear/analyze)\n\nReturn as JSON with this structure:\n{\n  \"generation_1_roots\": {\n    \"period\": \"1940s-1960s\",\n    \"title\": \"Roots\",\n    \"influences\": [\n      {\"name\": \"Artist Name\", \"why\": \"specific reason\", \"connection\": \"specific musical connection\", \"confidence\": 0.8, \"source\": \"analysis\"}\n    ]\n  },\n  \"generation_2_evolution\": {...},\n  \"generation_3_current\": {...},\n  \"genre_context\": {\"primary_genre\": \"...\", \"description\": \"...\"}\n}"
+    },
+    "instrument_origins": {}
+  },
+  "synthesis": {
+    "influence_graph": {
+      "nodes": [
+        {
+          "id": "root",
+          "type": "track",
+          "name": "Dorival",
+          "artist": "Academia da Berlinda",
+          "layer": 0
+        },
+        {
+          "id": "artist_0",
+          "type": "artist",
+          "name": "Na\u00e7\u00e3o Zumbi",
+          "source": "lastfm_similar",
+          "confidence": 1.0,
+          "layer": 1
+        },
+        {
+          "id": "artist_1",
+          "type": "artist",
+          "name": "Fino Coletivo",
+          "source": "lastfm_similar",
+          "confidence": 0.875036,
+          "layer": 1
+        },
+        {
+          "id": "artist_2",
+          "type": "artist",
+          "name": "Cordel do Fogo Encantado",
+          "source": "lastfm_similar",
+          "confidence": 0.839726,
+          "layer": 1
+        },
+        {
+          "id": "artist_3",
+          "type": "artist",
+          "name": "Otto",
+          "source": "lastfm_similar",
+          "confidence": 0.600211,
+          "layer": 1
+        },
+        {
+          "id": "artist_4",
+          "type": "artist",
+          "name": "Mundo Livre S/A",
+          "source": "lastfm_similar",
+          "confidence": 0.516203,
+          "layer": 1
+        },
+        {
+          "id": "genre_0",
+          "type": "genre",
+          "name": "Cumbia",
+          "layer": 2
+        },
+        {
+          "id": "genre_1",
+          "type": "genre",
+          "name": "Latin",
+          "layer": 2
+        },
+        {
+          "id": "genre_2",
+          "type": "genre",
+          "name": "Latin Music",
+          "layer": 2
+        }
+      ],
+      "edges": [
+        {
+          "from": "artist_0",
+          "to": "root",
+          "strength": 1.0,
+          "type": "direct_influence"
+        },
+        {
+          "from": "artist_1",
+          "to": "root",
+          "strength": 0.875036,
+          "type": "direct_influence"
+        },
+        {
+          "from": "artist_2",
+          "to": "root",
+          "strength": 0.839726,
+          "type": "direct_influence"
+        },
+        {
+          "from": "artist_3",
+          "to": "root",
+          "strength": 0.600211,
+          "type": "direct_influence"
+        },
+        {
+          "from": "artist_4",
+          "to": "root",
+          "strength": 0.516203,
+          "type": "direct_influence"
+        },
+        {
+          "from": "genre_0",
+          "to": "root",
+          "strength": 0.7,
+          "type": "genre_influence"
+        },
+        {
+          "from": "genre_1",
+          "to": "root",
+          "strength": 0.7,
+          "type": "genre_influence"
+        },
+        {
+          "from": "genre_2",
+          "to": "root",
+          "strength": 0.7,
+          "type": "genre_influence"
+        }
+      ],
+      "layers": [
+        {
+          "layer": 0,
+          "nodes": [
+            {
+              "id": "root",
+              "type": "track",
+              "name": "Dorival",
+              "artist": "Academia da Berlinda",
+              "layer": 0
+            }
+          ]
+        },
+        {
+          "layer": 1,
+          "nodes": [
+            {
+              "id": "artist_0",
+              "type": "artist",
+              "name": "Na\u00e7\u00e3o Zumbi",
+              "source": "lastfm_similar",
+              "confidence": 1.0,
+              "layer": 1
+            },
+            {
+              "id": "artist_1",
+              "type": "artist",
+              "name": "Fino Coletivo",
+              "source": "lastfm_similar",
+              "confidence": 0.875036,
+              "layer": 1
+            },
+            {
+              "id": "artist_2",
+              "type": "artist",
+              "name": "Cordel do Fogo Encantado",
+              "source": "lastfm_similar",
+              "confidence": 0.839726,
+              "layer": 1
+            },
+            {
+              "id": "artist_3",
+              "type": "artist",
+              "name": "Otto",
+              "source": "lastfm_similar",
+              "confidence": 0.600211,
+              "layer": 1
+            },
+            {
+              "id": "artist_4",
+              "type": "artist",
+              "name": "Mundo Livre S/A",
+              "source": "lastfm_similar",
+              "confidence": 0.516203,
+              "layer": 1
+            }
+          ]
+        },
+        {
+          "layer": 2,
+          "nodes": [
+            {
+              "id": "genre_0",
+              "type": "genre",
+              "name": "Cumbia",
+              "layer": 2
+            },
+            {
+              "id": "genre_1",
+              "type": "genre",
+              "name": "Latin",
+              "layer": 2
+            },
+            {
+              "id": "genre_2",
+              "type": "genre",
+              "name": "Latin Music",
+              "layer": 2
+            }
+          ]
+        }
+      ]
+    },
+    "narrative": "# Musical Archaeology: Dorival\n## by Academia da Berlinda\n\n## Overview\nThis analysis explores the musical DNA of \"Dorival\" by Academia da Berlinda, \ntracing its influences through genres, artists, and historical context.\n\n## Genre Classification\nPrimary genres: **Cumbia, Latin, Latin Music**\n\nLimited information available for genres: Cumbia, Latin, Latin Music\n\n## Direct Influences\nBased on API data and analysis, the following artists likely influenced this track:\n\n### High Confidence\n- **Na\u00e7\u00e3o Zumbi** (source: lastfm_similar)\n- **Fino Coletivo** (source: lastfm_similar)\n- **Cordel do Fogo Encantado** (source: lastfm_similar)\n\n### Moderate Confidence\n- Otto (source: lastfm_similar)\n- Mundo Livre S/A (source: lastfm_similar)\n- Lamparina (source: lastfm_similar)\n- Chico C\u00e9sar (source: lastfm_similar)\n- Karina Buhr (source: lastfm_similar)\n\n## Audio Characteristics\n## Style Tags and Descriptors\nOlinda, pernambuco, Carimb\u00f3, cumbia, Cumbia, Compas, Merengue, latino, brazilian, recife, alternative, brazil, Salsa, brasil, vi ao vivo\n\n## Influence Network\nThe influence graph contains 9 nodes \nand 8 connections, \nspanning 3 layers of musical influence.\n\n## Data Sources\nThis analysis drew from: lastfm, discogs, musicbrainz, deezer, genius\n",
+    "research_findings": {
+      "influences": [],
+      "genre_history": [],
+      "artist_background": "The page \"Academia da Berlinda\" does not exist. You can create a draft and submit it for review or request that a redirect be created, but consider checking the search results below to see whether the topic is already covered. ",
+      "sources": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/w/index.php?search=Academia%20da%20Berlinda&ns0=1",
+          "type": "encyclopedia"
+        },
+        {
+          "name": "AllMusic",
+          "url": "https://www.allmusic.com/artist/coro-infantil-da-academia-de-musica-de-almada-mn0003926021",
+          "type": "music_database"
+        }
+      ],
+      "enriched_influences": [
+        {
+          "name": "Na\u00e7\u00e3o Zumbi",
+          "source": "lastfm_similar",
+          "confidence": 1.0,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Na\u00e7\u00e3o_Zumbi"
+        },
+        {
+          "name": "Fino Coletivo",
+          "source": "lastfm_similar",
+          "confidence": 0.875036,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Fino_Coletivo"
+        },
+        {
+          "name": "Cordel do Fogo Encantado",
+          "source": "lastfm_similar",
+          "confidence": 0.839726,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Cordel_do_Fogo_Encantado"
+        },
+        {
+          "name": "Otto",
+          "source": "lastfm_similar",
+          "confidence": 0.600211,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Otto"
+        },
+        {
+          "name": "Mundo Livre S/A",
+          "source": "lastfm_similar",
+          "confidence": 0.516203,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Mundo_Livre_S/A"
+        },
+        {
+          "name": "Lamparina",
+          "source": "lastfm_similar",
+          "confidence": 0.463918,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Lamparina"
+        },
+        {
+          "name": "Chico C\u00e9sar",
+          "source": "lastfm_similar",
+          "confidence": 0.451935,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Chico_C\u00e9sar"
+        },
+        {
+          "name": "Karina Buhr",
+          "source": "lastfm_similar",
+          "confidence": 0.443913,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Karina_Buhr"
+        },
+        {
+          "name": "Momboj\u00f3",
+          "source": "lastfm_similar",
+          "confidence": 0.413925,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Momboj\u00f3"
+        },
+        {
+          "name": "Cidad\u00e3o Instigado",
+          "source": "lastfm_similar",
+          "confidence": 0.324271,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Cidad\u00e3o_Instigado"
+        }
+      ]
+    },
+    "instruments": [
+      "Accordion",
+      "Guacharaca",
+      "Drums",
+      "Bass",
+      "Guitar",
+      "Congas",
+      "Timbales",
+      "Piano",
+      "Brass"
+    ],
+    "summary": {
+      "track_name": "Dorival",
+      "artist_name": "Academia da Berlinda",
+      "total_influences": 10,
+      "genre_count": 3,
+      "graph_nodes": 9,
+      "graph_edges": 8,
+      "instruments_detected": 9
+    }
+  },
+  "style_card": {
+    "description": "Atmospheric, Cumbia track, wheezing accordion, subtle Guacharaca, and crisp drums, emotionally resonant",
+    "short_description": "Atmospheric, Cumbia track, wheezing accordion, subtle Guacharaca, and crisp drums, emotionally resonant",
+    "metadata": {
+      "bpm": "Unknown",
+      "key": "Unknown",
+      "energy": 5.0,
+      "genre": "Cumbia",
+      "mood": [
+        "Olinda",
+        "pernambuco",
+        "Carimb\u00f3"
+      ]
+    },
+    "components": {
+      "vibe": "Atmospheric",
+      "genre": "Cumbia track",
+      "tempo": null,
+      "instruments": "wheezing accordion, subtle Guacharaca, and crisp drums",
+      "production": null,
+      "aesthetic": "emotionally resonant"
+    }
+  },
+  "secondhandsongs_data": null,
+  "fingerprint_data": null,
+  "dashboard_path": "output/Academia_da_Berlinda_Dorival_analysis.html",
+  "network_stats": {
+    "session_id": "20260110_204133",
+    "start_time": "2026-01-10T20:41:33.033811",
+    "end_time": null,
+    "summary": {
+      "total_requests": 11,
+      "successful_requests": 11,
+      "failed_requests": 0,
+      "total_data_kb": 62.82,
+      "total_sent_kb": 0.8,
+      "total_received_kb": 62.02,
+      "total_duration_ms": 1856.61
+    },
+    "by_service": {
+      "lastfm": {
+        "requests": 4,
+        "sent_kb": 0.61,
+        "received_kb": 17.07,
+        "total_kb": 17.69,
+        "avg_duration_ms": 133.05,
+        "errors": 0
+      },
+      "discogs": {
+        "requests": 4,
+        "sent_kb": 0.14,
+        "received_kb": 18.67,
+        "total_kb": 18.81,
+        "avg_duration_ms": 200.64,
+        "errors": 0
+      },
+      "deezer": {
+        "requests": 3,
+        "sent_kb": 0.05,
+        "received_kb": 26.27,
+        "total_kb": 26.32,
+        "avg_duration_ms": 173.96,
+        "errors": 0
+      }
+    },
+    "requests": [
+      {
+        "url": "http://ws.audioscrobbler.com/2.0/",
+        "service": "lastfm",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.16,
+        "received_kb": 0.96,
+        "duration_ms": 129.72,
+        "success": true
+      },
+      {
+        "url": "http://ws.audioscrobbler.com/2.0/",
+        "service": "lastfm",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.14,
+        "received_kb": 7.33,
+        "duration_ms": 132.01,
+        "success": true
+      },
+      {
+        "url": "http://ws.audioscrobbler.com/2.0/",
+        "service": "lastfm",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.16,
+        "received_kb": 8.03,
+        "duration_ms": 131.71,
+        "success": true
+      },
+      {
+        "url": "http://ws.audioscrobbler.com/2.0/",
+        "service": "lastfm",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.15,
+        "received_kb": 0.75,
+        "duration_ms": 138.75,
+        "success": true
+      },
+      {
+        "url": "https://api.discogs.com/database/search",
+        "service": "discogs",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.07,
+        "received_kb": 1.43,
+        "duration_ms": 164.32,
+        "success": true
+      },
+      {
+        "url": "https://api.discogs.com/releases/15557454",
+        "service": "discogs",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.0,
+        "received_kb": 15.57,
+        "duration_ms": 259.81,
+        "success": true
+      },
+      {
+        "url": "https://api.discogs.com/database/search",
+        "service": "discogs",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.06,
+        "received_kb": 0.75,
+        "duration_ms": 234.38,
+        "success": true
+      },
+      {
+        "url": "https://api.discogs.com/artists/7756188",
+        "service": "discogs",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.0,
+        "received_kb": 0.93,
+        "duration_ms": 144.04,
+        "success": true
+      },
+      {
+        "url": "https://api.deezer.com/search/track",
+        "service": "deezer",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.05,
+        "received_kb": 2.06,
+        "duration_ms": 162.06,
+        "success": true
+      },
+      {
+        "url": "https://api.deezer.com/artist/6155102",
+        "service": "deezer",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.0,
+        "received_kb": 0.9,
+        "duration_ms": 147.34,
+        "success": true
+      },
+      {
+        "url": "https://api.deezer.com/album/13542405",
+        "service": "deezer",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.0,
+        "received_kb": 23.32,
+        "duration_ms": 212.47,
+        "success": true
+      }
+    ]
+  }
+}

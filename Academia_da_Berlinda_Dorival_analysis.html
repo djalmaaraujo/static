@@ -1,0 +1,3709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Musical Archaeology: Dorival by Academia da Berlinda</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* Theme CSS Variables */
+        :root {
+            --bg-primary: #111;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1e1e1e;
+            --text-primary: #f0f0f0;
+            --text-secondary: #aaa;
+            --text-muted: #666;
+            --accent-primary: #4a5080;
+            --accent-secondary: #553c73;
+            --accent-gradient: linear-gradient(135deg, #4a5080 0%, #553c73 100%);
+            --border-color: #333;
+            --card-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #e8e8e8;
+            --bg-card: #ffffff;
+            --text-primary: #222;
+            --text-secondary: #555;
+            --text-muted: #888;
+            --accent-primary: #4a5080;
+            --accent-secondary: #553c73;
+            --accent-gradient: linear-gradient(135deg, #4a5080 0%, #553c73 100%);
+            --border-color: #ddd;
+            --card-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Spotify-style header with album art background */
+        header {
+            border-radius: 15px;
+            padding: 0;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+            min-height: 320px;
+        }
+
+        /* Blurred album art background */
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            filter: blur(40px) brightness(0.4);
+            transform: scale(1.2);
+            z-index: 0;
+        }
+
+        /* Gradient overlay */
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(25,20,20,0.3) 0%, rgba(25,20,20,0.85) 100%);
+            z-index: 1;
+        }
+
+        .header-content {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 30px;
+            padding: 30px 40px 35px;
+            position: relative;
+            z-index: 2;
+            align-items: end;
+        }
+
+        .header-cover {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .header-cover-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .header-play-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 52px;
+            height: 52px;
+            background: #1db954;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .header-play-btn:hover {
+            transform: scale(1.08);
+            background: #1ed760;
+        }
+
+        .header-play-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: black;
+            margin-left: 3px;
+        }
+
+        .header-info {
+            flex: 1;
+            color: white;
+        }
+
+        .header-type {
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        /* Header h1 only */
+        header h1 {
+            color: white;
+            font-size: 2.8em;
+            margin-bottom: 8px;
+            font-weight: 900;
+            line-height: 1.1;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Regular h1 for narrative and other sections */
+        h1 {
+            color: var(--text-primary);
+            font-size: 2em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2em;
+            margin-bottom: 12px;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9em;
+        }
+
+        .header-meta-dot {
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+        }
+
+        .timestamp {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85em;
+            margin-top: 8px;
+        }
+
+        /* Header right side - streaming links and metadata */
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .header-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .header-link {
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 0.9em;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .header-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 15px 20px;
+            text-align: right;
+        }
+
+        .header-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-stat-label {
+            font-size: 0.75em;
+            opacity: 0.6;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .header-stat-value {
+            font-size: 1em;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Hidden audio player for header button control */
+        .header-audio-player {
+            display: none;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            transition: background 0.3s ease;
+        }
+
+        .card h2 {
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .card h3 {
+            color: var(--accent-secondary);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        #graph-container {
+            width: 100%;
+            height: 600px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg-secondary);
+        }
+
+        .node {
+            cursor: pointer;
+        }
+
+        .node circle {
+            stroke: #fff;
+            stroke-width: 2px;
+        }
+
+        .node text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--bg-secondary);
+            padding: 5px 12px;
+            border-radius: 15px;
+            margin: 5px;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
+        .genre-tag {
+            background: var(--accent-gradient);
+            color: white;
+            font-weight: 500;
+        }
+
+        .influence-list {
+            list-style: none;
+        }
+
+        .influence-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 5px;
+        }
+
+        .influence-high {
+            border-left-color: #48bb78;
+        }
+
+        .influence-medium {
+            border-left-color: #ed8936;
+        }
+
+        .confidence-badge {
+            float: right;
+            font-size: 0.8em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+
+        .narrative {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .narrative h1, .narrative h2, .narrative h3 {
+            color: var(--accent-primary);
+        }
+
+        .narrative ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .narrative p {
+            margin-bottom: 10px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: var(--card-shadow);
+            max-height: 80vh;
+            overflow-y: auto;
+            color: var(--text-primary);
+        }
+
+        .close {
+            color: var(--text-muted);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: var(--text-primary);
+        }
+
+        /* Source links */
+        .source-link {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            background: var(--accent-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: transform 0.2s;
+        }
+
+        .source-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .source-link::before {
+            content: "🔗 ";
+        }
+
+        /* YouTube embed */
+        .youtube-player {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            border-radius: 10px;
+        }
+
+        .youtube-player iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Timeline styles */
+        .timeline-container {
+            position: relative;
+            padding: 20px 0;
+            overflow-x: auto;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .timeline-date {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--accent-primary);
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 5px;
+            margin-left: 20px;
+        }
+
+        /* Instrument cards */
+        .instrument-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .instrument-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .instrument-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .instrument-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        /* Header link hover effects */
+        .header-link:hover {
+            background: rgba(255,255,255,0.35) !important;
+        }
+
+        /* Band Member Cards */
+        .member-card {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .member-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 12px;
+            border: 3px solid var(--accent-primary);
+        }
+
+        .member-name {
+            font-weight: bold;
+            color: var(--text-primary);
+            font-size: 1em;
+        }
+
+        /* Influence item with image */
+        .influence-item-with-image {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            margin: 8px 0;
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .influence-item-with-image:hover {
+            transform: translateX(5px);
+        }
+
+        .influence-item-with-image.influence-high {
+            border-left-color: #48bb78;
+        }
+
+        .influence-item-with-image.influence-medium {
+            border-left-color: #ed8936;
+        }
+
+        .influence-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .influence-info {
+            flex: 1;
+        }
+
+        /* Enhanced Timeline - Two Column Layout */
+        .timeline-card {
+            display: flex;
+            margin: 20px 0;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .timeline-left {
+            flex: 1;
+            padding: 20px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timeline-right {
+            flex: 1.2;
+            padding: 20px;
+            background: var(--bg-card);
+        }
+
+        .timeline-influence-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 12px;
+            border: 3px solid var(--accent-primary);
+        }
+
+        .timeline-influence-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .timeline-source-badge {
+            font-size: 0.8em;
+            padding: 4px 10px;
+            background: var(--accent-gradient);
+            color: white;
+            border-radius: 15px;
+            margin-top: 8px;
+        }
+
+        .timeline-source-badge a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .timeline-similar-title {
+            font-weight: bold;
+            color: var(--accent-secondary);
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .similar-artists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 15px;
+        }
+
+        .similar-artist-card {
+            text-align: center;
+        }
+
+        .similar-artist-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 6px;
+            border: 2px solid var(--border-color);
+        }
+
+        .similar-artist-name {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Quick Stats Bar below header */
+        .quick-stats-bar {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .quick-stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 20px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            min-width: 100px;
+        }
+
+        .quick-stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--accent-primary);
+        }
+
+        .quick-stat-label {
+            font-size: 0.8em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border: 2px solid var(--border-color);
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            top: 2px;
+            left: 4px;
+            background: var(--accent-primary);
+            transition: transform 0.3s ease;
+        }
+
+        [data-theme="light"] .theme-toggle::before {
+            transform: translateX(28px);
+        }
+
+        .theme-label {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            /* Stack header on mobile */
+            .header-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 25px 20px;
+            }
+
+            .header-cover {
+                display: flex;
+                justify-content: center;
+            }
+
+            .header-cover-image {
+                width: 160px;
+                height: 160px;
+            }
+
+            .header-info {
+                text-align: center;
+            }
+
+            .header-meta {
+                justify-content: center;
+            }
+
+            .header-right {
+                align-items: center;
+            }
+
+            .header-links {
+                justify-content: center;
+            }
+
+            .header-stats-grid {
+                text-align: center;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            /* Stack timeline cards on mobile */
+            .timeline-card {
+                flex-direction: column;
+            }
+
+            .timeline-left {
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <!-- Blurred album art background -->
+            <div class="header-bg" id="header-bg"></div>
+            <div class="header-overlay"></div>
+
+            <div class="header-content">
+                <!-- Left: Album Cover with Play Button -->
+                <div class="header-cover" id="header-cover">
+                    <img id="header-cover-image" class="header-cover-image" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIwIiBoZWlnaHQ9IjIyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjIwIiBoZWlnaHQ9IjIyMCIgZmlsbD0iIzI4MjgyOCIvPjx0ZXh0IHg9IjExMCIgeT0iMTIwIiBmb250LXNpemU9IjYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNTU1Ij7wn461PC90ZXh0Pjwvc3ZnPg==" alt="Album Cover">
+                    <button class="header-play-btn" id="header-play-btn" title="Play preview">
+                        <svg viewBox="0 0 24 24" id="header-play-icon"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                </div>
+
+                <!-- Center: Track Info -->
+                <div class="header-info">
+                    <div class="header-type">Track Analysis</div>
+                    <h1>Dorival</h1>
+                    <div class="subtitle">Academia da Berlinda</div>
+                    <div class="header-meta">
+                        <span id="header-year">—</span>
+                        <span class="header-meta-dot"></span>
+                        <span id="header-genre">—</span>
+                        <span class="header-meta-dot"></span>
+                        <span id="header-duration">—</span>
+                    </div>
+                    <div class="timestamp">Generated: 2026-01-10 20:53:51</div>
+                </div>
+
+                <!-- Right: Links and Stats -->
+                <div class="header-right">
+                    <div class="header-links">
+                        <a id="header-deezer-link" href="" target="_blank" class="header-link" style="display: none;">
+                            🎵 Deezer
+                        </a>
+                        <a id="header-lastfm-link" href="" target="_blank" class="header-link" style="display: none;">
+                            📊 Last.fm
+                        </a>
+                    </div>
+                    <div class="header-stats-grid" id="header-stats-grid">
+                        <!-- Stats populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden audio player -->
+            <audio id="header-audio-player" class="header-audio-player">
+                <source id="header-audio-source" src="" type="audio/mpeg">
+            </audio>
+        </header>
+
+        <!-- Quick Stats Bar -->
+        <div class="quick-stats-bar" id="quick-stats-bar">
+            <!-- Stats populated by JS -->
+        </div>
+
+        <!-- YouTube Player (if available) -->
+        <div id="youtube-section" style="display: none;">
+            <div class="card" style="margin-bottom: 30px;">
+                <h2>▶️ Original Track</h2>
+                <div class="youtube-player" id="youtube-player"></div>
+            </div>
+        </div>
+
+        <!-- Artist Biography & Info -->
+        <div id="artist-bio-section" class="card" style="margin-bottom: 30px; display: none;">
+            <h2>📖 About the Artist</h2>
+
+            <!-- Artist Bio Text -->
+            <div id="artist-bio-text" style="line-height: 1.8; margin-bottom: 25px; font-size: 0.95em;"></div>
+
+            <!-- Artist Stats Grid -->
+            <div id="artist-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;"></div>
+
+            <!-- Artist Links -->
+            <div id="artist-links" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+        </div>
+
+        <!-- Band Members Section -->
+        <div id="band-members-section" class="card" style="margin-bottom: 30px; display: none;">
+            <h2>🎤 Band Members</h2>
+            <div id="band-members-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; margin-top: 20px;"></div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Influence Network Visualization</h2>
+                <div id="graph-container"></div>
+                <p style="margin-top: 15px; color: var(--text-muted); font-size: 0.9em;">
+                    Interactive visualization of musical influences. Drag nodes to explore connections. Click on artist nodes to see details.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>Quick Stats</h2>
+                <div class="stats-grid" id="stats"></div>
+
+                <h3>Primary Genres</h3>
+                <div id="genres"></div>
+
+                <h3>Style Tags</h3>
+                <div id="tags"></div>
+            </div>
+        </div>
+
+        <!-- Time Machine Timeline (Enhanced with two-column layout) -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2>⏰ Time Machine: Musical Evolution</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Explore the musical archaeology - influences on the left, similar artists from that era on the right</p>
+            <div class="timeline-container" id="timeline"></div>
+        </div>
+
+        <!-- Audio Features Section (Standalone) -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2>🎧 Audio Features</h2>
+            <div id="audio-features"></div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Direct Influences</h2>
+                <ul class="influence-list" id="influences"></ul>
+            </div>
+
+            <div class="card">
+                <h2>🎸 Instruments & Origins</h2>
+                <div class="instrument-grid" id="instruments"></div>
+                <div id="instrument-origins" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- Style Card for Suno -->
+        <div class="card suno-card" style="margin-bottom: 30px; background: var(--accent-gradient); color: white;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: white; margin: 0;">🎵 Suno Style Card</h2>
+                <button onclick="copyStyleCard()" style="padding: 10px 20px; background: white; color: var(--accent-primary); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: transform 0.2s;">
+                    📋 Copy for Suno
+                </button>
+            </div>
+            <div class="style-card-content" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 15px;">
+                <p id="style-description" style="font-size: 1.1em; line-height: 1.8; margin: 0;">
+                    Atmospheric, Cumbia track, wheezing accordion, subtle Guacharaca, and crisp drums, emotionally resonant
+                </p>
+            </div>
+            <div class="style-specs" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <span id="style-bpm" style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px;">BPM: Loading...</span>
+                <span id="style-key" style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px;">Key: Loading...</span>
+                <span id="style-energy" style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px;">Energy: Loading...</span>
+                <span id="style-genre" style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px;">Genre: Loading...</span>
+            </div>
+        </div>
+
+        <!-- Musical Lineage -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2>🌳 Musical Lineage: Multi-Generation Influences</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Trace the musical roots across generations of artists and movements</p>
+            <div id="lineage-tree"></div>
+        </div>
+
+        <!-- Cultural Impact Section -->
+        <div id="cultural-impact-section" class="card" style="margin-bottom: 30px; display: none;">
+            <h2>🌍 Cultural Impact & Influence</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">How this artist has influenced music locally, nationally, and globally</p>
+            <div id="cultural-impact-content"></div>
+        </div>
+
+        <div class="narrative">
+            <div id="narrative"><h1>Musical Archaeology: Dorival</h1>
+<h2>by Academia da Berlinda</h2>
+<br>
+<h2>Overview</h2>
+<p>This analysis explores the musical DNA of "Dorival" by Academia da Berlinda,</p>
+<p>tracing its influences through genres, artists, and historical context.</p>
+<br>
+<h2>Genre Classification</h2>
+<p>Primary genres: <strong>Cumbia, Latin, Latin Music</strong></p>
+<br>
+<p>Limited information available for genres: Cumbia, Latin, Latin Music</p>
+<br>
+<h2>Direct Influences</h2>
+<p>Based on API data and analysis, the following artists likely influenced this track:</p>
+<br>
+<h3>High Confidence</h3>
+<ul>
+<li>**Nação Zumbi** (source: lastfm_similar)</li>
+<li>**Fino Coletivo** (source: lastfm_similar)</li>
+<li>**Cordel do Fogo Encantado** (source: lastfm_similar)</li>
+</ul>
+<br>
+<h3>Moderate Confidence</h3>
+<ul>
+<li>Otto (source: lastfm_similar)</li>
+<li>Mundo Livre S/A (source: lastfm_similar)</li>
+<li>Lamparina (source: lastfm_similar)</li>
+<li>Chico César (source: lastfm_similar)</li>
+<li>Karina Buhr (source: lastfm_similar)</li>
+</ul>
+<br>
+<h2>Audio Characteristics</h2>
+<h2>Style Tags and Descriptors</h2>
+<p>Olinda, pernambuco, Carimbó, cumbia, Cumbia, Compas, Merengue, latino, brazilian, recife, alternative, brazil, Salsa, brasil, vi ao vivo</p>
+<br>
+<h2>Influence Network</h2>
+<p>The influence graph contains 9 nodes</p>
+<p>and 8 connections,</p>
+<p>spanning 3 layers of musical influence.</p>
+<br>
+<h2>Data Sources</h2>
+<p>This analysis drew from: lastfm, discogs, musicbrainz, deezer, genius</p>
+<br></div>
+        </div>
+
+        <!-- Artist Details Modal -->
+        <div id="artistModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="modal-body"></div>
+            </div>
+        </div>
+
+        <!-- Data Sources -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2>📚 Data Sources</h2>
+            <div id="sources"></div>
+        </div>
+
+        <!-- Network Statistics Section -->
+        <div id="network-stats-section" class="card" style="margin-bottom: 30px; display: none;">
+            <h2>📡 Network Statistics</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">API requests made during this analysis</p>
+
+            <!-- Summary Stats -->
+            <div id="network-summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px;">
+            </div>
+
+            <!-- By Service Breakdown -->
+            <div id="network-by-service" style="margin-bottom: 25px;">
+                <h3 style="margin-bottom: 15px;">📊 By Service</h3>
+                <div id="service-bars" style="display: flex; flex-direction: column; gap: 10px;"></div>
+            </div>
+
+            <!-- Toggle for detailed requests -->
+            <button id="toggle-requests" onclick="toggleNetworkRequests()" style="padding: 10px 20px; background: var(--accent-primary); color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 15px;">
+                Show All Requests
+            </button>
+
+            <!-- Detailed Requests Table (hidden by default) -->
+            <div id="network-requests-table" style="display: none; overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                    <thead>
+                        <tr style="background: var(--bg-secondary);">
+                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid var(--border-color);">Service</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid var(--border-color);">URL</th>
+                            <th style="padding: 10px; text-align: right; border-bottom: 2px solid var(--border-color);">Status</th>
+                            <th style="padding: 10px; text-align: right; border-bottom: 2px solid var(--border-color);">Duration</th>
+                            <th style="padding: 10px; text-align: right; border-bottom: 2px solid var(--border-color);">Data</th>
+                        </tr>
+                    </thead>
+                    <tbody id="requests-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Theme Toggle -->
+        <div class="theme-toggle-container">
+            <span class="theme-label">🌙 Dark</span>
+            <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()"></div>
+            <span class="theme-label">☀️ Light</span>
+        </div>
+
+        <footer>
+            <p>Musical Archaeology Dashboard v0.2.0</p>
+            <p style="color: var(--text-muted);">Data sources: Last.fm, Discogs, MusicBrainz, Deezer, AcousticBrainz, Wikipedia, AllMusic, WhoSampled</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data injection
+        const graphData = {
+  "nodes": [
+    {
+      "id": "root",
+      "type": "track",
+      "name": "Dorival",
+      "artist": "Academia da Berlinda",
+      "layer": 0
+    },
+    {
+      "id": "artist_0",
+      "type": "artist",
+      "name": "Na\u00e7\u00e3o Zumbi",
+      "source": "lastfm_similar",
+      "confidence": 1.0,
+      "layer": 1
+    },
+    {
+      "id": "artist_1",
+      "type": "artist",
+      "name": "Fino Coletivo",
+      "source": "lastfm_similar",
+      "confidence": 0.875036,
+      "layer": 1
+    },
+    {
+      "id": "artist_2",
+      "type": "artist",
+      "name": "Cordel do Fogo Encantado",
+      "source": "lastfm_similar",
+      "confidence": 0.839726,
+      "layer": 1
+    },
+    {
+      "id": "artist_3",
+      "type": "artist",
+      "name": "Otto",
+      "source": "lastfm_similar",
+      "confidence": 0.600211,
+      "layer": 1
+    },
+    {
+      "id": "artist_4",
+      "type": "artist",
+      "name": "Mundo Livre S/A",
+      "source": "lastfm_similar",
+      "confidence": 0.516203,
+      "layer": 1
+    },
+    {
+      "id": "genre_0",
+      "type": "genre",
+      "name": "Cumbia",
+      "layer": 2
+    },
+    {
+      "id": "genre_1",
+      "type": "genre",
+      "name": "Latin",
+      "layer": 2
+    },
+    {
+      "id": "genre_2",
+      "type": "genre",
+      "name": "Latin Music",
+      "layer": 2
+    }
+  ],
+  "edges": [
+    {
+      "from": "artist_0",
+      "to": "root",
+      "strength": 1.0,
+      "type": "direct_influence"
+    },
+    {
+      "from": "artist_1",
+      "to": "root",
+      "strength": 0.875036,
+      "type": "direct_influence"
+    },
+    {
+      "from": "artist_2",
+      "to": "root",
+      "strength": 0.839726,
+      "type": "direct_influence"
+    },
+    {
+      "from": "artist_3",
+      "to": "root",
+      "strength": 0.600211,
+      "type": "direct_influence"
+    },
+    {
+      "from": "artist_4",
+      "to": "root",
+      "strength": 0.516203,
+      "type": "direct_influence"
+    },
+    {
+      "from": "genre_0",
+      "to": "root",
+      "strength": 0.7,
+      "type": "genre_influence"
+    },
+    {
+      "from": "genre_1",
+      "to": "root",
+      "strength": 0.7,
+      "type": "genre_influence"
+    },
+    {
+      "from": "genre_2",
+      "to": "root",
+      "strength": 0.7,
+      "type": "genre_influence"
+    }
+  ],
+  "layers": [
+    {
+      "layer": 0,
+      "nodes": [
+        {
+          "id": "root",
+          "type": "track",
+          "name": "Dorival",
+          "artist": "Academia da Berlinda",
+          "layer": 0
+        }
+      ]
+    },
+    {
+      "layer": 1,
+      "nodes": [
+        {
+          "id": "artist_0",
+          "type": "artist",
+          "name": "Na\u00e7\u00e3o Zumbi",
+          "source": "lastfm_similar",
+          "confidence": 1.0,
+          "layer": 1
+        },
+        {
+          "id": "artist_1",
+          "type": "artist",
+          "name": "Fino Coletivo",
+          "source": "lastfm_similar",
+          "confidence": 0.875036,
+          "layer": 1
+        },
+        {
+          "id": "artist_2",
+          "type": "artist",
+          "name": "Cordel do Fogo Encantado",
+          "source": "lastfm_similar",
+          "confidence": 0.839726,
+          "layer": 1
+        },
+        {
+          "id": "artist_3",
+          "type": "artist",
+          "name": "Otto",
+          "source": "lastfm_similar",
+          "confidence": 0.600211,
+          "layer": 1
+        },
+        {
+          "id": "artist_4",
+          "type": "artist",
+          "name": "Mundo Livre S/A",
+          "source": "lastfm_similar",
+          "confidence": 0.516203,
+          "layer": 1
+        }
+      ]
+    },
+    {
+      "layer": 2,
+      "nodes": [
+        {
+          "id": "genre_0",
+          "type": "genre",
+          "name": "Cumbia",
+          "layer": 2
+        },
+        {
+          "id": "genre_1",
+          "type": "genre",
+          "name": "Latin",
+          "layer": 2
+        },
+        {
+          "id": "genre_2",
+          "type": "genre",
+          "name": "Latin Music",
+          "layer": 2
+        }
+      ]
+    }
+  ]
+};
+        const fullData = {
+  "track": {
+    "name": "Dorival",
+    "artists": [
+      "Academia da Berlinda"
+    ],
+    "lastfm_url": "https://www.last.fm/music/Academia+da+Berlinda/_/Dorival",
+    "listeners": 43919,
+    "playcount": 401015,
+    "discogs_url": "https://www.discogs.com/release/15557454-Academia-da-Berlinda-Nada-sem-ela",
+    "year": 2016,
+    "country": "Brazil",
+    "labels": [
+      {
+        "name": "Vinil Brasil",
+        "catno": "none"
+      }
+    ],
+    "recording_id": "3b7f9895-3a34-4529-a597-578d54473bfc",
+    "deezer_url": "https://www.deezer.com/track/128242055",
+    "preview_url": "https://cdnt-preview.dzcdn.net/api/1/1/3/4/6/0/346e4aeffef1b4937a790b722910756a.mp3?hdnea=exp=1768096598~acl=/api/1/1/3/4/6/0/346e4aeffef1b4937a790b722910756a.mp3*~data=user_id=0,application_id=42~hmac=4f2214f6679265ad2dd5873b80c3a42f8e6ab3478dcc86e6da3e46e9e0d968e8",
+    "cover_url": "https://cdn-images.dzcdn.net/images/cover/d28f34b2b59778b3d49cbfb99af96d31/500x500-000000-80-0-0.jpg",
+    "genius_url": "https://genius.com/Academia-da-berlinda-dorival-annotated"
+  },
+  "genres": [
+    "Cumbia",
+    "Latin",
+    "Latin Music"
+  ],
+  "tags": [
+    "Olinda",
+    "pernambuco",
+    "Carimb\u00f3",
+    "cumbia",
+    "Cumbia",
+    "Compas",
+    "Merengue",
+    "latino",
+    "brazilian",
+    "recife",
+    "alternative",
+    "brazil",
+    "Salsa",
+    "brasil",
+    "vi ao vivo",
+    "Guaracha"
+  ],
+  "influences": [
+    {
+      "name": "Na\u00e7\u00e3o Zumbi",
+      "source": "lastfm_similar",
+      "confidence": 1.0,
+      "strength": 1.0,
+      "image_url": "https://cdn-images.dzcdn.net/images/artist/003ed6aa04d70faceda955e5d967400b/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+      "name": "Fino Coletivo",
+      "source": "lastfm_similar",
+      "confidence": 0.875036,
+      "strength": 0.875036,
+      "image_url": "https://cdn-images.dzcdn.net/images/artist/59a14f9aa8bd199091f66b7bd0eefcb3/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+      "name": "Cordel do Fogo Encantado",
+      "source": "lastfm_similar",
+      "confidence": 0.839726,
+      "strength": 0.839726,
+      "image_url": "https://cdn-images.dzcdn.net/images/artist/59f52f9f434b9f3f14f173797d809582/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+      "name": "Otto",
+      "source": "lastfm_similar",
+      "confidence": 0.600211,
+      "strength": 0.600211,
+      "image_url": "https://cdn-images.dzcdn.net/images/artist/d742e2c4d501e9a74aedeeea02dc5003/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+      "name": "Mundo Livre S/A",
+      "source": "lastfm_similar",
+      "confidence": 0.516203,
+      "strength": 0.516203,
+      "image_url": "https://cdn-images.dzcdn.net/images/artist/cee2e4f2267b61a58cad4fd28ed74e52/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+      "name": "Lamparina",
+      "source": "lastfm_similar",
+      "confidence": 0.463918,
+      "strength": 0.463918,
+      "image_url": "https://cdn-images.dzcdn.net/images/artist/ae9d61a920bbe218ce56fd3c73279fd1/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+      "name": "Chico C\u00e9sar",
+      "source": "lastfm_similar",
+      "confidence": 0.451935,
+      "strength": 0.451935,
+      "image_url": "https://cdn-images.dzcdn.net/images/artist/0016710e0a8799f06497acbf14e45095/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+      "name": "Karina Buhr",
+      "source": "lastfm_similar",
+      "confidence": 0.443913,
+      "strength": 0.443913,
+      "image_url": "https://cdn-images.dzcdn.net/images/artist/8ae985cf1cf50fb96e7b54741537a50a/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+      "name": "Momboj\u00f3",
+      "source": "lastfm_similar",
+      "confidence": 0.413925,
+      "strength": 0.413925,
+      "image_url": "https://cdn-images.dzcdn.net/images/artist/4b9aeea6741282cf7d2aec291a2440ef/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+      "name": "Cidad\u00e3o Instigado",
+      "source": "lastfm_similar",
+      "confidence": 0.324271,
+      "strength": 0.324271,
+      "image_url": "https://cdn-images.dzcdn.net/images/artist/abb977f17fbcad188151897ca965ecfa/1000x1000-000000-80-0-0.jpg"
+    }
+  ],
+  "audio_features": {
+    "deezer": {
+      "bpm": null,
+      "duration_seconds": 307
+    }
+  },
+  "summary": {
+    "track_name": "Dorival",
+    "artist_name": "Academia da Berlinda",
+    "total_influences": 10,
+    "genre_count": 3,
+    "graph_nodes": 9,
+    "graph_edges": 8,
+    "instruments_detected": 9
+  },
+  "artist_details": {
+    "Academia da Berlinda": {
+      "name": "Academia da Berlinda",
+      "bio": "The page \"Academia da Berlinda\" does not exist. You can create a draft and submit it for review or request that a redirect be created, but consider checking the search results below to see whether the topic is already covered. ",
+      "genres": [
+        "Cumbia",
+        "Latin",
+        "Latin Music"
+      ],
+      "wikipedia_url": "https://en.wikipedia.org/w/index.php?search=Academia%20da%20Berlinda&ns0=1",
+      "allmusic_url": "https://www.allmusic.com/artist/coro-infantil-da-academia-de-musica-de-almada-mn0003926021",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Academia da Berlinda&type=artist"
+    },
+    "Na\u00e7\u00e3o Zumbi": {
+      "name": "Na\u00e7\u00e3o Zumbi",
+      "bio": "Musical influence on Academia da Berlinda",
+      "source": "lastfm_similar",
+      "confidence": 1.0,
+      "genres": [],
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Na\u00e7\u00e3o_Zumbi",
+      "allmusic_url": "https://www.allmusic.com/search/artists/Na\u00e7\u00e3o+Zumbi",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Na\u00e7\u00e3o Zumbi&type=artist"
+    },
+    "Fino Coletivo": {
+      "name": "Fino Coletivo",
+      "bio": "Musical influence on Academia da Berlinda",
+      "source": "lastfm_similar",
+      "confidence": 0.875036,
+      "genres": [],
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Fino_Coletivo",
+      "allmusic_url": "https://www.allmusic.com/search/artists/Fino+Coletivo",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Fino Coletivo&type=artist"
+    },
+    "Cordel do Fogo Encantado": {
+      "name": "Cordel do Fogo Encantado",
+      "bio": "Musical influence on Academia da Berlinda",
+      "source": "lastfm_similar",
+      "confidence": 0.839726,
+      "genres": [],
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Cordel_do_Fogo_Encantado",
+      "allmusic_url": "https://www.allmusic.com/search/artists/Cordel+do+Fogo+Encantado",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Cordel do Fogo Encantado&type=artist"
+    },
+    "Otto": {
+      "name": "Otto",
+      "bio": "Musical influence on Academia da Berlinda",
+      "source": "lastfm_similar",
+      "confidence": 0.600211,
+      "genres": [],
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Otto",
+      "allmusic_url": "https://www.allmusic.com/search/artists/Otto",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Otto&type=artist"
+    },
+    "Mundo Livre S/A": {
+      "name": "Mundo Livre S/A",
+      "bio": "Musical influence on Academia da Berlinda",
+      "source": "lastfm_similar",
+      "confidence": 0.516203,
+      "genres": [],
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Mundo_Livre_S/A",
+      "allmusic_url": "https://www.allmusic.com/search/artists/Mundo+Livre+S/A",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Mundo Livre S/A&type=artist"
+    },
+    "Lamparina": {
+      "name": "Lamparina",
+      "bio": "Musical influence on Academia da Berlinda",
+      "source": "lastfm_similar",
+      "confidence": 0.463918,
+      "genres": [],
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Lamparina",
+      "allmusic_url": "https://www.allmusic.com/search/artists/Lamparina",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Lamparina&type=artist"
+    },
+    "Chico C\u00e9sar": {
+      "name": "Chico C\u00e9sar",
+      "bio": "Musical influence on Academia da Berlinda",
+      "source": "lastfm_similar",
+      "confidence": 0.451935,
+      "genres": [],
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Chico_C\u00e9sar",
+      "allmusic_url": "https://www.allmusic.com/search/artists/Chico+C\u00e9sar",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Chico C\u00e9sar&type=artist"
+    },
+    "Karina Buhr": {
+      "name": "Karina Buhr",
+      "bio": "Musical influence on Academia da Berlinda",
+      "source": "lastfm_similar",
+      "confidence": 0.443913,
+      "genres": [],
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Karina_Buhr",
+      "allmusic_url": "https://www.allmusic.com/search/artists/Karina+Buhr",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Karina Buhr&type=artist"
+    },
+    "Momboj\u00f3": {
+      "name": "Momboj\u00f3",
+      "bio": "Musical influence on Academia da Berlinda",
+      "source": "lastfm_similar",
+      "confidence": 0.413925,
+      "genres": [],
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Momboj\u00f3",
+      "allmusic_url": "https://www.allmusic.com/search/artists/Momboj\u00f3",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Momboj\u00f3&type=artist"
+    },
+    "Cidad\u00e3o Instigado": {
+      "name": "Cidad\u00e3o Instigado",
+      "bio": "Musical influence on Academia da Berlinda",
+      "source": "lastfm_similar",
+      "confidence": 0.324271,
+      "genres": [],
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Cidad\u00e3o_Instigado",
+      "allmusic_url": "https://www.allmusic.com/search/artists/Cidad\u00e3o+Instigado",
+      "musicbrainz_url": "https://musicbrainz.org/search?query=Cidad\u00e3o Instigado&type=artist"
+    }
+  },
+  "artists": {
+    "lastfm": {
+      "name": "Academia da Berlinda",
+      "tags": [
+        "cumbia",
+        "brasil",
+        "latino",
+        "brazilian",
+        "pernambuco"
+      ],
+      "listeners": 74175,
+      "playcount": 2000661,
+      "bio_summary": "Formed in 2004 in Olinda, the group consists of musicians from a number of famous bands all from Pernambuco\u2019s musical scene (Mundo Livre S/A, Eddie, A Roda, Variant). From the beginning, the band invested in a repertory from the bregas music from the 60\u2019s, which soon named it as an original band that played \u201cbrega roots\u201d in creative and innovating versions, full of cumbias, guarachas and loads of afrobeats. \n\nThis experimental fusion of styles <a href=\"https://www.last.fm/music/Academia+da+Berlinda\">Read more on Last.fm</a>",
+      "lastfm_url": "https://www.last.fm/music/Academia+da+Berlinda"
+    },
+    "discogs": {
+      "name": "Academia da Berlinda",
+      "real_name": null,
+      "profile": "",
+      "discogs_url": "https://www.discogs.com/artist/7756188-Academia-da-Berlinda",
+      "members": [],
+      "members_detailed": [],
+      "groups": []
+    },
+    "musicbrainz": {
+      "name": "Academia da Berlinda",
+      "sort_name": "Academia da Berlinda",
+      "type": "Group",
+      "country": "BR",
+      "tags": [],
+      "genres": [],
+      "relationships": []
+    },
+    "genius": {
+      "song_id": 2823502,
+      "title": "Dorival",
+      "artist": "Academia da Berlinda",
+      "album": "Nada Sem Ela",
+      "description": ""
+    }
+  },
+  "band_members": [],
+  "similar_artists_by_influence": {
+    "Na\u00e7\u00e3o Zumbi": [
+      {
+        "name": "Chico Science & Na\u00e7\u00e3o Zumbi",
+        "match": 1.0,
+        "url": "https://www.last.fm/music/Chico+Science+&+Na%C3%A7%C3%A3o+Zumbi",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/f9fbcd50c21d1a16a2187c78150bceb7/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Los Sebosos Postizos",
+        "match": 0.796134,
+        "url": "https://www.last.fm/music/Los+Sebosos+Postizos",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/07cf552a29ff1d92f38653060287c512/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Academia da Berlinda",
+        "match": 0.757865,
+        "url": "https://www.last.fm/music/Academia+da+Berlinda",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/737e0e9d337a8a7d92403df0609ee59d/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Cordel do Fogo Encantado",
+        "match": 0.659887,
+        "url": "https://www.last.fm/music/Cordel+do+Fogo+Encantado",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/59f52f9f434b9f3f14f173797d809582/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Mundo Livre S/A",
+        "match": 0.59136,
+        "url": "https://www.last.fm/music/Mundo+Livre+S%2FA",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/cee2e4f2267b61a58cad4fd28ed74e52/1000x1000-000000-80-0-0.jpg"
+      }
+    ],
+    "Fino Coletivo": [
+      {
+        "name": "Los Sebosos Postizos",
+        "match": 1.0,
+        "url": "https://www.last.fm/music/Los+Sebosos+Postizos",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/07cf552a29ff1d92f38653060287c512/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Academia da Berlinda",
+        "match": 0.943225,
+        "url": "https://www.last.fm/music/Academia+da+Berlinda",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/737e0e9d337a8a7d92403df0609ee59d/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Russo Passapusso",
+        "match": 0.850454,
+        "url": "https://www.last.fm/music/Russo+Passapusso",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/464d4916681decc0f3a0b559b0007ef5/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Curumin",
+        "match": 0.758573,
+        "url": "https://www.last.fm/music/Curumin",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/b0d010a3e6ec25e2e697cd19bacb5733/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Na\u00e7\u00e3o Zumbi",
+        "match": 0.685435,
+        "url": "https://www.last.fm/music/Na%C3%A7%C3%A3o+Zumbi",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/003ed6aa04d70faceda955e5d967400b/1000x1000-000000-80-0-0.jpg"
+      }
+    ],
+    "Cordel do Fogo Encantado": [
+      {
+        "name": "Na\u00e7\u00e3o Zumbi",
+        "match": 1.0,
+        "url": "https://www.last.fm/music/Na%C3%A7%C3%A3o+Zumbi",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/003ed6aa04d70faceda955e5d967400b/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Academia da Berlinda",
+        "match": 0.964406,
+        "url": "https://www.last.fm/music/Academia+da+Berlinda",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/737e0e9d337a8a7d92403df0609ee59d/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Mestre Ambr\u00f3sio",
+        "match": 0.724429,
+        "url": "https://www.last.fm/music/Mestre+Ambr%C3%B3sio",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/4eef81b68c47d352e64b856417a48be0/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Lula Queiroga",
+        "match": 0.670651,
+        "url": "https://www.last.fm/music/Lula+Queiroga",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/098f29085a313c5ffaae1522704ad16f/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Otto",
+        "match": 0.604024,
+        "url": "https://www.last.fm/music/Otto",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/d742e2c4d501e9a74aedeeea02dc5003/1000x1000-000000-80-0-0.jpg"
+      }
+    ],
+    "Otto": [
+      {
+        "name": "Mundo Livre S/A",
+        "match": 1.0,
+        "url": "https://www.last.fm/music/Mundo+Livre+S%2FA",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/cee2e4f2267b61a58cad4fd28ed74e52/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Na\u00e7\u00e3o Zumbi",
+        "match": 0.965655,
+        "url": "https://www.last.fm/music/Na%C3%A7%C3%A3o+Zumbi",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/003ed6aa04d70faceda955e5d967400b/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Momboj\u00f3",
+        "match": 0.814229,
+        "url": "https://www.last.fm/music/Momboj%C3%B3",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/4b9aeea6741282cf7d2aec291a2440ef/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Academia da Berlinda",
+        "match": 0.810856,
+        "url": "https://www.last.fm/music/Academia+da+Berlinda",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/737e0e9d337a8a7d92403df0609ee59d/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Russo Passapusso",
+        "match": 0.712099,
+        "url": "https://www.last.fm/music/Russo+Passapusso",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/464d4916681decc0f3a0b559b0007ef5/1000x1000-000000-80-0-0.jpg"
+      }
+    ],
+    "Mundo Livre S/A": [
+      {
+        "name": "Na\u00e7\u00e3o Zumbi",
+        "match": 1.0,
+        "url": "https://www.last.fm/music/Na%C3%A7%C3%A3o+Zumbi",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/003ed6aa04d70faceda955e5d967400b/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Otto",
+        "match": 0.948638,
+        "url": "https://www.last.fm/music/Otto",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/d742e2c4d501e9a74aedeeea02dc5003/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Siba",
+        "match": 0.910456,
+        "url": "https://www.last.fm/music/Siba",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/ab87f6cdcc56d1d0d6ebaa6284740a04/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Lula Queiroga",
+        "match": 0.750919,
+        "url": "https://www.last.fm/music/Lula+Queiroga",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/098f29085a313c5ffaae1522704ad16f/1000x1000-000000-80-0-0.jpg"
+      },
+      {
+        "name": "Academia da Berlinda",
+        "match": 0.661547,
+        "url": "https://www.last.fm/music/Academia+da+Berlinda",
+        "image_url": "https://cdn-images.dzcdn.net/images/artist/737e0e9d337a8a7d92403df0609ee59d/1000x1000-000000-80-0-0.jpg"
+      }
+    ]
+  },
+  "synthesis": {
+    "influence_graph": {
+      "nodes": [
+        {
+          "id": "root",
+          "type": "track",
+          "name": "Dorival",
+          "artist": "Academia da Berlinda",
+          "layer": 0
+        },
+        {
+          "id": "artist_0",
+          "type": "artist",
+          "name": "Na\u00e7\u00e3o Zumbi",
+          "source": "lastfm_similar",
+          "confidence": 1.0,
+          "layer": 1
+        },
+        {
+          "id": "artist_1",
+          "type": "artist",
+          "name": "Fino Coletivo",
+          "source": "lastfm_similar",
+          "confidence": 0.875036,
+          "layer": 1
+        },
+        {
+          "id": "artist_2",
+          "type": "artist",
+          "name": "Cordel do Fogo Encantado",
+          "source": "lastfm_similar",
+          "confidence": 0.839726,
+          "layer": 1
+        },
+        {
+          "id": "artist_3",
+          "type": "artist",
+          "name": "Otto",
+          "source": "lastfm_similar",
+          "confidence": 0.600211,
+          "layer": 1
+        },
+        {
+          "id": "artist_4",
+          "type": "artist",
+          "name": "Mundo Livre S/A",
+          "source": "lastfm_similar",
+          "confidence": 0.516203,
+          "layer": 1
+        },
+        {
+          "id": "genre_0",
+          "type": "genre",
+          "name": "Cumbia",
+          "layer": 2
+        },
+        {
+          "id": "genre_1",
+          "type": "genre",
+          "name": "Latin",
+          "layer": 2
+        },
+        {
+          "id": "genre_2",
+          "type": "genre",
+          "name": "Latin Music",
+          "layer": 2
+        }
+      ],
+      "edges": [
+        {
+          "from": "artist_0",
+          "to": "root",
+          "strength": 1.0,
+          "type": "direct_influence"
+        },
+        {
+          "from": "artist_1",
+          "to": "root",
+          "strength": 0.875036,
+          "type": "direct_influence"
+        },
+        {
+          "from": "artist_2",
+          "to": "root",
+          "strength": 0.839726,
+          "type": "direct_influence"
+        },
+        {
+          "from": "artist_3",
+          "to": "root",
+          "strength": 0.600211,
+          "type": "direct_influence"
+        },
+        {
+          "from": "artist_4",
+          "to": "root",
+          "strength": 0.516203,
+          "type": "direct_influence"
+        },
+        {
+          "from": "genre_0",
+          "to": "root",
+          "strength": 0.7,
+          "type": "genre_influence"
+        },
+        {
+          "from": "genre_1",
+          "to": "root",
+          "strength": 0.7,
+          "type": "genre_influence"
+        },
+        {
+          "from": "genre_2",
+          "to": "root",
+          "strength": 0.7,
+          "type": "genre_influence"
+        }
+      ],
+      "layers": [
+        {
+          "layer": 0,
+          "nodes": [
+            {
+              "id": "root",
+              "type": "track",
+              "name": "Dorival",
+              "artist": "Academia da Berlinda",
+              "layer": 0
+            }
+          ]
+        },
+        {
+          "layer": 1,
+          "nodes": [
+            {
+              "id": "artist_0",
+              "type": "artist",
+              "name": "Na\u00e7\u00e3o Zumbi",
+              "source": "lastfm_similar",
+              "confidence": 1.0,
+              "layer": 1
+            },
+            {
+              "id": "artist_1",
+              "type": "artist",
+              "name": "Fino Coletivo",
+              "source": "lastfm_similar",
+              "confidence": 0.875036,
+              "layer": 1
+            },
+            {
+              "id": "artist_2",
+              "type": "artist",
+              "name": "Cordel do Fogo Encantado",
+              "source": "lastfm_similar",
+              "confidence": 0.839726,
+              "layer": 1
+            },
+            {
+              "id": "artist_3",
+              "type": "artist",
+              "name": "Otto",
+              "source": "lastfm_similar",
+              "confidence": 0.600211,
+              "layer": 1
+            },
+            {
+              "id": "artist_4",
+              "type": "artist",
+              "name": "Mundo Livre S/A",
+              "source": "lastfm_similar",
+              "confidence": 0.516203,
+              "layer": 1
+            }
+          ]
+        },
+        {
+          "layer": 2,
+          "nodes": [
+            {
+              "id": "genre_0",
+              "type": "genre",
+              "name": "Cumbia",
+              "layer": 2
+            },
+            {
+              "id": "genre_1",
+              "type": "genre",
+              "name": "Latin",
+              "layer": 2
+            },
+            {
+              "id": "genre_2",
+              "type": "genre",
+              "name": "Latin Music",
+              "layer": 2
+            }
+          ]
+        }
+      ]
+    },
+    "narrative": "# Musical Archaeology: Dorival\n## by Academia da Berlinda\n\n## Overview\nThis analysis explores the musical DNA of \"Dorival\" by Academia da Berlinda, \ntracing its influences through genres, artists, and historical context.\n\n## Genre Classification\nPrimary genres: **Cumbia, Latin, Latin Music**\n\nLimited information available for genres: Cumbia, Latin, Latin Music\n\n## Direct Influences\nBased on API data and analysis, the following artists likely influenced this track:\n\n### High Confidence\n- **Na\u00e7\u00e3o Zumbi** (source: lastfm_similar)\n- **Fino Coletivo** (source: lastfm_similar)\n- **Cordel do Fogo Encantado** (source: lastfm_similar)\n\n### Moderate Confidence\n- Otto (source: lastfm_similar)\n- Mundo Livre S/A (source: lastfm_similar)\n- Lamparina (source: lastfm_similar)\n- Chico C\u00e9sar (source: lastfm_similar)\n- Karina Buhr (source: lastfm_similar)\n\n## Audio Characteristics\n## Style Tags and Descriptors\nOlinda, pernambuco, Carimb\u00f3, cumbia, Cumbia, Compas, Merengue, latino, brazilian, recife, alternative, brazil, Salsa, brasil, vi ao vivo\n\n## Influence Network\nThe influence graph contains 9 nodes \nand 8 connections, \nspanning 3 layers of musical influence.\n\n## Data Sources\nThis analysis drew from: lastfm, discogs, musicbrainz, deezer, genius\n",
+    "research_findings": {
+      "influences": [],
+      "genre_history": [],
+      "artist_background": "The page \"Academia da Berlinda\" does not exist. You can create a draft and submit it for review or request that a redirect be created, but consider checking the search results below to see whether the topic is already covered. ",
+      "sources": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/w/index.php?search=Academia%20da%20Berlinda&ns0=1",
+          "type": "encyclopedia"
+        },
+        {
+          "name": "AllMusic",
+          "url": "https://www.allmusic.com/artist/coro-infantil-da-academia-de-musica-de-almada-mn0003926021",
+          "type": "music_database"
+        }
+      ],
+      "enriched_influences": [
+        {
+          "name": "Na\u00e7\u00e3o Zumbi",
+          "source": "lastfm_similar",
+          "confidence": 1.0,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Na\u00e7\u00e3o_Zumbi"
+        },
+        {
+          "name": "Fino Coletivo",
+          "source": "lastfm_similar",
+          "confidence": 0.875036,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Fino_Coletivo"
+        },
+        {
+          "name": "Cordel do Fogo Encantado",
+          "source": "lastfm_similar",
+          "confidence": 0.839726,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Cordel_do_Fogo_Encantado"
+        },
+        {
+          "name": "Otto",
+          "source": "lastfm_similar",
+          "confidence": 0.600211,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Otto"
+        },
+        {
+          "name": "Mundo Livre S/A",
+          "source": "lastfm_similar",
+          "confidence": 0.516203,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Mundo_Livre_S/A"
+        },
+        {
+          "name": "Lamparina",
+          "source": "lastfm_similar",
+          "confidence": 0.463918,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Lamparina"
+        },
+        {
+          "name": "Chico C\u00e9sar",
+          "source": "lastfm_similar",
+          "confidence": 0.451935,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Chico_C\u00e9sar"
+        },
+        {
+          "name": "Karina Buhr",
+          "source": "lastfm_similar",
+          "confidence": 0.443913,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Karina_Buhr"
+        },
+        {
+          "name": "Momboj\u00f3",
+          "source": "lastfm_similar",
+          "confidence": 0.413925,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Momboj\u00f3"
+        },
+        {
+          "name": "Cidad\u00e3o Instigado",
+          "source": "lastfm_similar",
+          "confidence": 0.324271,
+          "wikipedia_url": "https://en.wikipedia.org/wiki/Cidad\u00e3o_Instigado"
+        }
+      ]
+    },
+    "instruments": [
+      "Accordion",
+      "Guacharaca",
+      "Drums",
+      "Bass",
+      "Guitar",
+      "Congas",
+      "Timbales",
+      "Piano",
+      "Brass"
+    ],
+    "summary": {
+      "track_name": "Dorival",
+      "artist_name": "Academia da Berlinda",
+      "total_influences": 10,
+      "genre_count": 3,
+      "graph_nodes": 9,
+      "graph_edges": 8,
+      "instruments_detected": 9
+    }
+  },
+  "style_card": {
+    "description": "Atmospheric, Cumbia track, wheezing accordion, subtle Guacharaca, and crisp drums, emotionally resonant",
+    "short_description": "Atmospheric, Cumbia track, wheezing accordion, subtle Guacharaca, and crisp drums, emotionally resonant",
+    "metadata": {
+      "bpm": "Unknown",
+      "key": "Unknown",
+      "energy": 5.0,
+      "genre": "Cumbia",
+      "mood": [
+        "Olinda",
+        "pernambuco",
+        "Carimb\u00f3"
+      ]
+    },
+    "components": {
+      "vibe": "Atmospheric",
+      "genre": "Cumbia track",
+      "tempo": null,
+      "instruments": "wheezing accordion, subtle Guacharaca, and crisp drums",
+      "production": null,
+      "aesthetic": "emotionally resonant"
+    }
+  },
+  "deep_research": {
+    "influences": {
+      "generation_1_roots": {
+        "period": "1940s-1960s",
+        "title": "Roots",
+        "influences": [
+          {
+            "name": "Na\u00e7\u00e3o Zumbi",
+            "source": "lastfm_similar",
+            "confidence": 1.0,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Fino Coletivo",
+            "source": "lastfm_similar",
+            "confidence": 0.875036,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Cordel do Fogo Encantado",
+            "source": "lastfm_similar",
+            "confidence": 0.839726,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          }
+        ]
+      },
+      "generation_2_evolution": {
+        "period": "1970s-1980s",
+        "title": "Evolution",
+        "influences": [
+          {
+            "name": "Otto",
+            "source": "lastfm_similar",
+            "confidence": 0.600211,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Mundo Livre S/A",
+            "source": "lastfm_similar",
+            "confidence": 0.516203,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Lamparina",
+            "source": "lastfm_similar",
+            "confidence": 0.463918,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Chico C\u00e9sar",
+            "source": "lastfm_similar",
+            "confidence": 0.451935,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Karina Buhr",
+            "source": "lastfm_similar",
+            "confidence": 0.443913,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          },
+          {
+            "name": "Momboj\u00f3",
+            "source": "lastfm_similar",
+            "confidence": 0.413925,
+            "why": "Listed as influence by lastfm_similar",
+            "connection": "Musical style and approach"
+          }
+        ]
+      },
+      "generation_3_current": {
+        "period": "1990s-2000s",
+        "title": "Contemporary Context",
+        "artist": "Academia da Berlinda",
+        "track": "Dorival"
+      },
+      "generation_4_legacy": {
+        "period": "Modern",
+        "title": "Legacy",
+        "influenced": []
+      },
+      "genre_context": {
+        "primary_genre": "Cumbia",
+        "subgenres": [
+          "Latin",
+          "Latin Music"
+        ],
+        "description": "Cumbia music tradition"
+      },
+      "_claude_prompt": "You are a music historian and ethnomusicologist. Analyze this track and provide deep influence research.\n\nTrack: Dorival\nArtist: Academia da Berlinda\nGenres: Cumbia, Latin, Latin Music\nYear: None\n\nKnown Influences from APIs:\n- Na\u00e7\u00e3o Zumbi (from lastfm_similar, 100% confidence)\n- Fino Coletivo (from lastfm_similar, 87% confidence)\n- Cordel do Fogo Encantado (from lastfm_similar, 83% confidence)\n- Otto (from lastfm_similar, 60% confidence)\n- Mundo Livre S/A (from lastfm_similar, 51% confidence)\n- Lamparina (from lastfm_similar, 46% confidence)\n- Chico C\u00e9sar (from lastfm_similar, 45% confidence)\n- Karina Buhr (from lastfm_similar, 44% confidence)\n- Momboj\u00f3 (from lastfm_similar, 41% confidence)\n- Cidad\u00e3o Instigado (from lastfm_similar, 32% confidence)\n\nWeb Research Context:\nThe page \"Academia da Berlinda\" does not exist. You can create a draft and submit it for review or request that a redirect be created, but consider checking the search results below to see whether the topic is already covered. \n\nTask: Trace the musical lineage across 4 generations:\n\nGeneration 1 (Roots - 1940s-1960s): Who were the foundational artists/movements that created the genre traditions this artist draws from? Be specific about musical elements.\n\nGeneration 2 (Evolution - 1970s-1980s): Who evolved and modernized those traditions? How did they bridge the gap?\n\nGeneration 3 (Current - 1990s-2000s): This artist/track\n\nGeneration 4 (Legacy - Modern): Who has this artist influenced? What's their impact?\n\nFor each influence, provide:\n- WHY they influenced (specific musical elements: rhythm, harmony, instrumentation, vocal style, production)\n- CONNECTION to the track (cite concrete musical features you can hear/analyze)\n\nReturn as JSON with this structure:\n{\n  \"generation_1_roots\": {\n    \"period\": \"1940s-1960s\",\n    \"title\": \"Roots\",\n    \"influences\": [\n      {\"name\": \"Artist Name\", \"why\": \"specific reason\", \"connection\": \"specific musical connection\", \"confidence\": 0.8, \"source\": \"analysis\"}\n    ]\n  },\n  \"generation_2_evolution\": {...},\n  \"generation_3_current\": {...},\n  \"genre_context\": {\"primary_genre\": \"...\", \"description\": \"...\"}\n}"
+    },
+    "instrument_origins": {}
+  },
+  "research_findings": {
+    "influences": [],
+    "genre_history": [],
+    "artist_background": "The page \"Academia da Berlinda\" does not exist. You can create a draft and submit it for review or request that a redirect be created, but consider checking the search results below to see whether the topic is already covered. ",
+    "sources": [
+      {
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/w/index.php?search=Academia%20da%20Berlinda&ns0=1",
+        "type": "encyclopedia"
+      },
+      {
+        "name": "AllMusic",
+        "url": "https://www.allmusic.com/artist/coro-infantil-da-academia-de-musica-de-almada-mn0003926021",
+        "type": "music_database"
+      }
+    ],
+    "enriched_influences": [
+      {
+        "name": "Na\u00e7\u00e3o Zumbi",
+        "source": "lastfm_similar",
+        "confidence": 1.0,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Na\u00e7\u00e3o_Zumbi"
+      },
+      {
+        "name": "Fino Coletivo",
+        "source": "lastfm_similar",
+        "confidence": 0.875036,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Fino_Coletivo"
+      },
+      {
+        "name": "Cordel do Fogo Encantado",
+        "source": "lastfm_similar",
+        "confidence": 0.839726,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Cordel_do_Fogo_Encantado"
+      },
+      {
+        "name": "Otto",
+        "source": "lastfm_similar",
+        "confidence": 0.600211,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Otto"
+      },
+      {
+        "name": "Mundo Livre S/A",
+        "source": "lastfm_similar",
+        "confidence": 0.516203,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Mundo_Livre_S/A"
+      },
+      {
+        "name": "Lamparina",
+        "source": "lastfm_similar",
+        "confidence": 0.463918,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Lamparina"
+      },
+      {
+        "name": "Chico C\u00e9sar",
+        "source": "lastfm_similar",
+        "confidence": 0.451935,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Chico_C\u00e9sar"
+      },
+      {
+        "name": "Karina Buhr",
+        "source": "lastfm_similar",
+        "confidence": 0.443913,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Karina_Buhr"
+      },
+      {
+        "name": "Momboj\u00f3",
+        "source": "lastfm_similar",
+        "confidence": 0.413925,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Momboj\u00f3"
+      },
+      {
+        "name": "Cidad\u00e3o Instigado",
+        "source": "lastfm_similar",
+        "confidence": 0.324271,
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Cidad\u00e3o_Instigado"
+      }
+    ]
+  },
+  "network_stats": {
+    "session_id": "20260110_204133",
+    "start_time": "2026-01-10T20:41:33.033811",
+    "end_time": null,
+    "summary": {
+      "total_requests": 11,
+      "successful_requests": 11,
+      "failed_requests": 0,
+      "total_data_kb": 62.82,
+      "total_sent_kb": 0.8,
+      "total_received_kb": 62.02,
+      "total_duration_ms": 1856.61
+    },
+    "by_service": {
+      "lastfm": {
+        "requests": 4,
+        "sent_kb": 0.61,
+        "received_kb": 17.07,
+        "total_kb": 17.69,
+        "avg_duration_ms": 133.05,
+        "errors": 0
+      },
+      "discogs": {
+        "requests": 4,
+        "sent_kb": 0.14,
+        "received_kb": 18.67,
+        "total_kb": 18.81,
+        "avg_duration_ms": 200.64,
+        "errors": 0
+      },
+      "deezer": {
+        "requests": 3,
+        "sent_kb": 0.05,
+        "received_kb": 26.27,
+        "total_kb": 26.32,
+        "avg_duration_ms": 173.96,
+        "errors": 0
+      }
+    },
+    "requests": [
+      {
+        "url": "http://ws.audioscrobbler.com/2.0/",
+        "service": "lastfm",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.16,
+        "received_kb": 0.96,
+        "duration_ms": 129.72,
+        "success": true
+      },
+      {
+        "url": "http://ws.audioscrobbler.com/2.0/",
+        "service": "lastfm",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.14,
+        "received_kb": 7.33,
+        "duration_ms": 132.01,
+        "success": true
+      },
+      {
+        "url": "http://ws.audioscrobbler.com/2.0/",
+        "service": "lastfm",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.16,
+        "received_kb": 8.03,
+        "duration_ms": 131.71,
+        "success": true
+      },
+      {
+        "url": "http://ws.audioscrobbler.com/2.0/",
+        "service": "lastfm",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.15,
+        "received_kb": 0.75,
+        "duration_ms": 138.75,
+        "success": true
+      },
+      {
+        "url": "https://api.discogs.com/database/search",
+        "service": "discogs",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.07,
+        "received_kb": 1.43,
+        "duration_ms": 164.32,
+        "success": true
+      },
+      {
+        "url": "https://api.discogs.com/releases/15557454",
+        "service": "discogs",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.0,
+        "received_kb": 15.57,
+        "duration_ms": 259.81,
+        "success": true
+      },
+      {
+        "url": "https://api.discogs.com/database/search",
+        "service": "discogs",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.06,
+        "received_kb": 0.75,
+        "duration_ms": 234.38,
+        "success": true
+      },
+      {
+        "url": "https://api.discogs.com/artists/7756188",
+        "service": "discogs",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.0,
+        "received_kb": 0.93,
+        "duration_ms": 144.04,
+        "success": true
+      },
+      {
+        "url": "https://api.deezer.com/search/track",
+        "service": "deezer",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.05,
+        "received_kb": 2.06,
+        "duration_ms": 162.06,
+        "success": true
+      },
+      {
+        "url": "https://api.deezer.com/artist/6155102",
+        "service": "deezer",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.0,
+        "received_kb": 0.9,
+        "duration_ms": 147.34,
+        "success": true
+      },
+      {
+        "url": "https://api.deezer.com/album/13542405",
+        "service": "deezer",
+        "method": "GET",
+        "status": 200,
+        "sent_kb": 0.0,
+        "received_kb": 23.32,
+        "duration_ms": 212.47,
+        "success": true
+      }
+    ]
+  }
+};
+
+        // Debug: Verify data loaded correctly
+        console.log('🎵 Dashboard loaded for:', fullData.track.name, 'by', fullData.track.artists);
+        console.log('📊 Data sources:', fullData);
+        console.log('Generated:', new Date().toISOString());
+
+        // Extract YouTube ID from URL
+        function getYouTubeId(url) {
+            if (!url) return null;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // Render YouTube player
+        function renderYouTube() {
+            const youtubeUrl = fullData.track.youtube_url || fullData.track.source_url;
+            if (youtubeUrl) {
+                const videoId = getYouTubeId(youtubeUrl);
+                if (videoId) {
+                    document.getElementById('youtube-section').style.display = 'block';
+                    document.getElementById('youtube-player').innerHTML =
+                        `<iframe src="https://www.youtube.com/embed/${videoId}"
+                         allowfullscreen></iframe>`;
+                }
+            }
+        }
+
+        // Render preview data in header (merged preview section)
+        function renderPreview() {
+            // This function now populates header elements instead of separate preview section
+
+            // Set up audio player for header button
+            if (fullData.track.preview_url) {
+                document.getElementById('header-audio-source').src = fullData.track.preview_url;
+                document.getElementById('header-audio-player').load();
+            }
+
+            // Deezer link in header
+            if (fullData.track.deezer_url) {
+                const deezerLink = document.getElementById('header-deezer-link');
+                deezerLink.href = fullData.track.deezer_url;
+                deezerLink.style.display = 'inline-flex';
+            }
+
+            // Last.fm link in header
+            if (fullData.track.lastfm_url) {
+                const lastfmLink = document.getElementById('header-lastfm-link');
+                lastfmLink.href = fullData.track.lastfm_url;
+                lastfmLink.style.display = 'inline-flex';
+            }
+
+            // Build header stats grid
+            const statsGrid = document.getElementById('header-stats-grid');
+            const stats = [];
+
+            // Year
+            if (fullData.track.year) {
+                stats.push({ label: 'Year', value: fullData.track.year });
+            }
+
+            // Country
+            if (fullData.track.country) {
+                stats.push({ label: 'Country', value: fullData.track.country });
+            }
+
+            // Listeners (from Last.fm)
+            if (fullData.track.listeners) {
+                stats.push({ label: 'Listeners', value: formatNumber(fullData.track.listeners) });
+            }
+
+            // Playcount (from Last.fm)
+            if (fullData.track.playcount) {
+                stats.push({ label: 'Plays', value: formatNumber(fullData.track.playcount) });
+            }
+
+            // Duration (from Deezer or analysis)
+            const duration = fullData.audio_features?.deezer?.duration_seconds ||
+                           fullData.audio_features?.analysis?.duration_seconds;
+            if (duration) {
+                const minutes = Math.floor(duration / 60);
+                const seconds = Math.floor(duration % 60);
+                stats.push({ label: 'Duration', value: `${minutes}:${seconds.toString().padStart(2, '0')}` });
+            }
+
+            // Label information
+            if (fullData.track.labels && fullData.track.labels.length > 0) {
+                stats.push({ label: 'Label', value: fullData.track.labels[0].name });
+            }
+
+            // Render stats (max 6 in grid)
+            statsGrid.innerHTML = stats.slice(0, 6).map(stat =>
+                `<div class="header-stat">
+                    <span class="header-stat-label">${stat.label}</span>
+                    <span class="header-stat-value">${stat.value}</span>
+                </div>`
+            ).join('');
+        }
+
+        // Format numbers with commas
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Render data sources with clickable links
+        function renderSources() {
+            const sources = [];
+
+            // MusicBrainz
+            if (fullData.track.recording_id) {
+                sources.push({
+                    name: 'MusicBrainz',
+                    url: `https://musicbrainz.org/recording/${fullData.track.recording_id}`
+                });
+            }
+
+            // Last.fm
+            if (fullData.track.lastfm_url) {
+                sources.push({ name: 'Last.fm', url: fullData.track.lastfm_url });
+            }
+
+            // Discogs
+            if (fullData.track.discogs_url) {
+                sources.push({ name: 'Discogs', url: fullData.track.discogs_url });
+            }
+
+            // Deezer
+            if (fullData.track.deezer_url) {
+                sources.push({ name: 'Deezer', url: fullData.track.deezer_url });
+            }
+
+            // YouTube
+            if (fullData.track.youtube_url) {
+                sources.push({ name: 'YouTube', url: fullData.track.youtube_url });
+            }
+
+            const sourcesHTML = sources.map(s =>
+                `<a href="${s.url}" target="_blank" class="source-link">${s.name}</a>`
+            ).join('');
+
+            document.getElementById('sources').innerHTML = sourcesHTML || '<p>No external sources available</p>';
+        }
+
+        // Render artist biography and information
+        function renderArtistBio() {
+            const artistBioSection = document.getElementById('artist-bio-section');
+            const artistBioText = document.getElementById('artist-bio-text');
+            const artistStats = document.getElementById('artist-stats');
+            const artistLinks = document.getElementById('artist-links');
+
+            // Get artist data from Last.fm or Discogs
+            const artistLastfm = fullData.artists?.lastfm;
+            const artistDiscogs = fullData.artists?.discogs;
+
+            let hasArtistData = false;
+
+            // Artist bio summary
+            if (artistLastfm?.bio_summary) {
+                let bio = artistLastfm.bio_summary;
+                // Remove "Read more on Last.fm" link if present
+                bio = bio.replace(/<a[^>]*>.*?<\/a>/gi, '');
+                artistBioText.innerHTML = bio;
+                hasArtistData = true;
+            }
+
+            // Artist stats (separate from track stats)
+            let statsHTML = '';
+            if (artistLastfm?.listeners) {
+                statsHTML += `
+                    <div style="padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; text-align: center;">
+                        <div style="font-size: 0.85em; opacity: 0.8; margin-bottom: 5px;">Artist Listeners</div>
+                        <div style="font-size: 1.5em; font-weight: bold; color: #667eea;">${formatNumber(artistLastfm.listeners)}</div>
+                    </div>
+                `;
+                hasArtistData = true;
+            }
+            if (artistLastfm?.playcount) {
+                statsHTML += `
+                    <div style="padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; text-align: center;">
+                        <div style="font-size: 0.85em; opacity: 0.8; margin-bottom: 5px;">Artist Total Plays</div>
+                        <div style="font-size: 1.5em; font-weight: bold; color: #764ba2;">${formatNumber(artistLastfm.playcount)}</div>
+                    </div>
+                `;
+                hasArtistData = true;
+            }
+            artistStats.innerHTML = statsHTML;
+
+            // Artist links
+            let linksHTML = '';
+            if (artistLastfm?.lastfm_url) {
+                linksHTML += `<a href="${artistLastfm.lastfm_url}" target="_blank" style="color: white; text-decoration: none; padding: 10px 18px; background: linear-gradient(135deg, #d93025 0%, #ea4335 100%); border-radius: 8px; transition: all 0.2s;">🎵 Artist on Last.fm</a>`;
+                hasArtistData = true;
+            }
+            if (artistDiscogs?.discogs_url) {
+                linksHTML += `<a href="${artistDiscogs.discogs_url}" target="_blank" style="color: white; text-decoration: none; padding: 10px 18px; background: linear-gradient(135deg, #000000 0%, #333333 100%); border-radius: 8px; transition: all 0.2s;">💿 Artist on Discogs</a>`;
+                hasArtistData = true;
+            }
+            artistLinks.innerHTML = linksHTML;
+
+            // Show section if we have any artist data
+            if (hasArtistData) {
+                artistBioSection.style.display = 'block';
+            }
+        }
+
+        // Render Band Members with pictures
+        function renderBandMembers() {
+            const bandMembers = fullData.band_members || [];
+            const section = document.getElementById('band-members-section');
+            const grid = document.getElementById('band-members-grid');
+
+            if (!bandMembers || bandMembers.length === 0) {
+                return;
+            }
+
+            // Default placeholder image for members without pictures
+            const placeholderImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2UwZTBlMCIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1zaXplPSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzk5OSI+8J+OtTwvdGV4dD48L3N2Zz4=';
+
+            // Sort members: active first, then inactive
+            const sortedMembers = [...bandMembers].sort((a, b) => {
+                if (a.active === b.active) return 0;
+                return a.active ? -1 : 1;
+            });
+
+            let html = '';
+            for (const member of sortedMembers) {
+                const imageUrl = member.image_url || placeholderImage;
+                const isActive = member.active !== false;  // Default to active if not specified
+                const nameStyle = isActive ? '' : 'text-decoration: line-through; color: #999;';
+                const cardStyle = isActive ? '' : 'opacity: 0.7;';
+                const statusBadge = isActive ? '' : '<div style="font-size: 0.75em; color: #999; margin-top: 4px;">Former member</div>';
+
+                html += `
+                    <div class="member-card" style="${cardStyle}" onclick="showArtistDetails('${member.name.replace(/'/g, "\\'")}')">
+                        <img src="${imageUrl}" alt="${member.name}" class="member-image" style="${isActive ? '' : 'filter: grayscale(50%);'}" onerror="this.src='${placeholderImage}'">
+                        <div class="member-name" style="${nameStyle}">${member.name}</div>
+                        ${statusBadge}
+                    </div>
+                `;
+            }
+
+            grid.innerHTML = html;
+            section.style.display = 'block';
+
+            const activeCount = bandMembers.filter(m => m.active !== false).length;
+            const formerCount = bandMembers.length - activeCount;
+            console.log('🎤 Rendered', bandMembers.length, 'band members (' + activeCount + ' active, ' + formerCount + ' former)');
+        }
+
+        // Modal functionality
+        const modal = document.getElementById('artistModal');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function showArtistDetails(artistName) {
+            const modalBody = document.getElementById('modal-body');
+
+            // Get artist details from pre-loaded data
+            const artist = fullData.artist_details && fullData.artist_details[artistName];
+
+            if (artist) {
+                // Build genres list
+                const genresHtml = artist.genres && artist.genres.length > 0
+                    ? `<p><strong>Genres:</strong> ${artist.genres.map(g => `<span class="tag genre-tag" style="margin: 2px;">${g}</span>`).join('')}</p>`
+                    : '';
+
+                // Build bio section
+                const bioHtml = artist.bio
+                    ? `<p style="color: #666; line-height: 1.6;">${artist.bio}</p>`
+                    : '<p style="color: #999;">No biography available.</p>';
+
+                // Build source info
+                const sourceHtml = artist.source
+                    ? `<p style="color: #999; font-size: 0.9em;"><em>Influence source: ${artist.source}</em></p>`
+                    : '';
+
+                // Build confidence badge
+                const confidenceHtml = artist.confidence
+                    ? `<p style="color: #667eea; font-weight: bold;">Confidence: ${(artist.confidence * 100).toFixed(0)}%</p>`
+                    : '';
+
+                modalBody.innerHTML = `
+                    <h2 style="color: #667eea; margin-bottom: 10px;">${artistName}</h2>
+                    ${confidenceHtml}
+                    ${genresHtml}
+                    ${bioHtml}
+                    ${sourceHtml}
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #f0f0f0;">
+                        <h3 style="color: #764ba2; margin-bottom: 15px;">🔗 External Links:</h3>
+                        <a href="${artist.wikipedia_url || 'https://en.wikipedia.org/wiki/' + artistName.replace(/ /g, '_')}"
+                           target="_blank" class="source-link">Wikipedia</a>
+                        <a href="${artist.allmusic_url || 'https://www.allmusic.com/search/artists/' + artistName.replace(/ /g, '+')}"
+                           target="_blank" class="source-link">AllMusic</a>
+                        <a href="${artist.musicbrainz_url || 'https://musicbrainz.org/search?query=' + artistName + '&type=artist'}"
+                           target="_blank" class="source-link">MusicBrainz</a>
+                    </div>
+                `;
+            } else {
+                // Fallback if artist not found in data
+                modalBody.innerHTML = `
+                    <h2 style="color: #667eea;">${artistName}</h2>
+                    <p style="color: #999;">Artist information not available in the current dataset.</p>
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #f0f0f0;">
+                        <h3 style="color: #764ba2; margin-bottom: 15px;">🔗 External Links:</h3>
+                        <a href="https://en.wikipedia.org/wiki/${artistName.replace(/ /g, '_')}"
+                           target="_blank" class="source-link">Wikipedia</a>
+                        <a href="https://www.allmusic.com/search/artists/${artistName.replace(/ /g, '+')}"
+                           target="_blank" class="source-link">AllMusic</a>
+                        <a href="https://musicbrainz.org/search?query=${artistName}&type=artist"
+                           target="_blank" class="source-link">MusicBrainz</a>
+                    </div>
+                `;
+            }
+
+            modal.style.display = 'block';
+        }
+
+        // Render enhanced timeline with two-column layout (influences + similar artists)
+        function renderTimeline() {
+            const influences = fullData.influences || [];
+            const genres = fullData.genres || [];
+            const similarByInfluence = fullData.similar_artists_by_influence || {};
+
+            // Default placeholder image
+            const placeholderImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjZTBlMGUwIi8+PHRleHQgeD0iNDAiIHk9IjQ1IiBmb250LXNpemU9IjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5Ij7wn461PC90ZXh0Pjwvc3ZnPg==';
+            const smallPlaceholder = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZTBlMGUwIi8+PHRleHQgeD0iMzAiIHk9IjM1IiBmb250LXNpemU9IjI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5Ij7wn461PC90ZXh0Pjwvc3ZnPg==';
+
+            if (influences.length === 0) {
+                document.getElementById('timeline').innerHTML =
+                    '<p style="color: #999;">Timeline will be generated from influence data. Run analysis with web research enabled for richer timeline information.</p>';
+                return;
+            }
+
+            let timelineHTML = '';
+
+            // Add genre origins card if available
+            if (genres.length > 0) {
+                const primaryGenre = genres[0];
+                timelineHTML += `
+                    <div class="timeline-card">
+                        <div class="timeline-left">
+                            <div class="timeline-influence-name" style="color: #667eea;">🎵 Genre Origins</div>
+                            <div style="font-size: 1.2em; font-weight: bold; color: #333; text-transform: capitalize;">${primaryGenre}</div>
+                            <div style="color: #666; font-size: 0.9em; margin-top: 8px;">Musical tradition and cultural roots</div>
+                        </div>
+                        <div class="timeline-right">
+                            <div class="timeline-similar-title">Related Genres</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                ${genres.slice(1, 6).map(g => `<span class="tag genre-tag">${g}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Add influence cards with similar artists
+            influences.slice(0, 5).forEach((influence, idx) => {
+                const confidence = influence.strength || influence.confidence || 0;
+                const imageUrl = influence.image_url || placeholderImage;
+                const similarArtists = similarByInfluence[influence.name] || [];
+
+                // Generate similar artists HTML
+                let similarHTML = '';
+                if (similarArtists.length > 0) {
+                    similarHTML = `
+                        <div class="timeline-similar-title">Similar Artists from this Era</div>
+                        <div class="similar-artists-grid">
+                            ${similarArtists.slice(0, 5).map(sa => `
+                                <div class="similar-artist-card" onclick="showArtistDetails('${sa.name.replace(/'/g, "\\'")}')">
+                                    <img src="${sa.image_url || smallPlaceholder}" alt="${sa.name}" class="similar-artist-image" onerror="this.src='${smallPlaceholder}'">
+                                    <div class="similar-artist-name">${sa.name}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    similarHTML = '<p style="color: #999; font-size: 0.9em;">Similar artists data not available</p>';
+                }
+
+                timelineHTML += `
+                    <div class="timeline-card">
+                        <div class="timeline-left" onclick="showArtistDetails('${influence.name.replace(/'/g, "\\'")}')">
+                            <img src="${imageUrl}" alt="${influence.name}" class="timeline-influence-image" onerror="this.src='${placeholderImage}'">
+                            <div class="timeline-influence-name">${influence.name}</div>
+                            <div class="timeline-source-badge">
+                                <a href="https://www.last.fm/music/${encodeURIComponent(influence.name)}" target="_blank">
+                                    ${influence.source} (${(confidence * 100).toFixed(0)}%)
+                                </a>
+                            </div>
+                        </div>
+                        <div class="timeline-right">
+                            ${similarHTML}
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Add current track card
+            const trackCover = fullData.track.cover_url || placeholderImage;
+            timelineHTML += `
+                <div class="timeline-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="timeline-left" style="border-right-color: rgba(255,255,255,0.2);">
+                        <img src="${trackCover}" alt="${fullData.track.name}" class="timeline-influence-image" style="border-color: white;" onerror="this.src='${placeholderImage}'">
+                        <div class="timeline-influence-name" style="color: white;">${fullData.track.name}</div>
+                        <div style="color: rgba(255,255,255,0.9); font-size: 0.9em;">by ${fullData.track.artists ? fullData.track.artists.join(', ') : 'Unknown'}</div>
+                    </div>
+                    <div class="timeline-right" style="background: rgba(255,255,255,0.1);">
+                        <div class="timeline-similar-title" style="color: white;">🎵 Current Track</div>
+                        <p style="color: rgba(255,255,255,0.9); font-size: 0.9em;">
+                            This is the track you're analyzing - the culmination of all the musical influences shown above.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('timeline').innerHTML = timelineHTML;
+            console.log('⏰ Rendered timeline with', influences.slice(0, 5).length, 'influences');
+        }
+
+        // Render instruments
+        function renderInstruments() {
+            const instrumentContainer = document.getElementById('instruments');
+            const originsContainer = document.getElementById('instrument-origins');
+
+            // Check if we have Claude's comprehensive instrument analysis
+            const instrumentAnalysis = fullData.deep_research?.influences?.instrument_analysis;
+
+            if (instrumentAnalysis) {
+                // COMPREHENSIVE INSTRUMENT ANALYSIS from Claude
+                let html = '';
+
+                // Common Instruments Section
+                if (instrumentAnalysis.common_instruments && instrumentAnalysis.common_instruments.length > 0) {
+                    html += '<h3 style="color: #667eea; margin-bottom: 15px;">🎼 Common Instruments</h3>';
+                    html += '<div class="instrument-grid" style="margin-bottom: 30px;">';
+                    instrumentAnalysis.common_instruments.forEach(inst => {
+                        html += `
+                            <div class="instrument-card">
+                                <div class="instrument-icon">🎵</div>
+                                <h4>${inst.name}</h4>
+                                <p style="color: #666; font-size: 0.85em; margin: 5px 0;">${inst.prevalence}</p>
+                                <p style="color: #888; font-size: 0.8em;">${inst.typical_role}</p>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                }
+
+                // Innovative/Different Instruments Section
+                if (instrumentAnalysis.innovative_instruments && instrumentAnalysis.innovative_instruments.length > 0) {
+                    html += '<h3 style="color: #764ba2; margin-bottom: 15px;">⚡ Innovative Instruments</h3>';
+                    html += '<div class="instrument-grid" style="margin-bottom: 30px;">';
+                    instrumentAnalysis.innovative_instruments.forEach(inst => {
+                        html += `
+                            <div class="instrument-card" style="border: 2px solid #764ba2;">
+                                <div class="instrument-icon">✨</div>
+                                <h4>${inst.name}</h4>
+                                <p style="color: #666; font-size: 0.85em; margin: 5px 0;">${inst.innovation}</p>
+                                <p style="color: #888; font-size: 0.8em;"><em>Via: ${inst.influenced_by}</em></p>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                }
+
+                instrumentContainer.innerHTML = html;
+
+                // Instrument Lineage Section (goes in origins container)
+                if (instrumentAnalysis.instrument_lineage && instrumentAnalysis.instrument_lineage.length > 0) {
+                    let originsHTML = '<h3 style="margin-top: 30px; color: #667eea; margin-bottom: 15px;">🌳 Instrument Evolution Through Generations</h3>';
+
+                    instrumentAnalysis.instrument_lineage.forEach(lineage => {
+                        originsHTML += `
+                            <div style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #f0f4ff 0%, #f8f0ff 100%); border-radius: 12px; border-left: 4px solid #667eea;">
+                                <h4 style="color: #667eea; margin-bottom: 15px; font-size: 1.3em;">${lineage.instrument}</h4>
+
+                                <div style="margin-bottom: 12px;">
+                                    <strong style="color: #667eea;">🌱 Generation 1 (Roots):</strong>
+                                    <p style="margin: 5px 0 0 20px; color: #555;">${lineage.generation_1}</p>
+                                </div>
+
+                                <div style="margin-bottom: 12px;">
+                                    <strong style="color: #764ba2;">🌿 Generation 2 (Evolution):</strong>
+                                    <p style="margin: 5px 0 0 20px; color: #555;">${lineage.generation_2}</p>
+                                </div>
+
+                                <div style="margin-bottom: 12px;">
+                                    <strong style="color: #4CAF50;">🎵 Generation 3 (Current):</strong>
+                                    <p style="margin: 5px 0 0 20px; color: #555;">${lineage.generation_3}</p>
+                                </div>
+
+                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1);">
+                                    <strong style="color: #999;">Pioneered by:</strong> ${lineage.pioneered_by}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    // Signature Sound Summary
+                    if (instrumentAnalysis.signature_sound) {
+                        const sig = instrumentAnalysis.signature_sound;
+                        originsHTML += `
+                            <div style="margin: 30px 0; padding: 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+                                <h3 style="color: white; margin-bottom: 15px;">🎸 Signature Sound</h3>
+                                <p style="margin-bottom: 12px;"><strong>Primary Instruments:</strong> ${sig.primary_instruments.join(', ')}</p>
+                                <p style="margin-bottom: 12px;"><strong>Distinctive Elements:</strong> ${sig.distinctive_elements}</p>
+                                <p style="margin: 0;"><strong>Innovation:</strong> ${sig.innovation_summary}</p>
+                            </div>
+                        `;
+                    }
+
+                    originsContainer.innerHTML = originsHTML;
+                }
+
+            } else {
+                // FALLBACK: Basic genre-inferred instruments
+                const instruments = fullData.synthesis?.instruments || [];
+
+                if (instruments.length > 0) {
+                    const instrumentsHTML = instruments.map(inst => `
+                        <div class="instrument-card">
+                            <div class="instrument-icon">🎵</div>
+                            <h4>${inst}</h4>
+                            <p style="color: #666; font-size: 0.9em;">Genre-inferred</p>
+                        </div>
+                    `).join('');
+                    instrumentContainer.innerHTML = instrumentsHTML;
+                } else {
+                    instrumentContainer.innerHTML = `
+                        <div class="instrument-card">
+                            <div class="instrument-icon">⏳</div>
+                            <h4>Instrument Analysis</h4>
+                            <p style="color: #666; font-size: 0.9em;">Run with Claude CLI for detailed analysis</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Render Musical Lineage Tree
+        function renderLineage() {
+            const deepResearch = fullData.deep_research || {};
+            const influences = deepResearch.influences || {};
+
+            if (Object.keys(influences).length === 0) {
+                document.getElementById('lineage-tree').innerHTML =
+                    '<p style="color: #666;">Musical lineage analysis not available for this track.</p>';
+                return;
+            }
+
+            let lineageHTML = '';
+
+            // Generation 1: Roots
+            const gen1 = influences.generation_1_roots || {};
+            if (gen1.influences && gen1.influences.length > 0) {
+                lineageHTML += `
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">🌱 ${gen1.title} (${gen1.period})</h3>
+                        <div style="padding-left: 20px; border-left: 3px solid #667eea;">
+                            ${gen1.influences.map(inf => `
+                                <div style="margin: 15px 0; padding: 12px; background: #f0f4ff; border-radius: 8px;">
+                                    <h4 style="color: #333; margin-bottom: 5px;">${inf.name}</h4>
+                                    <p style="margin-bottom: 5px;"><strong>Why:</strong> ${inf.why}</p>
+                                    <p style="color: #666; font-size: 0.9em;"><strong>Connection:</strong> ${inf.connection}</p>
+                                    <small style="color: #999;">Confidence: ${(inf.confidence * 100).toFixed(0)}% | Source: ${inf.source}</small>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Generation 2: Evolution
+            const gen2 = influences.generation_2_evolution || {};
+            if (gen2.influences && gen2.influences.length > 0) {
+                lineageHTML += `
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #764ba2; margin-bottom: 15px;">🌿 ${gen2.title} (${gen2.period})</h3>
+                        <div style="padding-left: 20px; border-left: 3px solid #764ba2;">
+                            ${gen2.influences.map(inf => `
+                                <div style="margin: 15px 0; padding: 12px; background: #f8f0ff; border-radius: 8px;">
+                                    <h4 style="color: #333; margin-bottom: 5px;">${inf.name}</h4>
+                                    <p style="margin-bottom: 5px;"><strong>Why:</strong> ${inf.why}</p>
+                                    <p style="color: #666; font-size: 0.9em;"><strong>Connection:</strong> ${inf.connection}</p>
+                                    <small style="color: #999;">Confidence: ${(inf.confidence * 100).toFixed(0)}% | Source: ${inf.source}</small>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Generation 3: Current
+            const gen3 = influences.generation_3_current || {};
+            lineageHTML += `
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #4CAF50; margin-bottom: 15px;">🎵 ${gen3.title || 'Current Track'} (${gen3.period})</h3>
+                    <div style="padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; color: white;">
+                        <h4 style="color: white; margin-bottom: 5px;">${gen3.track || fullData.track.name}</h4>
+                        <p style="margin: 0;">by ${gen3.artist || fullData.track.artists.join(', ')}</p>
+                    </div>
+                </div>
+            `;
+
+            // Genre context if available
+            if (influences.genre_context) {
+                const gc = influences.genre_context;
+                lineageHTML += `
+                    <div style="margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
+                        <strong>Genre Context:</strong> ${gc.primary_genre}
+                        ${gc.subgenres && gc.subgenres.length > 0 ? ` (${gc.subgenres.join(', ')})` : ''}
+                        <br>
+                        <small style="color: #666;">${gc.description || ''}</small>
+                    </div>
+                `;
+            }
+
+            document.getElementById('lineage-tree').innerHTML = lineageHTML;
+        }
+
+        // Render stats
+        function renderStats() {
+            const stats = [
+                { label: 'Influences', value: fullData.summary.total_influences || 0 },
+                { label: 'Genres', value: fullData.summary.genre_count || 0 },
+                { label: 'Graph Nodes', value: fullData.summary.graph_nodes || 0 },
+                { label: 'Connections', value: fullData.summary.graph_edges || 0 }
+            ];
+
+            const statsHTML = stats.map(stat => `
+                <div class="stat-box">
+                    <div class="stat-value">${stat.value}</div>
+                    <div class="stat-label">${stat.label}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('stats').innerHTML = statsHTML;
+        }
+
+        // Render genres
+        function renderGenres() {
+            const genresHTML = fullData.genres.slice(0, 10).map(genre =>
+                `<span class="tag genre-tag">${genre}</span>`
+            ).join('');
+            document.getElementById('genres').innerHTML = genresHTML || '<p>No genre data</p>';
+        }
+
+        // Render tags
+        function renderTags() {
+            const tagsHTML = fullData.tags.slice(0, 20).map(tag =>
+                `<span class="tag">${tag}</span>`
+            ).join('');
+            document.getElementById('tags').innerHTML = tagsHTML || '<p>No tags available</p>';
+        }
+
+        // Render influences with images
+        function renderInfluences() {
+            // Default placeholder image for influences without pictures
+            const placeholderImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZTBlMGUwIi8+PHRleHQgeD0iMzAiIHk9IjM1IiBmb250LXNpemU9IjI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5Ij7wn461PC90ZXh0Pjwvc3ZnPg==';
+
+            const influencesHTML = fullData.influences.slice(0, 15).map(inf => {
+                const confidence = inf.strength || inf.confidence || 0;
+                const confClass = confidence >= 0.7 ? 'influence-high' : 'influence-medium';
+                const imageUrl = inf.image_url || placeholderImage;
+
+                return `
+                    <div class="influence-item-with-image ${confClass}" onclick="showArtistDetails('${inf.name.replace(/'/g, "\\'")}')">
+                        <img src="${imageUrl}" alt="${inf.name}" class="influence-image" onerror="this.src='${placeholderImage}'">
+                        <div class="influence-info">
+                            <strong>${inf.name}</strong>
+                            <span class="confidence-badge">${(confidence * 100).toFixed(0)}%</span>
+                            <br>
+                            <small style="color: #666;">Source: ${inf.source}</small>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Change the container from ul to div since we're not using li anymore
+            const container = document.getElementById('influences');
+            container.innerHTML = influencesHTML || '<p>No influences found</p>';
+            container.style.listStyle = 'none';
+            container.style.padding = '0';
+        }
+
+        // Render audio features
+        function renderAudioFeatures() {
+            const features = fullData.audio_features;
+            let html = '';
+
+            if (features.analysis) {
+                html += '<h3>Technical Analysis</h3><ul>';
+                const analysis = features.analysis;
+                html += `<li><strong>Tempo:</strong> ${analysis.tempo_bpm?.toFixed(1)} BPM</li>`;
+                html += `<li><strong>Key:</strong> ${analysis.key}</li>`;
+                html += `<li><strong>Duration:</strong> ${analysis.duration_seconds?.toFixed(1)}s</li>`;
+                html += '</ul>';
+            }
+
+            document.getElementById('audio-features').innerHTML = html || '<p>No audio features available</p>';
+        }
+
+        // Render graph
+        function renderGraph() {
+            const container = document.getElementById('graph-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            const svg = d3.select('#graph-container')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            // Define colors for different node types
+            const colorScale = {
+                'track': '#667eea',
+                'artist': '#48bb78',
+                'genre': '#ed8936',
+                'historical_genre': '#f6ad55'
+            };
+
+            // Create links
+            const links = graphData.edges.map(edge => ({
+                source: edge.from,
+                target: edge.to,
+                strength: edge.strength
+            }));
+
+            // Create nodes
+            const nodes = graphData.nodes.map(node => ({
+                id: node.id,
+                name: node.name,
+                type: node.type,
+                layer: node.layer
+            }));
+
+            // Create force simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(100))
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(50));
+
+            // Draw links
+            const link = svg.append('g')
+                .selectAll('line')
+                .data(links)
+                .join('line')
+                .attr('class', 'link')
+                .attr('stroke-width', d => d.strength * 3);
+
+            // Draw nodes
+            const node = svg.append('g')
+                .selectAll('g')
+                .data(nodes)
+                .join('g')
+                .attr('class', 'node')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended));
+
+            node.append('circle')
+                .attr('r', d => d.type === 'track' ? 20 : 12)
+                .attr('fill', d => colorScale[d.type] || '#999')
+                .on('click', function(event, d) {
+                    if (d.type === 'artist') {
+                        showArtistDetails(d.name);
+                    }
+                });
+
+            node.append('text')
+                .text(d => d.name.length > 20 ? d.name.substring(0, 17) + '...' : d.name)
+                .attr('x', 0)
+                .attr('y', 25)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#333');
+
+            // Update positions
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+
+            // Drag functions
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+
+        // Render Style Card
+        function renderStyleCard() {
+            const styleCard = fullData.style_card || {};
+            const metadata = styleCard.metadata || {};
+
+            // Update metadata spans
+            if (metadata.bpm) {
+                document.getElementById('style-bpm').textContent = `BPM: ${Math.round(metadata.bpm)}`;
+            }
+            if (metadata.key) {
+                document.getElementById('style-key').textContent = `Key: ${metadata.key}`;
+            }
+            if (metadata.energy !== undefined) {
+                document.getElementById('style-energy').textContent = `Energy: ${metadata.energy}/10`;
+            }
+            if (metadata.genre) {
+                document.getElementById('style-genre').textContent = `Genre: ${metadata.genre}`;
+            }
+        }
+
+        // Copy Style Card to clipboard
+        function copyStyleCard() {
+            const styleCard = fullData.style_card || {};
+            const description = styleCard.description || styleCard.short_description || 'No style description available';
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(description).then(() => {
+                // Show success feedback
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                button.style.background = '#4CAF50';
+                button.style.color = 'white';
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = 'white';
+                    button.style.color = '#667eea';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard. Please select and copy manually.');
+            });
+        }
+
+        // Render Cultural Impact
+        function renderCulturalImpact() {
+            const culturalImpact = fullData.deep_research?.cultural_impact;
+            const section = document.getElementById('cultural-impact-section');
+            const content = document.getElementById('cultural-impact-content');
+
+            if (!culturalImpact) {
+                return;
+            }
+
+            section.style.display = 'block';
+
+            let html = '';
+
+            // Summary at top
+            if (culturalImpact.summary) {
+                html += `
+                    <div style="padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-bottom: 25px;">
+                        <p style="font-size: 1.1em; line-height: 1.7; margin: 0;">${culturalImpact.summary}</p>
+                    </div>
+                `;
+            }
+
+            // Origin info
+            if (culturalImpact.origin) {
+                const origin = culturalImpact.origin;
+                html += `
+                    <div style="margin-bottom: 25px; padding: 20px; background: #f5f5f5; border-radius: 10px;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">📍 Origin</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            ${origin.country ? `<div><strong>Country:</strong> ${origin.country}</div>` : ''}
+                            ${origin.region ? `<div><strong>Region:</strong> ${origin.region}</div>` : ''}
+                        </div>
+                        ${origin.scene ? `<p style="margin-top: 10px; color: #666;">${origin.scene}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Impact sections grid
+            html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 25px;">';
+
+            // Local Impact
+            if (culturalImpact.local_impact) {
+                const local = culturalImpact.local_impact;
+                html += `
+                    <div style="padding: 20px; background: #f0f4ff; border-radius: 10px; border-left: 4px solid #667eea;">
+                        <h3 style="color: #667eea; margin-bottom: 12px;">🏠 Local Impact</h3>
+                        ${local.contribution ? `<p style="margin-bottom: 10px;"><strong>Contribution:</strong> ${local.contribution}</p>` : ''}
+                        ${local.significance ? `<p style="color: #666; font-size: 0.95em;">${local.significance}</p>` : ''}
+                        ${local.influenced_artists && local.influenced_artists.length > 0 ? `
+                            <div style="margin-top: 12px;">
+                                <strong>Influenced Artists:</strong>
+                                <ul style="margin: 8px 0 0 20px; color: #555;">
+                                    ${local.influenced_artists.slice(0, 3).map(a => `<li>${a.name}: ${a.how}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            // National Impact
+            if (culturalImpact.national_impact) {
+                const national = culturalImpact.national_impact;
+                html += `
+                    <div style="padding: 20px; background: #f8f0ff; border-radius: 10px; border-left: 4px solid #764ba2;">
+                        <h3 style="color: #764ba2; margin-bottom: 12px;">🎵 National Impact</h3>
+                        ${national.genre_contribution ? `<p style="margin-bottom: 10px;"><strong>Genre Contribution:</strong> ${national.genre_contribution}</p>` : ''}
+                        ${national.cultural_barriers ? `<p style="margin-bottom: 10px;"><strong>Barriers Broken:</strong> ${national.cultural_barriers}</p>` : ''}
+                        ${national.significance ? `<p style="color: #666; font-size: 0.95em;">${national.significance}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Global Impact
+            if (culturalImpact.global_impact) {
+                const global = culturalImpact.global_impact;
+                html += `
+                    <div style="padding: 20px; background: #f0fff4; border-radius: 10px; border-left: 4px solid #48bb78;">
+                        <h3 style="color: #48bb78; margin-bottom: 12px;">🌍 Global Impact</h3>
+                        ${global.international_reach ? `<p style="margin-bottom: 10px;"><strong>Reach:</strong> ${global.international_reach}</p>` : ''}
+                        ${global.significance ? `<p style="color: #666; font-size: 0.95em;">${global.significance}</p>` : ''}
+                        ${global.influenced_artists && global.influenced_artists.length > 0 ? `
+                            <div style="margin-top: 12px;">
+                                <strong>International Influence:</strong>
+                                <ul style="margin: 8px 0 0 20px; color: #555;">
+                                    ${global.influenced_artists.slice(0, 3).map(a => `<li>${a.name} (${a.country}): ${a.how}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+
+            // Cultural Significance
+            if (culturalImpact.cultural_significance) {
+                const cultural = culturalImpact.cultural_significance;
+                html += `
+                    <div style="margin-bottom: 25px; padding: 20px; background: #fff5f5; border-radius: 10px; border-left: 4px solid #e53e3e;">
+                        <h3 style="color: #e53e3e; margin-bottom: 12px;">🎭 Beyond Music</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                            ${cultural.social_impact ? `<div><strong>Social:</strong> ${cultural.social_impact}</div>` : ''}
+                            ${cultural.political_impact ? `<div><strong>Political:</strong> ${cultural.political_impact}</div>` : ''}
+                            ${cultural.fashion_lifestyle ? `<div><strong>Fashion/Lifestyle:</strong> ${cultural.fashion_lifestyle}</div>` : ''}
+                            ${cultural.representation ? `<div><strong>Cultural Representation:</strong> ${cultural.representation}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Legacy
+            if (culturalImpact.legacy) {
+                const legacy = culturalImpact.legacy;
+                html += `
+                    <div style="padding: 20px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 10px;">
+                        <h3 style="color: #c44536; margin-bottom: 12px;">🏆 Legacy</h3>
+                        ${legacy.lasting_impact ? `<p style="margin-bottom: 10px;"><strong>Lasting Impact:</strong> ${legacy.lasting_impact}</p>` : ''}
+                        ${legacy.modern_relevance ? `<p style="margin-bottom: 10px;"><strong>Modern Relevance:</strong> ${legacy.modern_relevance}</p>` : ''}
+                        ${legacy.new_generation ? `<p style="margin-bottom: 10px;"><strong>New Generation:</strong> ${legacy.new_generation}</p>` : ''}
+                        ${legacy.hypothetical_absence ? `<p style="color: #666; font-style: italic;">"${legacy.hypothetical_absence}"</p>` : ''}
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+            console.log('🌍 Rendered cultural impact section');
+        }
+
+        // Render Spotify-style header with blurred album art background
+        function renderHeader() {
+            // Update cover image and blurred background
+            if (fullData.track.cover_url) {
+                const coverUrl = fullData.track.cover_url;
+                document.getElementById('header-cover-image').src = coverUrl;
+                // Set blurred background
+                document.getElementById('header-bg').style.backgroundImage = `url(${coverUrl})`;
+            }
+
+            // Update year in meta line
+            if (fullData.track.year) {
+                document.getElementById('header-year').textContent = fullData.track.year;
+            }
+
+            // Update primary genre
+            if (fullData.genres && fullData.genres.length > 0) {
+                document.getElementById('header-genre').textContent = fullData.genres[0];
+            }
+
+            // Update duration in meta line
+            const duration = fullData.audio_features?.deezer?.duration_seconds ||
+                           fullData.audio_features?.analysis?.duration_seconds;
+            if (duration) {
+                const minutes = Math.floor(duration / 60);
+                const seconds = Math.floor(duration % 60);
+                document.getElementById('header-duration').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            // Setup play button for header using the header audio player
+            const headerPlayBtn = document.getElementById('header-play-btn');
+            const headerAudioPlayer = document.getElementById('header-audio-player');
+
+            if (fullData.track.preview_url) {
+                headerPlayBtn.addEventListener('click', function() {
+                    if (headerAudioPlayer.paused) {
+                        headerAudioPlayer.play();
+                        this.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                    } else {
+                        headerAudioPlayer.pause();
+                        this.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                    }
+                });
+
+                // Reset button when audio ends
+                headerAudioPlayer.addEventListener('ended', function() {
+                    headerPlayBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                });
+            } else {
+                // Hide play button if no preview available
+                headerPlayBtn.style.display = 'none';
+            }
+
+            console.log('🎨 Rendered Spotify-style header with blurred background');
+        }
+
+        // Initialize all components
+        renderHeader();   // Spotify-style header
+        renderPreview();  // Audio preview and streaming links
+        renderYouTube();
+        renderSources();
+        renderArtistBio();  // Artist biography and information
+        renderBandMembers();  // NEW: Band members with pictures
+        renderStats();
+        renderGenres();
+        renderTags();
+        renderAudioFeatures();  // Audio features now first
+        renderInfluences();   // Now with images
+        renderInstruments();  // Instruments now in grid with influences
+        renderStyleCard();
+        renderTimeline();     // ENHANCED: Two-column layout with similar artists
+        renderLineage();
+        renderCulturalImpact();  // NEW: Cultural impact section
+        renderGraph();
+        renderNetworkStats();  // Network statistics
+
+        // Toggle network requests table
+        function toggleNetworkRequests() {
+            const table = document.getElementById('network-requests-table');
+            const btn = document.getElementById('toggle-requests');
+            if (table.style.display === 'none') {
+                table.style.display = 'block';
+                btn.textContent = 'Hide Requests';
+            } else {
+                table.style.display = 'none';
+                btn.textContent = 'Show All Requests';
+            }
+        }
+
+        // Render network statistics
+        function renderNetworkStats() {
+            const networkStats = fullData.network_stats;
+            const section = document.getElementById('network-stats-section');
+
+            if (!networkStats || !networkStats.summary) {
+                return;
+            }
+
+            section.style.display = 'block';
+            const summary = networkStats.summary;
+            const byService = networkStats.by_service || {};
+
+            // Render summary stats
+            const summaryHTML = `
+                <div style="padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; text-align: center; color: white;">
+                    <div style="font-size: 2em; font-weight: bold;">${summary.total_requests}</div>
+                    <div style="font-size: 0.85em; opacity: 0.9;">Total Requests</div>
+                </div>
+                <div style="padding: 15px; background: #f0f4ff; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2em; font-weight: bold; color: #48bb78;">${summary.successful_requests}</div>
+                    <div style="font-size: 0.85em; color: #666;">Successful</div>
+                </div>
+                <div style="padding: 15px; background: #fff0f0; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2em; font-weight: bold; color: #e53e3e;">${summary.failed_requests}</div>
+                    <div style="font-size: 0.85em; color: #666;">Failed</div>
+                </div>
+                <div style="padding: 15px; background: #f0fff4; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2em; font-weight: bold; color: #38a169;">${summary.total_data_kb.toFixed(1)}</div>
+                    <div style="font-size: 0.85em; color: #666;">KB Transferred</div>
+                </div>
+                <div style="padding: 15px; background: #fffbf0; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2em; font-weight: bold; color: #d69e2e;">${(summary.total_duration_ms / 1000).toFixed(1)}s</div>
+                    <div style="font-size: 0.85em; color: #666;">Total Time</div>
+                </div>
+            `;
+            document.getElementById('network-summary').innerHTML = summaryHTML;
+
+            // Render service breakdown bars
+            const maxRequests = Math.max(...Object.values(byService).map(s => s.requests));
+            const serviceColors = {
+                'lastfm': '#d93025',
+                'discogs': '#333333',
+                'musicbrainz': '#eb743b',
+                'deezer': '#feaa2d',
+                'serpapi': '#4285f4',
+                'smart_parser': '#34a853',
+                'images': '#9c27b0',
+                'claude_cli': '#ff6b6b'  // Distinctive red for AI service
+            };
+
+            let barsHTML = '';
+            Object.entries(byService).sort((a, b) => b[1].requests - a[1].requests).forEach(([service, stats]) => {
+                const width = (stats.requests / maxRequests) * 100;
+                const color = serviceColors[service] || '#667eea';
+
+                barsHTML += `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="min-width: 100px; font-weight: 500; text-transform: capitalize;">${service}</div>
+                        <div style="flex: 1; background: #f0f0f0; border-radius: 5px; height: 24px; overflow: hidden;">
+                            <div style="width: ${width}%; height: 100%; background: ${color}; border-radius: 5px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px;">
+                                <span style="color: white; font-size: 0.8em; font-weight: bold;">${stats.requests}</span>
+                            </div>
+                        </div>
+                        <div style="min-width: 80px; text-align: right; color: #666; font-size: 0.85em;">${stats.total_kb.toFixed(1)} KB</div>
+                        <div style="min-width: 80px; text-align: right; color: #666; font-size: 0.85em;">${stats.avg_duration_ms.toFixed(0)}ms avg</div>
+                    </div>
+                `;
+            });
+            document.getElementById('service-bars').innerHTML = barsHTML;
+
+            // Render requests table
+            const requests = networkStats.requests || [];
+            let tableHTML = '';
+            requests.forEach(req => {
+                const statusColor = req.success ? '#48bb78' : '#e53e3e';
+                const urlDisplay = req.url.length > 60 ? req.url.substring(0, 57) + '...' : req.url;
+
+                tableHTML += `
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; text-transform: capitalize;">${req.service}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; font-family: monospace; font-size: 0.8em;" title="${req.url}">${urlDisplay}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right; color: ${statusColor}; font-weight: bold;">${req.status}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${req.duration_ms.toFixed(0)}ms</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${req.received_kb.toFixed(2)} KB</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('requests-body').innerHTML = tableHTML;
+
+            console.log('📡 Rendered network statistics:', summary.total_requests, 'requests');
+        }
+
+        // Render Quick Stats Bar
+        function renderQuickStats() {
+            const statsBar = document.getElementById('quick-stats-bar');
+            const stats = [];
+
+            // Genres count
+            if (fullData.genres && fullData.genres.length > 0) {
+                stats.push({ value: fullData.genres.length, label: 'Genres' });
+            }
+
+            // Influences count
+            if (fullData.influences && fullData.influences.length > 0) {
+                stats.push({ value: fullData.influences.length, label: 'Influences' });
+            }
+
+            // Similar artists count
+            if (fullData.similar_artists && fullData.similar_artists.length > 0) {
+                stats.push({ value: fullData.similar_artists.length, label: 'Similar Artists' });
+            }
+
+            // Tags count
+            if (fullData.style_tags && fullData.style_tags.length > 0) {
+                stats.push({ value: fullData.style_tags.length, label: 'Tags' });
+            }
+
+            // Year if available
+            if (fullData.track?.year) {
+                stats.push({ value: fullData.track.year, label: 'Year' });
+            }
+
+            // BPM if available
+            const bpm = fullData.audio_features?.analysis?.bpm || fullData.audio_features?.deezer?.bpm;
+            if (bpm) {
+                stats.push({ value: Math.round(bpm), label: 'BPM' });
+            }
+
+            // Energy if available
+            const energy = fullData.audio_features?.analysis?.energy || fullData.audio_features?.deezer?.energy;
+            if (energy !== undefined) {
+                stats.push({ value: Math.round(energy * 100) + '%', label: 'Energy' });
+            }
+
+            // Key if available
+            const key = fullData.audio_features?.analysis?.key || fullData.audio_features?.deezer?.key;
+            if (key) {
+                stats.push({ value: key, label: 'Key' });
+            }
+
+            // Render stats (max 8)
+            statsBar.innerHTML = stats.slice(0, 8).map(stat =>
+                `<div class="quick-stat-item">
+                    <span class="quick-stat-value">${stat.value}</span>
+                    <span class="quick-stat-label">${stat.label}</span>
+                </div>`
+            ).join('');
+        }
+
+        // Theme toggle function
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Initialize theme from localStorage
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme === 'light' ? 'light' : '');
+        }
+
+        // Initialize theme on load
+        initTheme();
+
+        // Render quick stats
+        renderQuickStats();
+    </script>
+</body>
+</html>
