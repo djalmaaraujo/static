@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlannerGPT & SlackOS</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0a0a0a;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      max-width: 80ch;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .slide {
+      width: 100%;
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ascii-art-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .ascii-art {
+      color: #00ff00;
+      font-size: 0.6rem;
+      line-height: 1.1;
+      white-space: pre;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00ff0040;
+      transform-origin: center center;
+      display: inline-block;
+    }
+
+    @media (min-width: 768px) {
+      .ascii-art {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .ascii-art {
+        font-size: 1rem;
+      }
+    }
+
+    h1 {
+      color: #00ff00;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00ff0040;
+    }
+
+    h2 {
+      color: #00aaff;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: bold;
+    }
+
+    h3 {
+      color: #00aaff;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .terminal-list {
+      list-style: none;
+      margin-bottom: 1rem;
+    }
+
+    .terminal-list li {
+      margin-bottom: 0.5rem;
+      padding-left: 1.5rem;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .terminal-list .bullet {
+      position: absolute;
+      left: 0;
+      color: #00ff00;
+    }
+
+    .code-block {
+      background-color: #1a1a1a;
+      color: #00ff88;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+      border: 1px solid #333;
+    }
+
+    .code-block code {
+      font-family: inherit;
+    }
+
+    .inline-code {
+      background-color: #1a1a1a;
+      color: #00ff88;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    strong {
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+      color: #888888;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed #888888;
+      margin: 1.5rem 0;
+    }
+
+    blockquote {
+      border-left: 2px solid #888888;
+      padding-left: 1rem;
+      color: #888888;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: linear-gradient(transparent, #0a0a0a 30%);
+      color: #888888;
+      font-size: 0.85rem;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .progress-bar {
+      width: 100px;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #00ff00;
+      transition: width 0.3s ease;
+    }
+
+    .help-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .help-overlay.active {
+      display: flex;
+    }
+
+    .help-content {
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid #888888;
+      max-width: 400px;
+    }
+
+    .help-content h2 {
+      margin-bottom: 1rem;
+    }
+
+    .help-content .key {
+      display: inline-block;
+      background: #333;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+      min-width: 2rem;
+      text-align: center;
+    }
+
+    .help-content li {
+      margin-bottom: 0.5rem;
+      list-style: none;
+    }
+
+    /* Scanline effect for extra terminal feel */
+    .scanlines {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.1) 0px,
+        rgba(0, 0, 0, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      z-index: 1000;
+    }
+
+    /* CRT glow effect */
+    .crt-glow {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      box-shadow: inset 0 0 100px rgba(0, 255, 0, 0.03);
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="crt-glow"></div>
+
+  <div class="container" id="slideContainer">
+    <!-- Slides will be injected here -->
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">
+      <span id="slideCounter">Slide 1 of 14</span>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+    <div>Press <span style="color: #00ff00;">h</span> for help | <span style="color: #00ff00;">q</span> to close</div>
+  </div>
+
+  <div class="help-overlay" id="helpOverlay">
+    <div class="help-content">
+      <h2 style="color: #00ff00;">Navigation</h2>
+      <ul>
+        <li><span class="key">→</span> / <span class="key">n</span> / <span class="key">Space</span> Next slide</li>
+        <li><span class="key">←</span> / <span class="key">p</span> Previous slide</li>
+        <li><span class="key">g</span> First slide</li>
+        <li><span class="key">G</span> Last slide</li>
+        <li><span class="key">1-9</span> Jump to slide</li>
+        <li><span class="key">h</span> / <span class="key">?</span> Toggle help</li>
+        <li><span class="key">Esc</span> Close help</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const slides = [{"title":"PlannerGPT & SlackOS","content":"<p style=\"color: #ffffff;\"><strong>Claude Code Plugin Marketplace</strong></p>\n<p style=\"color: #ffffff;\">Context window: unlimited plans | Temperature: orchestrated | Subagents: spawned</p>\n<p style=\"color: #ffffff;\"><em>Now with dependency resolution</em></p>\n","asciiArt":"  ___ _                         ___ ___ _____   __       ___ _         _    ___  ___ \n | _ \\ |__ _ _ _  _ _  ___ _ _ / __| _ \\_   _| / _|___  / __| |__ _ __| |__/ _ \\/ __|\n |  _/ / _` | ' \\| ' \\/ -_) '_| (_ |  _/ | |   > _|_ _| \\__ \\ / _` / _| / / (_) \\__ \\\n |_| |_\\__,_|_||_|_||_\\___|_|  \\___|_|   |_|   \\_____|  |___/_\\__,_\\__|_\\_\\\\___/|___/\n                                                                                     ","asciiArtWidth":85},{"title":"The Problem","content":"<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Claude Code exhausts context on large features. By step 47, it forgets step 3.</li>\n<li><span class=\"bullet\">•</span> Users paste long instructions. Claude nods, then implements something adjacent.</li>\n<li><span class=\"bullet\">•</span> Complex tasks require coordination. One agent doing everything is a single point of hallucination.</li>\n<li><span class=\"bullet\">•</span> Slack messaging requires leaving the terminal. Context switch detected. Productivity lost.</li>\n</ul>\n","asciiArt":"  _______ _            _____           _     _                \n |__   __| |          |  __ \\         | |   | |               \n    | |  | |__   ___  | |__) | __ ___ | |__ | | ___ _ __ ___  \n    | |  | '_ \\ / _ \\ |  ___/ '__/ _ \\| '_ \\| |/ _ \\ '_ ` _ \\ \n    | |  | | | |  __/ | |   | | | (_) | |_) | |  __/ | | | | |\n    |_|  |_| |_|\\___| |_|   |_|  \\___/|_.__/|_|\\___|_| |_| |_|\n                                                              \n                                                              ","asciiArtWidth":62},{"title":"Architecture","content":"<pre class=\"code-block\"><code>~/.claude/plugins/marketplaces/djalmaaraujo-claude-code-plugins/\n├── .claude-plugin/marketplace.json    # Plugin registry\n└── plugins/\n    ├── planner/                       # Sub-agent orchestration\n    └── slack/                         # Terminal-native messaging</code></pre>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> <strong>Commands</strong>: Thin wrappers. Delegate immediately. No logic.</li>\n<li><span class=\"bullet\">•</span> <strong>Skills</strong>: Core instructions. Spawn agents. Report results.</li>\n<li><span class=\"bullet\">•</span> <strong>Agents</strong>: Fresh context. No memory. Execute one plan.</li>\n<li><span class=\"bullet\">•</span> <strong>Libraries</strong>: Shared bash. Centralized config.</li>\n</ul>\n","asciiArt":"                    _     _ _            _                  \n     /\\            | |   (_) |          | |                 \n    /  \\   _ __ ___| |__  _| |_ ___  ___| |_ _   _ _ __ ___ \n   / /\\ \\ | '__/ __| '_ \\| | __/ _ \\/ __| __| | | | '__/ _ \\\n  / ____ \\| | | (__| | | | | ||  __/ (__| |_| |_| | | |  __/\n /_/    \\_\\_|  \\___|_| |_|_|\\__\\___|\\___|\\__|\\__,_|_|  \\___|\n                                                            \n                                                            ","asciiArtWidth":60},{"title":"Planner: The Concept","content":"<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Break large features into small plans. Each plan: one sub-agent, fresh context.</li>\n<li><span class=\"bullet\">•</span> Sub-agent uses ~40% of window. Leaves room for implementation.</li>\n<li><span class=\"bullet\">•</span> Plans declare <code class=\"inline-code\">depends_on</code>. Orchestrator builds dependency graph.</li>\n<li><span class=\"bullet\">•</span> Execution in rounds. Independent plans run parallel. Dependencies block.</li>\n</ul>\n<pre class=\"code-block\"><code>Feature Request → Plan Files → Dependency Graph → Parallel Execution\n                                                    ↓\n                                              Fresh subagent per plan\n                                              (No memory of siblings)</code></pre>\n","asciiArt":"  ___ _                       _   _____ _           ___                      _   \n | _ \\ |__ _ _ _  _ _  ___ _ (_) |_   _| |_  ___   / __|___ _ _  __ ___ _ __| |_ \n |  _/ / _` | ' \\| ' \\/ -_) '_|    | | | ' \\/ -_) | (__/ _ \\ ' \\/ _/ -_) '_ \\  _|\n |_| |_\\__,_|_||_|_||_\\___|_|(_)   |_| |_||_\\___|  \\___\\___/_||_\\__\\___| .__/\\__|\n                                                                       |_|       ","asciiArtWidth":81},{"title":"Planner: Key Skills","content":"<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Each skill is a markdown file with <code class=\"inline-code\">allowed-tools</code> frontmatter.</li>\n<li><span class=\"bullet\">•</span> Spawns agents via <code class=\"inline-code\">Task</code> tool with structured prompts.</li>\n</ul>\n","asciiArt":"  ____  _                                 _  __            ____  _    _ _ _     \n |  _ \\| | __ _ _ __  _ __   ___ _ __ _  | |/ /___ _   _  / ___|| | _(_) | |___ \n | |_) | |/ _` | '_ \\| '_ \\ / _ \\ '__(_) | ' // _ \\ | | | \\___ \\| |/ / | | / __|\n |  __/| | (_| | | | | | | |  __/ |   _  | . \\  __/ |_| |  ___) |   <| | | \\__ \\\n |_|   |_|\\__,_|_| |_|_| |_|\\___|_|  (_) |_|\\_\\___|\\__, | |____/|_|\\_\\_|_|_|___/\n                                                   |___/                        ","asciiArtWidth":80},{"title":"Planner: Spec Workflow","content":"<p style=\"color: #ffffff;\"><strong>Spec → Plans → Execution</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> <code class=\"inline-code\">spec-create</code>: Deep codebase analysis. 7-section specification file.</li>\n<li><span class=\"bullet\">•</span> <code class=\"inline-code\">spec-plans-sync</code>: Generates plans from spec. Updates milestones.</li>\n</ul>\n<pre class=\"code-block\"><code># spec.TEMPLATE.md structure\n1. Overview\n2. Current State Analysis\n3. Requirements\n4. Technical Design\n5. Implementation Plan\n6. Logistics\n7. Appendix</code></pre>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Lifecycle: <code class=\"inline-code\">DRAFT</code> → <code class=\"inline-code\">ACTIVE</code> → <code class=\"inline-code\">DEPRECATED</code></li>\n<li><span class=\"bullet\">•</span> Plans reference specs. Specs reference reality.</li>\n</ul>\n","asciiArt":"  ___ _                       _   ___               __      __       _    __ _            \n | _ \\ |__ _ _ _  _ _  ___ _ (_) / __|_ __  ___ __  \\ \\    / /__ _ _| |__/ _| |_____ __ __\n |  _/ / _` | ' \\| ' \\/ -_) '_|  \\__ \\ '_ \\/ -_) _|  \\ \\/\\/ / _ \\ '_| / /  _| / _ \\ V  V /\n |_| |_\\__,_|_||_|_||_\\___|_|(_) |___/ .__/\\___\\__|   \\_/\\_/\\___/_| |_\\_\\_| |_\\___/\\_/\\_/ \n                                     |_|                                                  ","asciiArtWidth":90},{"title":"Planner: Linear Integration","content":"<p style=\"color: #ffffff;\"><strong>Plans → Linear Projects → Issues</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Bidirectional sync. Plans know their issues. Issues link to plans.</li>\n<li><span class=\"bullet\">•</span> PROGRESS.md tracks both local status and Linear state.</li>\n</ul>\n","asciiArt":"  ___ _                       _   _    _                     ___     _                     _   _          \n | _ \\ |__ _ _ _  _ _  ___ _ (_) | |  (_)_ _  ___ __ _ _ _  |_ _|_ _| |_ ___ __ _ _ _ __ _| |_(_)___ _ _  \n |  _/ / _` | ' \\| ' \\/ -_) '_|  | |__| | ' \\/ -_) _` | '_|  | || ' \\  _/ -_) _` | '_/ _` |  _| / _ \\ ' \\ \n |_| |_\\__,_|_||_|_||_\\___|_|(_) |____|_|_||_\\___\\__,_|_|   |___|_||_\\__\\___\\__, |_| \\__,_|\\__|_\\___/_||_|\n                                                                            |___/                         ","asciiArtWidth":106},{"title":"Slack: Architecture","content":"<pre class=\"code-block\"><code>plugins/slack/\n├── config.json          # Credentials (600 perms, gitignored)\n├── lib/\n│   ├── config.sh        # Load/validate config\n│   └── slack-api.sh     # curl wrappers for Slack API\n└── skills/\n    ├── slack-status/    # check.sh validates auth\n    ├── slack-setup/     # Browser credential extraction wizard\n    ├── slack-search-user/  # Cache-first user lookup\n    └── slack-send-message/ # Channels and DMs</code></pre>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Uses browser session tokens. No OAuth app required.</li>\n<li><span class=\"bullet\">•</span> Every skill checks <code class=\"inline-code\">slack-status</code> first. Fail fast.</li>\n</ul>\n","asciiArt":"  ___ _         _   _     _          _    _ _          _                \n / __| |__ _ __| |_(_)   /_\\  _ _ __| |_ (_) |_ ___ __| |_ _  _ _ _ ___ \n \\__ \\ / _` / _| / /_   / _ \\| '_/ _| ' \\| |  _/ -_) _|  _| || | '_/ -_)\n |___/_\\__,_\\__|_\\_(_) /_/ \\_\\_| \\__|_||_|_|\\__\\___\\__|\\__|\\_,_|_| \\___|\n                                                                        ","asciiArtWidth":72},{"title":"Slack: Key Skills","content":"<p style=\"color: #ffffff;\"><strong>slack-send-message</strong></p>\n<pre class=\"code-block\"><code>&quot;Send hello to #channel&quot;  → chat.postMessage(channel, msg)\n&quot;DM @user hello&quot;          → search-user → conversations.open → chat.postMessage</code></pre>\n<p style=\"color: #ffffff;\"><strong>slack-search-user</strong> (cache-first strategy)</p>\n<pre class=\"code-block\"><code>Request → jq cache lookup (10ms)\n            ↓ miss\n          Slack users.list API (500ms)\n            ↓\n          Bulk cache 1000 users\n            ↓\n          Return result</code></pre>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Cache persists in <code class=\"inline-code\">config.json.users[]</code></li>\n<li><span class=\"bullet\">•</span> Subsequent lookups: instant.</li>\n</ul>\n","asciiArt":"   _____ _            _        _  __             _____ _    _ _ _     \n  / ____| |          | |   _  | |/ /            / ____| |  (_) | |    \n | (___ | | __ _  ___| | _(_) | ' / ___ _   _  | (___ | | ___| | |___ \n  \\___ \\| |/ _` |/ __| |/ /   |  < / _ \\ | | |  \\___ \\| |/ / | | / __|\n  ____) | | (_| | (__|   < _  | . \\  __/ |_| |  ____) |   <| | | \\__ \\\n |_____/|_|\\__,_|\\___|_|\\_(_) |_|\\_\\___|\\__, | |_____/|_|\\_\\_|_|_|___/\n                                         __/ |                        \n                                        |___/                         ","asciiArtWidth":70},{"title":"Slack: Under the Hood","content":"<p style=\"color: #ffffff;\"><strong>lib/slack-api.sh</strong></p>\n<pre class=\"code-block\"><code>slack_api_call() {\n  curl -s &quot;https://$WORKSPACE/api/$1&quot; \\\n    -H &quot;Authorization: Bearer $TOKEN&quot; \\\n    -H &quot;Cookie: d=$COOKIE&quot;\n}</code></pre>\n<p style=\"color: #ffffff;\"><strong>skills/slack-status/check.sh</strong></p>\n<pre class=\"code-block\"><code># Returns: STATUS|MESSAGE|DETAILS\n# OK|Ready|workspace=a8c.slack.com\n# EXPIRED_TOKEN|Token expired|...</code></pre>\n<p style=\"color: #ffffff;\"><strong>skills/slack-search-user/search-user.sh</strong></p>\n<pre class=\"code-block\"><code># 1. jq cache search (exact → partial)\n# 2. API fallback with pagination\n# 3. Bulk cache update (skip bots, deleted)\n# 4. stdout: user_id, stderr: details</code></pre>\n","asciiArt":"  ___ _         _   _   _   _         _           _   _          _  _              _ \n / __| |__ _ __| |_(_) | | | |_ _  __| |___ _ _  | |_| |_  ___  | || |___  ___  __| |\n \\__ \\ / _` / _| / /_  | |_| | ' \\/ _` / -_) '_| |  _| ' \\/ -_) | __ / _ \\/ _ \\/ _` |\n |___/_\\__,_\\__|_\\_(_)  \\___/|_||_\\__,_\\___|_|    \\__|_||_\\___| |_||_\\___/\\___/\\__,_|\n                                                                                     ","asciiArtWidth":85},{"title":"In Action","content":"<p style=\"color: #ffffff;\"><strong>Planner workflow:</strong></p>\n<pre class=\"code-block\"><code>/planner:planner-setup                    # Configure project\n/planner:spec-create auth &quot;JWT auth&quot;      # Deep analysis → spec\n/planner:spec-plans-sync auth             # Spec → plan files\n/planner:planner-batch --prefix=auth      # Parallel execution</code></pre>\n<p style=\"color: #ffffff;\"><strong>Slack workflow:</strong></p>\n<pre class=\"code-block\"><code>/slack:slack-setup                        # One-time credential wizard\n/slack:slack-send-message &quot;#team hello&quot;   # Channel message\n/slack:slack-send-message &quot;@bob hey&quot;      # DM (auto user lookup)</code></pre>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> No context switches. No browser tabs. Terminal-native.</li>\n</ul>\n","asciiArt":"  _____                      _   _             \n |_   _|           /\\       | | (_)            \n   | |  _ __      /  \\   ___| |_ _  ___  _ __  \n   | | | '_ \\    / /\\ \\ / __| __| |/ _ \\| '_ \\ \n  _| |_| | | |  / ____ \\ (__| |_| | (_) | | | |\n |_____|_| |_| /_/    \\_\\___|\\__|_|\\___/|_| |_|\n                                               \n                                               ","asciiArtWidth":47},{"title":"Configuration","content":"<p style=\"color: #ffffff;\"><strong>plans/planner.config.json</strong></p>\n<pre class=\"code-block\"><code>{\n  &quot;auto_commit&quot;: true,           // Commit after plan completion\n  &quot;auto_update_claude_md&quot;: false,// Update CLAUDE.md with changes\n  &quot;smart_parallelism&quot;: true,     // Aggressive dependency detection\n  &quot;replan_on_exec&quot;: false,       // Re-analyze before executing\n  &quot;uses_spec&quot;: true,             // Enable spec workflow\n  &quot;spec_verbose&quot;: false          // Max inference vs interactive\n}</code></pre>\n<p style=\"color: #ffffff;\"><strong>plugins/slack/config.json</strong></p>\n<pre class=\"code-block\"><code>{\n  &quot;workspace&quot;: &quot;a8c.slack.com&quot;,\n  &quot;token&quot;: &quot;xoxc-...&quot;,\n  &quot;cookie&quot;: &quot;xoxd-...&quot;,\n  &quot;users&quot;: []                    // Auto-populated cache\n}</code></pre>\n","asciiArt":"   _____             __ _                       _   _             \n  / ____|           / _(_)                     | | (_)            \n | |     ___  _ __ | |_ _  __ _ _   _ _ __ __ _| |_ _  ___  _ __  \n | |    / _ \\| '_ \\|  _| |/ _` | | | | '__/ _` | __| |/ _ \\| '_ \\ \n | |___| (_) | | | | | | | (_| | |_| | | | (_| | |_| | (_) | | | |\n  \\_____\\___/|_| |_|_| |_|\\__, |\\__,_|_|  \\__,_|\\__|_|\\___/|_| |_|\n                           __/ |                                  \n                          |___/                                   ","asciiArtWidth":66},{"title":"Incidents","content":"<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> <strong>Context overflow</strong>: Planner v1 tried to hold all plans in memory. Exceeded window at plan 12.</li>\n<li><span class=\"bullet\">•</span> <strong>Circular dependencies</strong>: Plan A depended on B. B depended on A. Orchestrator entered infinite loop.</li>\n<li><span class=\"bullet\">•</span> <strong>Cache stampede</strong>: 50 users queried simultaneously. API rate limited. Added mutex.</li>\n<li><span class=\"bullet\">•</span> <strong>Token expiration</strong>: Browser session tokens expire. Users blamed the plugin. Added clear error messages.</li>\n</ul>\n<p style=\"color: #ffffff;\"><em>All incidents improved the model. Your feedback trains the next version.</em></p>\n","asciiArt":"  _____            _     _            _       \n |_   _|          (_)   | |          | |      \n   | |  _ __   ___ _  __| | ___ _ __ | |_ ___ \n   | | | '_ \\ / __| |/ _` |/ _ \\ '_ \\| __/ __|\n  _| |_| | | | (__| | (_| |  __/ | | | |_\\__ \\\n |_____|_| |_|\\___|_|\\__,_|\\___|_| |_|\\__|___/\n                                              \n                                              ","asciiArtWidth":46},{"title":"Results","content":"<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Context exhaustion: solved. Each plan gets fresh window.</li>\n<li><span class=\"bullet\">•</span> Dependency coordination: automated. Graph builds itself.</li>\n<li><span class=\"bullet\">•</span> Slack context switches: eliminated. Terminal-native messaging.</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Key patterns:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Sub-agent isolation prevents memory contamination</li>\n<li><span class=\"bullet\">•</span> Cache-first strategies minimize API calls</li>\n<li><span class=\"bullet\">•</span> Thin commands delegate to skills delegate to agents</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Roadmap:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Multi-workspace Slack support</li>\n<li><span class=\"bullet\">•</span> Plan templates per project type</li>\n<li><span class=\"bullet\">•</span> Agentic mode: <code class=\"inline-code\">dangerouslyAllowAutonomousPlanning</code></li>\n</ul>\n<p style=\"color: #ffffff;\"><em>Your plugins improve the ecosystem. Thank you for contributing to the marketplace.</em></p>\n","asciiArt":"  _____                 _ _       \n |  __ \\               | | |      \n | |__) |___  ___ _   _| | |_ ___ \n |  _  // _ \\/ __| | | | | __/ __|\n | | \\ \\  __/\\__ \\ |_| | | |_\\__ \\\n |_|  \\_\\___||___/\\__,_|_|\\__|___/\n                                  \n                                  ","asciiArtWidth":34}];
+    let currentSlide = 0;
+
+    const MAX_CONTAINER_CHARS = 80;
+
+    function getAsciiArtScale(artWidth) {
+      if (!artWidth || artWidth <= MAX_CONTAINER_CHARS) return 1;
+      return MAX_CONTAINER_CHARS / artWidth;
+    }
+
+    function renderSlides() {
+      const container = document.getElementById('slideContainer');
+      container.innerHTML = slides.map((slide, index) => {
+        if (slide.asciiArt) {
+          const scale = getAsciiArtScale(slide.asciiArtWidth);
+          const scaleStyle = scale < 1 ? `transform: scale(${scale}); margin: ${-(1-scale) * 2}rem 0;` : '';
+          return `
+            <div class="slide ${index === 0 ? 'active' : ''}" data-index="${index}">
+              <div class="ascii-art-wrapper">
+                <pre class="ascii-art" style="${scaleStyle}">${escapeHtml(slide.asciiArt)}</pre>
+              </div>
+              ${slide.content}
+            </div>
+          `;
+        }
+        return `
+          <div class="slide ${index === 0 ? 'active' : ''}" data-index="${index}">
+            ${slide.content}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function updateSlide() {
+      document.querySelectorAll('.slide').forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+      document.getElementById('slideCounter').textContent = `Slide ${currentSlide + 1} of ${slides.length}`;
+      document.getElementById('progressFill').style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(index) {
+      if (index >= 0 && index < slides.length) {
+        currentSlide = index;
+        updateSlide();
+      }
+    }
+
+    function toggleHelp() {
+      document.getElementById('helpOverlay').classList.toggle('active');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const helpOverlay = document.getElementById('helpOverlay');
+      const helpActive = helpOverlay.classList.contains('active');
+
+      if (helpActive) {
+        if (e.key === 'Escape' || e.key === 'h' || e.key === '?') {
+          toggleHelp();
+        }
+        return;
+      }
+
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'n':
+        case ' ':
+          e.preventDefault();
+          nextSlide();
+          break;
+        case 'ArrowLeft':
+        case 'p':
+          e.preventDefault();
+          prevSlide();
+          break;
+        case 'g':
+          goToSlide(0);
+          break;
+        case 'G':
+          goToSlide(slides.length - 1);
+          break;
+        case 'h':
+        case '?':
+          toggleHelp();
+          break;
+        case 'Escape':
+        case 'q':
+          // In a web context, we can't really "quit"
+          // but we could redirect or show a message
+          break;
+        default:
+          // Number keys for direct slide access
+          if (/^[1-9]$/.test(e.key)) {
+            goToSlide(parseInt(e.key) - 1);
+          }
+          break;
+      }
+    });
+
+    // Touch support for mobile
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    });
+
+    // Initialize
+    renderSlides();
+  </script>
+</body>
+</html>
