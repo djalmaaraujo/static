@@ -56,7 +56,6 @@
       justify-content: center;
       align-items: center;
       margin-bottom: 1.5rem;
-      overflow: hidden;
     }
 
     .ascii-art {
@@ -286,7 +285,7 @@
         <div class="progress-fill" id="progressFill"></div>
       </div>
     </div>
-    <div>Press <span style="color: #00ff00;">h</span> for help | <span style="color: #00ff00;">q</span> to close</div>
+    <div>Press <span style="color: #00ff00;">h</span> for help</div>
   </div>
 
   <div class="help-overlay" id="helpOverlay">
@@ -298,9 +297,13 @@
         <li><span class="key">g</span> First slide</li>
         <li><span class="key">G</span> Last slide</li>
         <li><span class="key">1-9</span> Jump to slide</li>
+        <li><span class="key">f</span> Toggle fullscreen</li>
         <li><span class="key">h</span> / <span class="key">?</span> Toggle help</li>
-        <li><span class="key">Esc</span> Close help</li>
+        <li><span class="key">Esc</span> Close help / Exit fullscreen</li>
       </ul>
+      <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #888888;">
+        Made with <a href="https://github.com/nb/presentercli" target="_blank" rel="noopener" style="color: #00aaff;">presentercli</a>
+      </p>
     </div>
   </div>
 
@@ -377,6 +380,16 @@
       document.getElementById('helpOverlay').classList.toggle('active');
     }
 
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log('Fullscreen not available:', err);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
     document.addEventListener('keydown', (e) => {
       const helpOverlay = document.getElementById('helpOverlay');
       const helpActive = helpOverlay.classList.contains('active');
@@ -406,14 +419,12 @@
         case 'G':
           goToSlide(slides.length - 1);
           break;
+        case 'f':
+          toggleFullscreen();
+          break;
         case 'h':
         case '?':
           toggleHelp();
-          break;
-        case 'Escape':
-        case 'q':
-          // In a web context, we can't really "quit"
-          // but we could redirect or show a message
           break;
         default:
           // Number keys for direct slide access
@@ -445,6 +456,7 @@
 
     // Initialize
     renderSlides();
+    updateSlide();
   </script>
 </body>
 </html>
