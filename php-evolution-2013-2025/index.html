@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From PHP 5.5 to PHP 8.5</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0a0a0a;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      max-width: 100ch;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .slide {
+      width: 100%;
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ascii-art-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .ascii-art {
+      color: #00ff00;
+      font-size: 0.6rem;
+      line-height: 1.1;
+      white-space: pre;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00ff0040;
+      transform-origin: center center;
+      display: inline-block;
+    }
+
+    @media (min-width: 768px) {
+      .ascii-art {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .ascii-art {
+        font-size: 1rem;
+      }
+    }
+
+    @media (min-width: 1280px) and (max-width: 1439px) {
+      .container {
+        zoom: 1.2;
+      }
+    }
+
+    @media (min-width: 1440px) {
+      .container {
+        zoom: 1.5;
+      }
+    }
+
+    h1 {
+      color: #00ff00;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00ff0040;
+    }
+
+    h2 {
+      color: #00aaff;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: bold;
+    }
+
+    h3 {
+      color: #00aaff;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .terminal-list {
+      list-style: none;
+      margin-bottom: 1rem;
+    }
+
+    .terminal-list li {
+      margin-bottom: 0.5rem;
+      padding-left: 1.5rem;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .terminal-list .bullet {
+      position: absolute;
+      left: 0;
+      color: #00ff00;
+    }
+
+    .code-block {
+      background-color: #1a1a1a;
+      color: #00ff88;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+      border: 1px solid #333;
+    }
+
+    .code-block code {
+      font-family: inherit;
+    }
+
+    .inline-code {
+      background-color: #1a1a1a;
+      color: #00ff88;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    strong {
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+      color: #888888;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed #888888;
+      margin: 1.5rem 0;
+    }
+
+    blockquote {
+      border-left: 2px solid #888888;
+      padding-left: 1rem;
+      color: #888888;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: linear-gradient(transparent, #0a0a0a 30%);
+      color: #888888;
+      font-size: 0.85rem;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .progress-bar {
+      width: 100px;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #00ff00;
+      transition: width 0.3s ease;
+    }
+
+    .help-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .help-overlay.active {
+      display: flex;
+    }
+
+    .help-content {
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid #888888;
+      max-width: 400px;
+    }
+
+    .help-content h2 {
+      margin-bottom: 1rem;
+    }
+
+    .help-content .key {
+      display: inline-block;
+      background: #333;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+      min-width: 2rem;
+      text-align: center;
+    }
+
+    .help-content li {
+      margin-bottom: 0.5rem;
+      list-style: none;
+    }
+
+    /* Scanline effect for extra terminal feel */
+    .scanlines {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.1) 0px,
+        rgba(0, 0, 0, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      z-index: 1000;
+    }
+
+    /* CRT glow effect */
+    .crt-glow {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      box-shadow: inset 0 0 100px rgba(0, 255, 0, 0.03);
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="crt-glow"></div>
+
+  <div class="container" id="slideContainer">
+    <!-- Slides will be injected here -->
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">
+      <span id="slideCounter">Slide 1 of 37</span>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+    <div>Press <span style="color: #00ff00;">h</span> for help</div>
+  </div>
+
+  <div class="help-overlay" id="helpOverlay">
+    <div class="help-content">
+      <h2 style="color: #00ff00;">Navigation</h2>
+      <ul>
+        <li><span class="key">→</span> / <span class="key">n</span> / <span class="key">Space</span> Next slide</li>
+        <li><span class="key">←</span> / <span class="key">p</span> Previous slide</li>
+        <li><span class="key">g</span> First slide</li>
+        <li><span class="key">G</span> Last slide</li>
+        <li><span class="key">1-9</span> Jump to slide</li>
+        <li><span class="key">f</span> Toggle fullscreen</li>
+        <li><span class="key">h</span> / <span class="key">?</span> Toggle help</li>
+        <li><span class="key">Esc</span> Close help / Exit fullscreen</li>
+      </ul>
+      <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #888888;">
+        Made with <a href="https://github.com/nb/presentercli" target="_blank" rel="noopener" style="color: #00aaff;">presentercli</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const slides = [{"title":"From PHP 5.5 to PHP 8.5","content":"<p style=\"color: #ffffff;\"><strong>A Developer's Journey Through 12 Years of Evolution</strong></p>\n<p style=\"color: #ffffff;\"><em>Welcome back to PHP!</em></p>\n","asciiArt":"  ___                ___ _  _ ___   ___   ___   _         ___ _  _ ___   ___   ___ \n | __| _ ___ _ __   | _ \\ || | _ \\ | __| | __| | |_ ___  | _ \\ || | _ \\ ( _ ) | __|\n | _| '_/ _ \\ '  \\  |  _/ __ |  _/ |__ \\_|__ \\ |  _/ _ \\ |  _/ __ |  _/ / _ \\_|__ \\\n |_||_| \\___/_|_|_| |_| |_||_|_|   |___(_)___/  \\__\\___/ |_| |_||_|_|   \\___(_)___/\n                                                                                   ","asciiArtWidth":83},{"title":"Welcome Back!","content":"<p style=\"color: #ffffff;\">If you last wrote PHP code in 2013, you're in for a <strong>remarkable surprise</strong>.</p>\n<p style=\"color: #ffffff;\">PHP has undergone one of the most dramatic transformations in programming language history.</p>\n<p style=\"color: #ffffff;\"><strong>This isn't just about new features</strong> — PHP has fundamentally reimagined itself as a modern, type-safe, high-performance language.</p>\n","asciiArt":" __          __  _                            ____             _    _ \n \\ \\        / / | |                          |  _ \\           | |  | |\n  \\ \\  /\\  / /__| | ___ ___  _ __ ___   ___  | |_) | __ _  ___| | _| |\n   \\ \\/  \\/ / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\ |  _ < / _` |/ __| |/ / |\n    \\  /\\  /  __/ | (_| (_) | | | | | |  __/ | |_) | (_| | (__|   <|_|\n     \\/  \\/ \\___|_|\\___\\___/|_| |_| |_|\\___| |____/ \\__,_|\\___|_|\\_(_)\n                                                                      \n                                                                      ","asciiArtWidth":70},{"title":"The Landscape in 2013","content":"<p style=\"color: #ffffff;\"><strong>PHP 5.5</strong> (June 2013) looked like this:</p>\n<pre class=\"code-block\"><code>class UserRepository {\n    private $db;\n\n    public function __construct($db) {\n        $this-&gt;db = $db;\n    }\n\n    public function findById($id) {\n        $result = $this-&gt;db-&gt;query(\n            &quot;SELECT * FROM users WHERE id = &quot; . $id\n        );\n        return $result-&gt;fetch();\n    }\n}</code></pre>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> No type hints (except array and callable)</li>\n<li><span class=\"bullet\">•</span> No return type declarations</li>\n<li><span class=\"bullet\">•</span> ~100 req/s performance</li>\n</ul>\n","asciiArt":"  _____ _          _                 _                         _        ___ __  _ ____\n |_   _| |_  ___  | |   __ _ _ _  __| |___ __ __ _ _ __  ___  (_)_ _   |_  )  \\/ |__ /\n   | | | ' \\/ -_) | |__/ _` | ' \\/ _` (_-</ _/ _` | '_ \\/ -_) | | ' \\   / / () | ||_ \\\n   |_| |_||_\\___| |____\\__,_|_||_\\__,_/__/\\__\\__,_| .__/\\___| |_|_||_| /___\\__/|_|___/\n                                                  |_|                                 ","asciiArtWidth":86},{"title":"PHP 7.0: The Game Changer","content":"<p style=\"color: #ffffff;\"><strong>December 2015</strong> - Complete rewrite of the Zend Engine</p>\n<p style=\"color: #ffffff;\"><strong>Performance doubled or tripled</strong> for most applications</p>\n<p style=\"color: #ffffff;\"><strong>Key Features:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Scalar type declarations (<code class=\"inline-code\">int</code>, <code class=\"inline-code\">float</code>, <code class=\"inline-code\">string</code>, <code class=\"inline-code\">bool</code>)</li>\n<li><span class=\"bullet\">•</span> Return type declarations</li>\n<li><span class=\"bullet\">•</span> Spaceship operator (<code class=\"inline-code\"><=></code>)</li>\n<li><span class=\"bullet\">•</span> Null coalescing operator (<code class=\"inline-code\">??</code>)</li>\n<li><span class=\"bullet\">•</span> Anonymous classes</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Performance Impact:</strong> 2-3x speed improvements, ~50% less memory</p>\n","asciiArt":"  ___ _  _ ___   ____ __ _   _____ _           ___                   ___ _                           \n | _ \\ || | _ \\ |__  /  (_) |_   _| |_  ___   / __|__ _ _ __  ___   / __| |_  __ _ _ _  __ _ ___ _ _ \n |  _/ __ |  _/   / / () |    | | | ' \\/ -_) | (_ / _` | '  \\/ -_) | (__| ' \\/ _` | ' \\/ _` / -_) '_|\n |_| |_||_|_|    /_(_)__(_)   |_| |_||_\\___|  \\___\\__,_|_|_|_\\___|  \\___|_||_\\__,_|_||_\\__, \\___|_|  \n                                                                                       |___/         ","asciiArtWidth":101},{"title":"PHP 7.0: Code Examples","content":"<p style=\"color: #ffffff;\"><strong>Scalar Types & Return Types:</strong></p>\n<pre class=\"code-block\"><code>function calculateTotal(int $quantity, float $price): float {\n    return $quantity * $price;\n}</code></pre>\n<p style=\"color: #ffffff;\"><strong>Null Coalescing:</strong></p>\n<pre class=\"code-block\"><code>// Before\n$username = isset($_GET[&#039;user&#039;]) ? $_GET[&#039;user&#039;] : &#039;guest&#039;;\n\n// After\n$username = $_GET[&#039;user&#039;] ?? &#039;guest&#039;;</code></pre>\n<p style=\"color: #ffffff;\"><strong>Spaceship Operator:</strong></p>\n<pre class=\"code-block\"><code>$result = $a &lt;=&gt; $b;  // Returns -1, 0, or 1\nusort($array, fn($a, $b) =&gt; $a &lt;=&gt; $b);</code></pre>\n","asciiArt":"  ___ _  _ ___   ____ __ _    ___         _       ___                     _        \n | _ \\ || | _ \\ |__  /  (_)  / __|___  __| |___  | __|_ ____ _ _ __  _ __| |___ ___\n |  _/ __ |  _/   / / () |  | (__/ _ \\/ _` / -_) | _|\\ \\ / _` | '  \\| '_ \\ / -_|_-<\n |_| |_||_|_|    /_(_)__(_)  \\___\\___/\\__,_\\___| |___/_\\_\\__,_|_|_|_| .__/_\\___/__/\n                                                                    |_|            ","asciiArtWidth":83},{"title":"PHP 7.4: Modern PHP Preview","content":"<p style=\"color: #ffffff;\"><strong>November 2019</strong> - Preview of PHP 8</p>\n<p style=\"color: #ffffff;\"><strong>1. Typed Properties:</strong></p>\n<pre class=\"code-block\"><code>class User {\n    public int $id;\n    public string $name;\n    public ?string $email = null;\n}</code></pre>\n<p style=\"color: #ffffff;\"><strong>2. Arrow Functions:</strong></p>\n<pre class=\"code-block\"><code>$multiplied = array_map(fn($n) =&gt; $n * 2, $numbers);</code></pre>\n<p style=\"color: #ffffff;\"><strong>3. Spread Operator in Arrays:</strong></p>\n<pre class=\"code-block\"><code>$fruits = [&#039;banana&#039;, ...$parts, &#039;grape&#039;];</code></pre>\n<p style=\"color: #ffffff;\">By 7.4, PHP started to look like a <strong>statically-typed language</strong></p>\n","asciiArt":"  ___ _  _ ___   ____ _ _ _   __  __         _                ___ _  _ ___   ___             _            \n | _ \\ || | _ \\ |__  | | (_) |  \\/  |___  __| |___ _ _ _ _   | _ \\ || | _ \\ | _ \\_ _ _____ _(_)_____ __ __\n |  _/ __ |  _/   / /|_  _|  | |\\/| / _ \\/ _` / -_) '_| ' \\  |  _/ __ |  _/ |  _/ '_/ -_) V / / -_) V  V /\n |_| |_||_|_|    /_(_) |_(_) |_|  |_\\___/\\__,_\\___|_| |_||_| |_| |_||_|_|   |_| |_| \\___|\\_/|_\\___|\\_/\\_/ \n                                                                                                          ","asciiArtWidth":106},{"title":"PHP 8.0: The JIT Revolution","content":"<p style=\"color: #ffffff;\"><strong>November 2020</strong> - A new era begins</p>\n<p style=\"color: #ffffff;\"><strong>Just-In-Time Compiler</strong> built into OPcache:</p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> CPU-intensive tasks: <strong>2-3x faster</strong></li>\n<li><span class=\"bullet\">•</span> Web applications: <strong>5-15% faster</strong></li>\n<li><span class=\"bullet\">•</span> Mathematical operations: <strong>Up to 10x faster</strong></li>\n</ul>\n<pre class=\"code-block\"><code>Your PHP Code → AST → OPcode → Optimization\n                              ↓\n                [OPcache] → [JIT] → Native Machine Code</code></pre>\n<p style=\"color: #ffffff;\"><strong>47 specialized files</strong> handling IR, tracing, and optimization</p>\n","asciiArt":"  ___ _  _ ___   ___   __ _   _____ _             _ ___ _____   ___             _      _   _          \n | _ \\ || | _ \\ ( _ ) /  (_) |_   _| |_  ___   _ | |_ _|_   _| | _ \\_____ _____| |_  _| |_(_)___ _ _  \n |  _/ __ |  _/ / _ \\| () |    | | | ' \\/ -_) | || || |  | |   |   / -_) V / _ \\ | || |  _| / _ \\ ' \\ \n |_| |_||_|_|   \\___(_)__(_)   |_| |_||_\\___|  \\__/|___| |_|   |_|_\\___|\\_/\\___/_|\\_,_|\\__|_\\___/_||_|\n                                                                                                      ","asciiArtWidth":102},{"title":"PHP 8.0: Named Arguments","content":"<p style=\"color: #ffffff;\"><strong>Call functions with explicit parameter names:</strong></p>\n<pre class=\"code-block\"><code>sendEmail(\n    to: &#039;user@example.com&#039;,\n    subject: &#039;Welcome!&#039;,\n    body: &#039;Hello there!&#039;,\n    priority: &#039;high&#039;\n);\n\n// Skip optional parameters\ncreateUser(name: &#039;John&#039;, role: &#039;admin&#039;);</code></pre>\n<p style=\"color: #ffffff;\">Makes code <strong>self-documenting</strong> and refactoring <strong>safer</strong></p>\n","asciiArt":"  ___ _  _ ___   ___   __ _   _  _                   _     _                               _      \n | _ \\ || | _ \\ ( _ ) /  (_) | \\| |__ _ _ __  ___ __| |   /_\\  _ _ __ _ _  _ _ __  ___ _ _| |_ ___\n |  _/ __ |  _/ / _ \\| () |  | .` / _` | '  \\/ -_) _` |  / _ \\| '_/ _` | || | '  \\/ -_) ' \\  _(_-<\n |_| |_||_|_|   \\___(_)__(_) |_|\\_\\__,_|_|_|_\\___\\__,_| /_/ \\_\\_| \\__, |\\_,_|_|_|_\\___|_||_\\__/__/\n                                                                  |___/                           ","asciiArtWidth":98},{"title":"PHP 8.0: Union Types","content":"<p style=\"color: #ffffff;\"><strong>Accept multiple types:</strong></p>\n<pre class=\"code-block\"><code>function processId(int|string $id): int|null {\n    if (is_string($id)) {\n        return $this-&gt;convertToInt($id);\n    }\n    return $id;\n}</code></pre>\n<p style=\"color: #ffffff;\">Type safety with <strong>flexibility</strong> where needed</p>\n","asciiArt":"  ___ _  _ ___   ___   __ _   _   _      _            _____                  \n | _ \\ || | _ \\ ( _ ) /  (_) | | | |_ _ (_)___ _ _   |_   _|  _ _ __  ___ ___\n |  _/ __ |  _/ / _ \\| () |  | |_| | ' \\| / _ \\ ' \\    | || || | '_ \\/ -_|_-<\n |_| |_||_|_|   \\___(_)__(_)  \\___/|_||_|_\\___/_||_|   |_| \\_, | .__/\\___/__/\n                                                           |__/|_|           ","asciiArtWidth":77},{"title":"PHP 8.0: Match Expression","content":"<p style=\"color: #ffffff;\"><strong>Better than switch:</strong></p>\n<pre class=\"code-block\"><code>// Old switch - verbose, error-prone\nswitch ($status) {\n    case &#039;pending&#039;:\n        $message = &#039;Waiting&#039;;\n        break;\n    case &#039;approved&#039;:\n        $message = &#039;Done&#039;;\n        break;\n}\n\n// New match - strict, concise, returns value\n$message = match($status) {\n    &#039;pending&#039; =&gt; &#039;Waiting&#039;,\n    &#039;approved&#039; =&gt; &#039;Done&#039;,\n    &#039;rejected&#039; =&gt; &#039;Failed&#039;,\n    default =&gt; &#039;Unknown&#039;\n};</code></pre>\n","asciiArt":"  ___ _  _ ___   ___   __ _   __  __      _      _      ___                        _          \n | _ \\ || | _ \\ ( _ ) /  (_) |  \\/  |__ _| |_ __| |_   | __|_ ___ __ _ _ ___ _____(_)___ _ _  \n |  _/ __ |  _/ / _ \\| () |  | |\\/| / _` |  _/ _| ' \\  | _|\\ \\ / '_ \\ '_/ -_|_-<_-< / _ \\ ' \\ \n |_| |_||_|_|   \\___(_)__(_) |_|  |_\\__,_|\\__\\__|_||_| |___/_\\_\\ .__/_| \\___/__/__/_\\___/_||_|\n                                                               |_|                            ","asciiArtWidth":94},{"title":"PHP 8.0: Constructor Property Promotion","content":"<p style=\"color: #ffffff;\"><strong>Dramatically reduces boilerplate:</strong></p>\n<pre class=\"code-block\"><code>// Before (PHP 7.4)\nclass User {\n    private string $name;\n    private string $email;\n\n    public function __construct(string $name, string $email) {\n        $this-&gt;name = $name;\n        $this-&gt;email = $email;\n    }\n}\n\n// After (PHP 8.0)\nclass User {\n    public function __construct(\n        private string $name,\n        private string $email\n    ) {}\n}</code></pre>\n","asciiArt":"  ___ _  _ ___   ___   __ _    ___             _               _             ___                       _         \n | _ \\ || | _ \\ ( _ ) /  (_)  / __|___ _ _  __| |_ _ _ _  _ __| |_ ___ _ _  | _ \\_ _ ___ _ __  ___ _ _| |_ _  _  \n |  _/ __ |  _/ / _ \\| () |  | (__/ _ \\ ' \\(_-<  _| '_| || / _|  _/ _ \\ '_| |  _/ '_/ _ \\ '_ \\/ -_) '_|  _| || | \n |_| |_||_|_|   \\___(_)__(_)  \\___\\___/_||_/__/\\__|_|  \\_,_\\__|\\__\\___/_|   |_| |_| \\___/ .__/\\___|_|  \\__|\\_, | \n                                                                                        |_|                |__/  ","asciiArtWidth":113},{"title":"PHP 8.0: Attributes","content":"<p style=\"color: #ffffff;\"><strong>Native annotation system:</strong></p>\n<pre class=\"code-block\"><code>#[Route(&#039;/api/users&#039;, methods: [&#039;GET&#039;])]\n#[Authenticated]\nclass UserController {\n\n    #[Cache(ttl: 3600)]\n    public function list(): array {\n        return $this-&gt;userRepository-&gt;findAll();\n    }\n}</code></pre>\n<p style=\"color: #ffffff;\">Metadata attached to <strong>code structures</strong> - readable by reflection</p>\n","asciiArt":"  ___ _  _ ___   ___   __ _     _  _   _       _ _         _          \n | _ \\ || | _ \\ ( _ ) /  (_)   /_\\| |_| |_ _ _(_) |__ _  _| |_ ___ ___\n |  _/ __ |  _/ / _ \\| () |   / _ \\  _|  _| '_| | '_ \\ || |  _/ -_|_-<\n |_| |_||_|_|   \\___(_)__(_) /_/ \\_\\__|\\__|_| |_|_.__/\\_,_|\\__\\___/__/\n                                                                      ","asciiArtWidth":70},{"title":"PHP 8.0: Nullsafe Operator","content":"<p style=\"color: #ffffff;\"><strong>Safe navigation through potentially null objects:</strong></p>\n<pre class=\"code-block\"><code>// Before - verbose null checks\n$country = null;\nif ($user !== null) {\n    $address = $user-&gt;getAddress();\n    if ($address !== null) {\n        $country = $address-&gt;getCountry();\n    }\n}\n\n// After - elegant chain\n$country = $user?-&gt;getAddress()?-&gt;getCountry();</code></pre>\n<p style=\"color: #ffffff;\">Inspired by <strong>Swift, TypeScript, C#</strong></p>\n","asciiArt":"  ___ _  _ ___   ___   __ _   _  _      _ _           __        ___                     _           \n | _ \\ || | _ \\ ( _ ) /  (_) | \\| |_  _| | |___ __ _ / _|___   / _ \\ _ __  ___ _ _ __ _| |_ ___ _ _ \n |  _/ __ |  _/ / _ \\| () |  | .` | || | | (_-</ _` |  _/ -_) | (_) | '_ \\/ -_) '_/ _` |  _/ _ \\ '_|\n |_| |_||_|_|   \\___(_)__(_) |_|\\_|\\_,_|_|_/__/\\__,_|_| \\___|  \\___/| .__/\\___|_| \\__,_|\\__\\___/_|  \n                                                                    |_|                             ","asciiArtWidth":100},{"title":"PHP 8.1: Enumerations","content":"<p style=\"color: #ffffff;\"><strong>November 2021</strong> - First-class enums</p>\n<pre class=\"code-block\"><code>enum Status {\n    case Pending;\n    case Approved;\n    case Rejected;\n}\n\nenum Priority: int {\n    case Low = 1;\n    case Medium = 5;\n    case High = 10;\n\n    public function label(): string {\n        return match($this) {\n            self::Low =&gt; &#039;Low Priority&#039;,\n            self::Medium =&gt; &#039;Medium Priority&#039;,\n            self::High =&gt; &#039;High Priority&#039;,\n        };\n    }\n}\n\n$priority = Priority::High;\necho $priority-&gt;value;  // 10</code></pre>\n","asciiArt":"  ___ _  _ ___   ___   _ _   ___                             _   _             \n | _ \\ || | _ \\ ( _ ) / (_) | __|_ _ _  _ _ __  ___ _ _ __ _| |_(_)___ _ _  ___\n |  _/ __ |  _/ / _ \\_| |_  | _|| ' \\ || | '  \\/ -_) '_/ _` |  _| / _ \\ ' \\(_-<\n |_| |_||_|_|   \\___(_)_(_) |___|_||_\\_,_|_|_|_\\___|_| \\__,_|\\__|_\\___/_||_/__/\n                                                                               ","asciiArtWidth":79},{"title":"PHP 8.1: Readonly Properties","content":"<p style=\"color: #ffffff;\"><strong>Immutability built into the language:</strong></p>\n<pre class=\"code-block\"><code>class Product {\n    public function __construct(\n        public readonly string $id,\n        public readonly string $name,\n        public readonly float $price\n    ) {}\n}\n\n$product = new Product(&#039;SKU123&#039;, &#039;Laptop&#039;, 999.99);\n// $product-&gt;price = 1200;\n// Error! Cannot modify readonly property</code></pre>\n<p style=\"color: #ffffff;\"><strong>Benefits:</strong> Thread-safe, predictable, no defensive copying</p>\n","asciiArt":"  ___ _  _ ___   ___   _ _   ___             _          _        ___                       _   _        \n | _ \\ || | _ \\ ( _ ) / (_) | _ \\___ __ _ __| |___ _ _ | |_  _  | _ \\_ _ ___ _ __  ___ _ _| |_(_)___ ___\n |  _/ __ |  _/ / _ \\_| |_  |   / -_) _` / _` / _ \\ ' \\| | || | |  _/ '_/ _ \\ '_ \\/ -_) '_|  _| / -_|_-<\n |_| |_||_|_|   \\___(_)_(_) |_|_\\___\\__,_\\__,_\\___/_||_|_|\\_, | |_| |_| \\___/ .__/\\___|_|  \\__|_\\___/__/\n                                                          |__/              |_|                         ","asciiArtWidth":104},{"title":"PHP 8.1: Fibers","content":"<p style=\"color: #ffffff;\"><strong>Green threads for async programming:</strong></p>\n<pre class=\"code-block\"><code>$fiber = new Fiber(function(): void {\n    $value = Fiber::suspend(&#039;first&#039;);\n    echo &quot;Resumed with: $value\\n&quot;;\n});\n\n$result = $fiber-&gt;start();  // &quot;first&quot;\n$fiber-&gt;resume(&#039;second&#039;);   // &quot;Resumed with: second&quot;</code></pre>\n<p style=\"color: #ffffff;\">Foundation for <strong>modern async frameworks</strong> without callbacks</p>\n<p style=\"color: #ffffff;\"><strong>First-class callable syntax:</strong></p>\n<pre class=\"code-block\"><code>$lengths = array_map(strlen(...), $strings);</code></pre>\n","asciiArt":"  _____  _    _ _____     ___  __     ______ _ _                   \n |  __ \\| |  | |  __ \\   / _ \\/_ |_  |  ____(_) |                  \n | |__) | |__| | |__) | | (_) || (_) | |__   _| |__   ___ _ __ ___ \n |  ___/|  __  |  ___/   > _ < | |   |  __| | | '_ \\ / _ \\ '__/ __|\n | |    | |  | | |      | (_) || |_  | |    | | |_) |  __/ |  \\__ \\\n |_|    |_|  |_|_|       \\___(_)_(_) |_|    |_|_.__/ \\___|_|  |___/\n                                                                   \n                                                                   ","asciiArtWidth":67},{"title":"PHP 8.2-8.3: Type System Maturity","content":"<p style=\"color: #ffffff;\"><strong>PHP 8.2 (December 2022):</strong></p>\n<pre class=\"code-block\"><code>readonly class Configuration {\n    public function __construct(\n        public string $host,\n        public int $port\n    ) {}\n}\n\n// DNF Types\nfunction process((Stringable&amp;JsonSerializable)|null $value) {}</code></pre>\n<p style=\"color: #ffffff;\"><strong>PHP 8.3 (November 2023):</strong></p>\n<pre class=\"code-block\"><code>class MathConstants {\n    public const float PI = 3.14159;\n    public const int MAX_SIZE = 1000;\n}\n\n#[Override]  // Ensures parent method exists\npublic function process(): void {}</code></pre>\n","asciiArt":"  ___ _  _ ___   ___   ___    ___   _____   _____                 ___         _               __  __      _            \n | _ \\ || | _ \\ ( _ ) |_  )__( _ ) |__ (_) |_   _|  _ _ __  ___  / __|_  _ __| |_ ___ _ __   |  \\/  |__ _| |_ _  _ _ _ \n |  _/ __ |  _/ / _ \\_ / /___/ _ \\_ |_ \\_    | || || | '_ \\/ -_) \\__ \\ || (_-<  _/ -_) '  \\  | |\\/| / _` |  _| || | '_|\n |_| |_||_|_|   \\___(_)___|  \\___(_)___(_)   |_| \\_, | .__/\\___| |___/\\_, /__/\\__\\___|_|_|_| |_|  |_\\__,_|\\__|\\_,_|_|  \n                                                 |__/|_|              |__/                                             ","asciiArtWidth":119},{"title":"PHP 8.4: Property Hooks","content":"<p style=\"color: #ffffff;\"><strong>November 2024</strong> - Getters/setters redefined</p>\n<pre class=\"code-block\"><code>class Temperature {\n    public float $celsius {\n        get =&gt; $this-&gt;celsius;\n        set =&gt; $value &gt;= -273.15\n            ? $value\n            : throw new ValueError(&#039;Below absolute zero&#039;);\n    }\n\n    public float $fahrenheit {\n        get =&gt; $this-&gt;celsius * 9/5 + 32;\n        set(float $f) =&gt; $this-&gt;celsius = ($f - 32) * 5/9;\n    }\n}\n\n$temp = new Temperature();\n$temp-&gt;celsius = 20;\necho $temp-&gt;fahrenheit;  // 68 (auto-calculated!)</code></pre>\n","asciiArt":"  ___ _  _ ___   ___  _ _ _   ___                       _          _  _          _       \n | _ \\ || | _ \\ ( _ )| | (_) | _ \\_ _ ___ _ __  ___ _ _| |_ _  _  | || |___  ___| |__ ___\n |  _/ __ |  _/ / _ \\|_  _|  |  _/ '_/ _ \\ '_ \\/ -_) '_|  _| || | | __ / _ \\/ _ \\ / /(_-<\n |_| |_||_|_|   \\___(_)|_(_) |_| |_| \\___/ .__/\\___|_|  \\__|\\_, | |_||_\\___/\\___/_\\_\\/__/\n                                         |_|                |__/                         ","asciiArtWidth":89},{"title":"PHP 8.4: Asymmetric Visibility","content":"<p style=\"color: #ffffff;\"><strong>Different visibility for read/write:</strong></p>\n<pre class=\"code-block\"><code>class User {\n    public private(set) string $username;\n    public protected(set) string $email;\n\n    public function __construct(string $username) {\n        $this-&gt;username = $username;  // OK inside class\n    }\n}\n\n$user = new User(&#039;john_doe&#039;);\necho $user-&gt;username;  // OK - public read\n// $user-&gt;username = &#039;jane&#039;;\n// Error - private write!</code></pre>\n<p style=\"color: #ffffff;\"><strong>Encapsulation without boilerplate</strong></p>\n","asciiArt":"  ___ _  _ ___   ___  _ _ _     _                            _       _     __   ___    _ _    _ _ _ _        \n | _ \\ || | _ \\ ( _ )| | (_)   /_\\   ____  _ _ __  _ __  ___| |_ _ _(_)__  \\ \\ / (_)__(_) |__(_) (_) |_ _  _ \n |  _/ __ |  _/ / _ \\|_  _|   / _ \\ (_-< || | '  \\| '  \\/ -_)  _| '_| / _|  \\ V /| (_-< | '_ \\ | | |  _| || |\n |_| |_||_|_|   \\___(_)|_(_) /_/ \\_\\/__/\\_, |_|_|_|_|_|_\\___|\\__|_| |_\\__|   \\_/ |_/__/_|_.__/_|_|_|\\__|\\_, |\n                                        |__/                                                            |__/ ","asciiArtWidth":109},{"title":"PHP 8.5: Pipe Operator","content":"<p style=\"color: #ffffff;\"><strong>November 2025</strong> - Functional programming FTW</p>\n<pre class=\"code-block\"><code>// Traditional nested calls (hard to read)\n$result = array_sum(\n    array_map(\n        fn($x) =&gt; $x * 2,\n        array_filter($data, fn($x) =&gt; $x &gt; 0)\n    )\n);\n\n// With pipe operator (clear flow)\n$result = $data\n    |&gt; array_filter($$, fn($x) =&gt; $x &gt; 0)\n    |&gt; array_map(fn($x) =&gt; $x * 2, $$)\n    |&gt; array_sum($$);</code></pre>\n<p style=\"color: #ffffff;\">Inspired by <strong>F#, Elixir, Hack</strong></p>\n","asciiArt":"  ___ _  _ ___   ___   ___ _   ___ _              ___                     _           \n | _ \\ || | _ \\ ( _ ) | __(_) | _ (_)_ __  ___   / _ \\ _ __  ___ _ _ __ _| |_ ___ _ _ \n |  _/ __ |  _/ / _ \\_|__ \\_  |  _/ | '_ \\/ -_) | (_) | '_ \\/ -_) '_/ _` |  _/ _ \\ '_|\n |_| |_||_|_|   \\___(_)___(_) |_| |_| .__/\\___|  \\___/| .__/\\___|_| \\__,_|\\__\\___/_|  \n                                    |_|               |_|                             ","asciiArtWidth":86},{"title":"PHP 8.5: More Features","content":"<p style=\"color: #ffffff;\"><strong>#[NoDiscard] Attribute:</strong></p>\n<pre class=\"code-block\"><code>#[\\NoDiscard]\nfunction openDatabaseConnection(): PDO {\n    return new PDO(/* ... */);\n}\n\nopenDatabaseConnection();  // Warning!\n(void) openDatabaseConnection();  // OK - explicit</code></pre>\n<p style=\"color: #ffffff;\"><strong>Closures in Constants:</strong></p>\n<pre class=\"code-block\"><code>class Calculator {\n    public const OPERATIONS = [\n        &#039;double&#039; =&gt; fn($x) =&gt; $x * 2,\n        &#039;square&#039; =&gt; fn($x) =&gt; $x ** 2,\n    ];\n}</code></pre>\n<p style=\"color: #ffffff;\"><strong>Lazy Objects</strong> - JIT initialization of expensive objects</p>\n","asciiArt":"  ___ _  _ ___   ___   ___ _   __  __               ___         _                   \n | _ \\ || | _ \\ ( _ ) | __(_) |  \\/  |___ _ _ ___  | __|__ __ _| |_ _  _ _ _ ___ ___\n |  _/ __ |  _/ / _ \\_|__ \\_  | |\\/| / _ \\ '_/ -_) | _/ -_) _` |  _| || | '_/ -_|_-<\n |_| |_||_|_|   \\___(_)___(_) |_|  |_\\___/_| \\___| |_|\\___\\__,_|\\__|\\_,_|_| \\___/__/\n                                                                                    ","asciiArtWidth":84},{"title":"Type System Evolution","content":"<pre class=\"code-block\"><code>// 2013: No types\nfunction calculatePrice($quantity, $price) {\n    return $quantity * $price;\n}\n\n// 2015 (PHP 7.0): Basic types\nfunction calculatePrice(int $quantity, float $price): float\n\n// 2020 (PHP 8.0): Union types\nfunction processInput(int|float|string $value): int|float\n\n// 2022 (PHP 8.2): DNF types\nfunction handle((Countable&amp;Traversable)|array $data): int\n\n// 2024 (PHP 8.4): Asymmetric visibility\nclass User {\n    public private(set) string $id;\n}</code></pre>\n<p style=\"color: #ffffff;\">From <strong>dynamic</strong> to one of the most <strong>sophisticated type systems</strong></p>\n","asciiArt":"  _____                 ___         _               ___         _      _   _          \n |_   _|  _ _ __  ___  / __|_  _ __| |_ ___ _ __   | __|_ _____| |_  _| |_(_)___ _ _  \n   | || || | '_ \\/ -_) \\__ \\ || (_-<  _/ -_) '  \\  | _|\\ V / _ \\ | || |  _| / _ \\ ' \\ \n   |_| \\_, | .__/\\___| |___/\\_, /__/\\__\\___|_|_|_| |___|\\_/\\___/_|\\_,_|\\__|_\\___/_||_|\n       |__/|_|              |__/                                                      ","asciiArtWidth":86},{"title":"OPcache + JIT: Built-In Performance","content":"<p style=\"color: #ffffff;\"><strong>What Changed:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> 2013: OPcache was optional</li>\n<li><span class=\"bullet\">•</span> 2025: <strong>OPcache always loaded</strong>, built into PHP binary</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>The Optimization Pipeline:</strong></p>\n<pre class=\"code-block\"><code>Your PHP Code\n      ↓\n[Parsing] → AST\n      ↓\n[Compilation] → OPcode\n      ↓\n[Optimization] → SCCP, DCE, DFA passes\n      ↓\n[OPcache] → Cached bytecode\n      ↓\n[JIT] → Native machine code\n      ↓\n[CPU] → Direct execution</code></pre>\n","asciiArt":"   ___  ___            _            _        _ ___ _____ _   ___      _ _ _      ___        ___          __         \n  / _ \\| _ \\__ __ _ __| |_  ___   _| |_   _ | |_ _|_   _(_) | _ )_  _(_) | |_ __|_ _|_ _   | _ \\___ _ _ / _|___ _ _ \n | (_) |  _/ _/ _` / _| ' \\/ -_) |_   _| | || || |  | |  _  | _ \\ || | | |  _|___| || ' \\  |  _/ -_) '_|  _/ _ \\ '_|\n  \\___/|_| \\__\\__,_\\__|_||_\\___|   |_|    \\__/|___| |_| (_) |___/\\_,_|_|_|\\__|  |___|_||_| |_| \\___|_| |_| \\___/_|  \n                                                                                                                    ","asciiArtWidth":116},{"title":"Error Handling Evolution","content":"<p style=\"color: #ffffff;\"><strong>2013:</strong></p>\n<pre class=\"code-block\"><code>$result = mysql_query(&quot;SELECT * FROM users&quot;);\nif (!$result) {\n    // Maybe handle error, maybe not\n}</code></pre>\n<p style=\"color: #ffffff;\"><strong>2025:</strong></p>\n<pre class=\"code-block\"><code>try {\n    $pdo = new PDO($dsn, $user, $pass);\n    $pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);\n\n    $stmt = $pdo-&gt;prepare(&quot;SELECT * FROM users WHERE id = ?&quot;);\n    $stmt-&gt;execute([$id]);\n\n} catch (PDOException $e) {\n    logger()-&gt;error(&#039;Database error&#039;, [&#039;exception&#039; =&gt; $e]);\n    throw new ApplicationException(&#039;Failed to fetch user&#039;, 0, $e);\n}</code></pre>\n<p style=\"color: #ffffff;\"><strong>PHP 8.5:</strong> Fatal errors now include <strong>backtraces</strong></p>\n","asciiArt":"  ___                   _  _              _ _ _             ___         _      _   _          \n | __|_ _ _ _ ___ _ _  | || |__ _ _ _  __| | (_)_ _  __ _  | __|_ _____| |_  _| |_(_)___ _ _  \n | _|| '_| '_/ _ \\ '_| | __ / _` | ' \\/ _` | | | ' \\/ _` | | _|\\ V / _ \\ | || |  _| / _ \\ ' \\ \n |___|_| |_| \\___/_|   |_||_\\__,_|_||_\\__,_|_|_|_||_\\__, | |___|\\_/\\___/_|\\_,_|\\__|_\\___/_||_|\n                                                    |___/                                     ","asciiArtWidth":94},{"title":"Performance: The Numbers","content":"<p style=\"color: #ffffff;\"><strong>Benchmarks compared to PHP 5.5:</strong></p>\n<p style=\"color: #ffffff;\"><strong>Real-world impact:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Server capacity: <strong>100 → 350+ concurrent users</strong></li>\n<li><span class=\"bullet\">•</span> Memory costs: <strong>~55% reduction</strong></li>\n<li><span class=\"bullet\">•</span> Response times: <strong>~70% faster</strong></li>\n</ul>\n","asciiArt":"  ___          __                                _   _____ _          _  _            _                \n | _ \\___ _ _ / _|___ _ _ _ __  __ _ _ _  __ ___(_) |_   _| |_  ___  | \\| |_  _ _ __ | |__  ___ _ _ ___\n |  _/ -_) '_|  _/ _ \\ '_| '  \\/ _` | ' \\/ _/ -_)_    | | | ' \\/ -_) | .` | || | '  \\| '_ \\/ -_) '_(_-<\n |_| \\___|_| |_| \\___/_| |_|_|_\\__,_|_||_\\__\\___(_)   |_| |_||_\\___| |_|\\_|\\_,_|_|_|_|_.__/\\___|_| /__/\n                                                                                                       ","asciiArtWidth":103},{"title":"Modern Toolchain: Composer","content":"<p style=\"color: #ffffff;\"><strong>2013:</strong> PEAR was dying, Composer was new\n<strong>2025:</strong> Composer is <strong>universal</strong></p>\n<pre class=\"code-block\"><code># Project setup\ncomposer init\ncomposer require symfony/http-foundation\ncomposer require --dev phpunit/phpunit\n\n# Autoloading (PSR-4)\ncomposer dump-autoload</code></pre>\n<p style=\"color: #ffffff;\"><strong>PSR Standards:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> PSR-4: Autoloading</li>\n<li><span class=\"bullet\">•</span> PSR-7: HTTP Messages</li>\n<li><span class=\"bullet\">•</span> PSR-11: Container Interface</li>\n<li><span class=\"bullet\">•</span> PSR-12: Coding Style</li>\n</ul>\n","asciiArt":"  __  __         _                _____         _    _         _      _    ___                                 \n |  \\/  |___  __| |___ _ _ _ _   |_   _|__  ___| |__| |_  __ _(_)_ _ (_)  / __|___ _ __  _ __  ___ ___ ___ _ _ \n | |\\/| / _ \\/ _` / -_) '_| ' \\    | |/ _ \\/ _ \\ / _| ' \\/ _` | | ' \\ _  | (__/ _ \\ '  \\| '_ \\/ _ (_-</ -_) '_|\n |_|  |_\\___/\\__,_\\___|_| |_||_|   |_|\\___/\\___/_\\__|_||_\\__,_|_|_||_(_)  \\___\\___/_|_|_| .__/\\___/__/\\___|_|  \n                                                                                        |_|                    ","asciiArtWidth":111},{"title":"Static Analysis Tools","content":"<p style=\"color: #ffffff;\"><strong>PHPStan / Psalm:</strong></p>\n<p style=\"color: #ffffff;\">Find bugs <strong>before runtime</strong> by analyzing types and logic</p>\n<pre class=\"code-block\"><code>composer require --dev phpstan/phpstan\nvendor/bin/phpstan analyse src --level=8</code></pre>\n<p style=\"color: #ffffff;\"><strong>PHP CS Fixer:</strong></p>\n<p style=\"color: #ffffff;\">Automatic code formatting</p>\n<pre class=\"code-block\"><code>composer require --dev friendsofphp/php-cs-fixer\nvendor/bin/php-cs-fixer fix src</code></pre>\n<p style=\"color: #ffffff;\">These tools are <strong>essential</strong> in modern PHP development</p>\n","asciiArt":"  ___ _        _   _        _             _         _      _____         _    \n / __| |_ __ _| |_(_)__    /_\\  _ _  __ _| |_  _ __(_)___ |_   _|__  ___| |___\n \\__ \\  _/ _` |  _| / _|  / _ \\| ' \\/ _` | | || (_-< (_-<   | |/ _ \\/ _ \\ (_-<\n |___/\\__\\__,_|\\__|_\\__| /_/ \\_\\_||_\\__,_|_|\\_, /__/_/__/   |_|\\___/\\___/_/__/\n                                            |__/                              ","asciiArtWidth":78},{"title":"Modern Frameworks","content":"<p style=\"color: #ffffff;\"><strong>2013:</strong> Symfony 2, Laravel 4, CodeIgniter</p>\n<p style=\"color: #ffffff;\"><strong>2025:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> <strong>Laravel 11</strong> - Full-stack with Livewire, Inertia, Vite</li>\n<li><span class=\"bullet\">•</span> <strong>Symfony 7</strong> - Enterprise-grade with Flex</li>\n<li><span class=\"bullet\">•</span> <strong>Slim 4</strong> - Microframeworks</li>\n<li><span class=\"bullet\">•</span> <strong>Laminas</strong> - Enterprise (Zend Framework successor)</li>\n</ul>\n<p style=\"color: #ffffff;\">All embrace <strong>modern PHP features</strong> - types, attributes, enums</p>\n","asciiArt":"  __  __         _                ___                                  _       \n |  \\/  |___  __| |___ _ _ _ _   | __| _ __ _ _ __  _____ __ _____ _ _| |__ ___\n | |\\/| / _ \\/ _` / -_) '_| ' \\  | _| '_/ _` | '  \\/ -_) V  V / _ \\ '_| / /(_-<\n |_|  |_\\___/\\__,_\\___|_| |_||_| |_||_| \\__,_|_|_|_\\___|\\_/\\_/\\___/_| |_\\_\\/__/\n                                                                               ","asciiArtWidth":79},{"title":"What You Need to Unlearn","content":"<p style=\"color: #ffffff;\"><strong>❌ \"PHP is weakly typed\"</strong>\n✅ Modern PHP has strict types, union types, intersection types</p>\n<p style=\"color: #ffffff;\"><strong>❌ \"PHP is slow\"</strong>\n✅ PHP 8.5 competes with Node.js and Python</p>\n<p style=\"color: #ffffff;\"><strong>❌ \"Arrays are the only data structure\"</strong>\n✅ Use objects - value objects, DTOs, typed classes</p>\n<p style=\"color: #ffffff;\"><strong>❌ \"Global state and superglobals are fine\"</strong>\n✅ Use dependency injection and immutable objects</p>\n<p style=\"color: #ffffff;\"><strong>The philosophy changed:</strong> From \"quick\" to <strong>maintainable & type-safe</strong></p>\n","asciiArt":" __      ___         _    __   __          _  _            _   _         _   _      _                   \n \\ \\    / / |_  __ _| |_  \\ \\ / /__ _  _  | \\| |___ ___ __| | | |_ ___  | | | |_ _ | |___ __ _ _ _ _ _  \n  \\ \\/\\/ /| ' \\/ _` |  _|  \\ V / _ \\ || | | .` / -_) -_) _` | |  _/ _ \\ | |_| | ' \\| / -_) _` | '_| ' \\ \n   \\_/\\_/ |_||_\\__,_|\\__|   |_|\\___/\\_,_| |_|\\_\\___\\___\\__,_|  \\__\\___/  \\___/|_||_|_\\___\\__,_|_| |_||_|\n                                                                                                        ","asciiArtWidth":104},{"title":"Arrays vs Objects","content":"<p style=\"color: #ffffff;\"><strong>2013 style:</strong></p>\n<pre class=\"code-block\"><code>$user = [\n    &#039;id&#039; =&gt; 1,\n    &#039;name&#039; =&gt; &#039;John&#039;,\n    &#039;email&#039; =&gt; &#039;john@example.com&#039;\n];</code></pre>\n<p style=\"color: #ffffff;\"><strong>2025 style:</strong></p>\n<pre class=\"code-block\"><code>readonly class User {\n    public function __construct(\n        public int $id,\n        public string $name,\n        public string $email\n    ) {}\n}\n\n$user = new User(1, &#039;John&#039;, &#039;john@example.com&#039;);</code></pre>\n<p style=\"color: #ffffff;\"><strong>Benefits:</strong> Type safety, IDE support, refactoring, documentation</p>\n","asciiArt":"    _                                    ___  _     _        _      \n   /_\\  _ _ _ _ __ _ _  _ ___ __ _____  / _ \\| |__ (_)___ __| |_ ___\n  / _ \\| '_| '_/ _` | || (_-< \\ V (_-< | (_) | '_ \\| / -_) _|  _(_-<\n /_/ \\_\\_| |_| \\__,_|\\_, /__/  \\_//__/  \\___/|_.__// \\___\\__|\\__/__/\n                     |__/                        |__/               ","asciiArtWidth":68},{"title":"Dependency Injection","content":"<p style=\"color: #ffffff;\"><strong>2013:</strong></p>\n<pre class=\"code-block\"><code>function processLogin() {\n    global $db;\n    $user = $_POST[&#039;username&#039;];\n    // ...\n}</code></pre>\n<p style=\"color: #ffffff;\"><strong>2025:</strong></p>\n<pre class=\"code-block\"><code>class LoginController {\n    public function __construct(\n        private UserRepository $users,\n        private PasswordHasher $hasher\n    ) {}\n\n    public function process(LoginRequest $request): Response {\n        $user = $this-&gt;users-&gt;findByEmail($request-&gt;email);\n        // ...\n    }\n}</code></pre>\n<p style=\"color: #ffffff;\"><strong>Testable, maintainable, explicit dependencies</strong></p>\n","asciiArt":"  ___                        _                    ___       _        _   _          \n |   \\ ___ _ __  ___ _ _  __| |___ _ _  __ _  _  |_ _|_ _  (_)___ __| |_(_)___ _ _  \n | |) / -_) '_ \\/ -_) ' \\/ _` / -_) ' \\/ _| || |  | || ' \\ | / -_) _|  _| / _ \\ ' \\ \n |___/\\___| .__/\\___|_||_\\__,_\\___|_||_\\__|\\_, | |___|_||_|/ \\___\\__|\\__|_\\___/_||_|\n          |_|                              |__/          |__/                       ","asciiArtWidth":84},{"title":"Your First Week Back","content":"<p style=\"color: #ffffff;\"><strong>Day 1-2:</strong> Environment setup</p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Install PHP 8.3+ (8.5 is bleeding edge)</li>\n<li><span class=\"bullet\">•</span> Install Composer</li>\n<li><span class=\"bullet\">•</span> Setup a modern project (Laravel/Symfony)</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Day 3-4:</strong> Learn type declarations</p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Rewrite old code with types</li>\n<li><span class=\"bullet\">•</span> Practice scalar types, return types, union types</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Day 5:</strong> Practice modern syntax</p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> Build a CLI tool with enums, readonly classes</li>\n<li><span class=\"bullet\">•</span> Use match expressions, arrow functions</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Day 6-7:</strong> Build something real</p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> REST API with a framework</li>\n<li><span class=\"bullet\">•</span> Use dependency injection, typed properties</li>\n</ul>\n","asciiArt":" __   __              ___ _        _    __      __       _     ___          _   \n \\ \\ / /__ _  _ _ _  | __(_)_ _ __| |_  \\ \\    / /__ ___| |__ | _ ) __ _ __| |__\n  \\ V / _ \\ || | '_| | _|| | '_(_-<  _|  \\ \\/\\/ / -_) -_) / / | _ \\/ _` / _| / /\n   |_|\\___/\\_,_|_|   |_| |_|_| /__/\\__|   \\_/\\_/\\___\\___|_\\_\\ |___/\\__,_\\__|_\\_\\\n                                                                                ","asciiArtWidth":80},{"title":"Removed & Deprecated","content":"<p style=\"color: #ffffff;\"><strong>Removed:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> <code class=\"inline-code\">mysql_*</code> functions → Use PDO or mysqli</li>\n<li><span class=\"bullet\">•</span> <code class=\"inline-code\">each()</code> function → Use foreach</li>\n<li><span class=\"bullet\">•</span> <code class=\"inline-code\">create_function()</code> → Use closures</li>\n<li><span class=\"bullet\">•</span> <code class=\"inline-code\">$php_errormsg</code> → Use try-catch</li>\n<li><span class=\"bullet\">•</span> Backtick operator for shell → Being deprecated</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Changed:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> <code class=\"inline-code\">call<em>user</em>func_array()</code> → Use spread: <code class=\"inline-code\">fn(...$args)</code></li>\n<li><span class=\"bullet\">•</span> <code class=\"inline-code\">array()</code> → Use short syntax <code class=\"inline-code\">[]</code></li>\n<li><span class=\"bullet\">•</span> String concatenation → Consider interpolation</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>If it feels old, it probably is</strong></p>\n","asciiArt":"  ___                          _   __       ___                           _          _ \n | _ \\___ _ __  _____ _____ __| | / _|___  |   \\ ___ _ __ _ _ ___ __ __ _| |_ ___ __| |\n |   / -_) '  \\/ _ \\ V / -_) _` | > _|_ _| | |) / -_) '_ \\ '_/ -_) _/ _` |  _/ -_) _` |\n |_|_\\___|_|_|_\\___/\\_/\\___\\__,_| \\_____|  |___/\\___| .__/_| \\___\\__\\__,_|\\__\\___\\__,_|\n                                                    |_|                                ","asciiArtWidth":87},{"title":"Final Thoughts","content":"<p style=\"color: #ffffff;\"><strong>PHP in 2025 ≠ PHP in 2013</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> ✅ <strong>Performance:</strong> 3-4x faster than PHP 5.5</li>\n<li><span class=\"bullet\">•</span> ✅ <strong>Type Safety:</strong> Comprehensive type system</li>\n<li><span class=\"bullet\">•</span> ✅ <strong>Modern Syntax:</strong> Enums, attributes, match, pipe operator</li>\n<li><span class=\"bullet\">•</span> ✅ <strong>Tooling:</strong> PHPStan, PHP CS Fixer, Composer</li>\n<li><span class=\"bullet\">•</span> ✅ <strong>Frameworks:</strong> Laravel, Symfony are world-class</li>\n<li><span class=\"bullet\">•</span> ✅ <strong>Async:</strong> Fibers enable true async programming</li>\n<li><span class=\"bullet\">•</span> ✅ <strong>JIT:</strong> Just-In-Time compilation</li>\n</ul>\n<p style=\"color: #ffffff;\">It's faster, stricter, more expressive, and <strong>more pleasant</strong> to work with.</p>\n","asciiArt":"  ______ _             _   _______ _                       _     _       \n |  ____(_)           | | |__   __| |                     | |   | |      \n | |__   _ _ __   __ _| |    | |  | |__   ___  _   _  __ _| |__ | |_ ___ \n |  __| | | '_ \\ / _` | |    | |  | '_ \\ / _ \\| | | |/ _` | '_ \\| __/ __|\n | |    | | | | | (_| | |    | |  | | | | (_) | |_| | (_| | | | | |_\\__ \\\n |_|    |_|_| |_|\\__,_|_|    |_|  |_| |_|\\___/ \\__,_|\\__, |_| |_|\\__|___/\n                                                      __/ |              \n                                                     |___/               ","asciiArtWidth":73},{"title":"The Philosophy Changed","content":"<p style=\"color: #ffffff;\">PHP is no longer just about <strong>\"getting things done quickly\"</strong></p>\n<p style=\"color: #ffffff;\">It's about writing:</p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> <strong>Maintainable</strong> code that scales with your team</li>\n<li><span class=\"bullet\">•</span> <strong>Performant</strong> code that handles scale</li>\n<li><span class=\"bullet\">•</span> <strong>Type-safe</strong> code that catches bugs early</li>\n<li><span class=\"bullet\">•</span> <strong>Testable</strong> code with explicit dependencies</li>\n</ul>\n<p style=\"color: #ffffff;\">Modern PHP is <strong>enterprise-ready</strong> while staying <strong>developer-friendly</strong></p>\n<p style=\"color: #ffffff;\">Welcome back to PHP. You're going to love it.</p>\n","asciiArt":"  _____ _          ___ _    _ _                  _           ___ _                          _ \n |_   _| |_  ___  | _ \\ |_ (_) |___ ___ ___ _ __| |_ _  _   / __| |_  __ _ _ _  __ _ ___ __| |\n   | | | ' \\/ -_) |  _/ ' \\| | / _ (_-</ _ \\ '_ \\ ' \\ || | | (__| ' \\/ _` | ' \\/ _` / -_) _` |\n   |_| |_||_\\___| |_| |_||_|_|_\\___/__/\\___/ .__/_||_\\_, |  \\___|_||_\\__,_|_||_\\__, \\___\\__,_|\n                                           |_|       |__/                      |___/          ","asciiArtWidth":94},{"title":"Resources","content":"<p style=\"color: #ffffff;\"><strong>Official:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> https://www.php.net/manual/en/</li>\n<li><span class=\"bullet\">•</span> https://wiki.php.net/rfc (upcoming features)</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Learning:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> https://php.watch/ (excellent changelog)</li>\n<li><span class=\"bullet\">•</span> https://phptherightway.com/</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Frameworks:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> https://laravel.com/docs</li>\n<li><span class=\"bullet\">•</span> https://symfony.com/doc</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Tools:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> https://phpstan.org/ (static analysis)</li>\n</ul>\n<p style=\"color: #ffffff;\"><strong>Community:</strong></p>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> r/PHP on Reddit</li>\n<li><span class=\"bullet\">•</span> PHP Discord servers</li>\n<li><span class=\"bullet\">•</span> Local PHP user groups</li>\n</ul>\n","asciiArt":"  _____                                         \n |  __ \\                                        \n | |__) |___  ___  ___  _   _ _ __ ___ ___  ___ \n |  _  // _ \\/ __|/ _ \\| | | | '__/ __/ _ \\/ __|\n | | \\ \\  __/\\__ \\ (_) | |_| | | | (_|  __/\\__ \\\n |_|  \\_\\___||___/\\___/ \\__,_|_|  \\___\\___||___/\n                                                \n                                                ","asciiArtWidth":48},{"title":"Thank You!","content":"<p style=\"color: #ffffff;\"><strong>Questions?</strong></p>\n<p style=\"color: #ffffff;\">Good luck with your team onboarding! 🚀</p>\n<p style=\"color: #ffffff;\"><em>From PHP 5.5 to PHP 8.5: A Developer's Journey Through 12 Years of Evolution</em></p>\n","asciiArt":"  _______ _                 _     __     __         _ \n |__   __| |               | |    \\ \\   / /        | |\n    | |  | |__   __ _ _ __ | | __  \\ \\_/ /__  _   _| |\n    | |  | '_ \\ / _` | '_ \\| |/ /   \\   / _ \\| | | | |\n    | |  | | | | (_| | | | |   <     | | (_) | |_| |_|\n    |_|  |_| |_|\\__,_|_| |_|_|\\_\\    |_|\\___/ \\__,_(_)\n                                                      \n                                                      ","asciiArtWidth":54}];
+    let currentSlide = 0;
+
+    const MAX_CONTAINER_CHARS = 80;
+
+    function getAsciiArtScale(artWidth) {
+      if (!artWidth || artWidth <= MAX_CONTAINER_CHARS) return 1;
+      return MAX_CONTAINER_CHARS / artWidth;
+    }
+
+    function renderSlides() {
+      const container = document.getElementById('slideContainer');
+      container.innerHTML = slides.map((slide, index) => {
+        if (slide.asciiArt) {
+          const scale = getAsciiArtScale(slide.asciiArtWidth);
+          const scaleStyle = scale < 1 ? `transform: scale(${scale}); margin: ${-(1-scale) * 2}rem 0;` : '';
+          return `
+            <div class="slide ${index === 0 ? 'active' : ''}" data-index="${index}">
+              <div class="ascii-art-wrapper">
+                <pre class="ascii-art" style="${scaleStyle}">${escapeHtml(slide.asciiArt)}</pre>
+              </div>
+              ${slide.content}
+            </div>
+          `;
+        }
+        return `
+          <div class="slide ${index === 0 ? 'active' : ''}" data-index="${index}">
+            ${slide.content}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function updateSlide() {
+      document.querySelectorAll('.slide').forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+      document.getElementById('slideCounter').textContent = `Slide ${currentSlide + 1} of ${slides.length}`;
+      document.getElementById('progressFill').style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(index) {
+      if (index >= 0 && index < slides.length) {
+        currentSlide = index;
+        updateSlide();
+      }
+    }
+
+    function toggleHelp() {
+      document.getElementById('helpOverlay').classList.toggle('active');
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log('Fullscreen not available:', err);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const helpOverlay = document.getElementById('helpOverlay');
+      const helpActive = helpOverlay.classList.contains('active');
+
+      if (helpActive) {
+        if (e.key === 'Escape' || e.key === 'h' || e.key === '?') {
+          toggleHelp();
+        }
+        return;
+      }
+
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'n':
+        case ' ':
+          e.preventDefault();
+          nextSlide();
+          break;
+        case 'ArrowLeft':
+        case 'p':
+          e.preventDefault();
+          prevSlide();
+          break;
+        case 'g':
+          goToSlide(0);
+          break;
+        case 'G':
+          goToSlide(slides.length - 1);
+          break;
+        case 'f':
+          toggleFullscreen();
+          break;
+        case 'h':
+        case '?':
+          toggleHelp();
+          break;
+        default:
+          // Number keys for direct slide access
+          if (/^[1-9]$/.test(e.key)) {
+            goToSlide(parseInt(e.key) - 1);
+          }
+          break;
+      }
+    });
+
+    // Touch support for mobile
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    });
+
+    // Initialize
+    renderSlides();
+    updateSlide();
+  </script>
+</body>
+</html>
