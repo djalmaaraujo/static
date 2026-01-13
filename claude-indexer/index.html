@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Indexer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0a0a0a;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      max-width: 100ch;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .slide {
+      width: 100%;
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ascii-art-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .ascii-art {
+      color: #00ff00;
+      font-size: 0.6rem;
+      line-height: 1.1;
+      white-space: pre;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00ff0040;
+      transform-origin: center center;
+      display: inline-block;
+    }
+
+    @media (min-width: 768px) {
+      .ascii-art {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .ascii-art {
+        font-size: 1rem;
+      }
+    }
+
+    @media (min-width: 1280px) and (max-width: 1439px) {
+      .container {
+        zoom: 1.2;
+      }
+    }
+
+    @media (min-width: 1440px) {
+      .container {
+        zoom: 1.5;
+      }
+    }
+
+    h1 {
+      color: #00ff00;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00ff0040;
+    }
+
+    h2 {
+      color: #00aaff;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: bold;
+    }
+
+    h3 {
+      color: #00aaff;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .terminal-list {
+      list-style: none;
+      margin-bottom: 1rem;
+    }
+
+    .terminal-list li {
+      margin-bottom: 0.5rem;
+      padding-left: 1.5rem;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .terminal-list .bullet {
+      position: absolute;
+      left: 0;
+      color: #00ff00;
+    }
+
+    .code-block {
+      background-color: #1a1a1a;
+      color: #00ff88;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+      border: 1px solid #333;
+    }
+
+    .code-block code {
+      font-family: inherit;
+    }
+
+    .inline-code {
+      background-color: #1a1a1a;
+      color: #00ff88;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    strong {
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+      color: #888888;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed #888888;
+      margin: 1.5rem 0;
+    }
+
+    blockquote {
+      border-left: 2px solid #888888;
+      padding-left: 1rem;
+      color: #888888;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: linear-gradient(transparent, #0a0a0a 30%);
+      color: #888888;
+      font-size: 0.85rem;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .progress-bar {
+      width: 100px;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #00ff00;
+      transition: width 0.3s ease;
+    }
+
+    .help-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .help-overlay.active {
+      display: flex;
+    }
+
+    .help-content {
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid #888888;
+      max-width: 400px;
+    }
+
+    .help-content h2 {
+      margin-bottom: 1rem;
+    }
+
+    .help-content .key {
+      display: inline-block;
+      background: #333;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+      min-width: 2rem;
+      text-align: center;
+    }
+
+    .help-content li {
+      margin-bottom: 0.5rem;
+      list-style: none;
+    }
+
+    /* Scanline effect for extra terminal feel */
+    .scanlines {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.1) 0px,
+        rgba(0, 0, 0, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      z-index: 1000;
+    }
+
+    /* CRT glow effect */
+    .crt-glow {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      box-shadow: inset 0 0 100px rgba(0, 255, 0, 0.03);
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="crt-glow"></div>
+
+  <div class="container" id="slideContainer">
+    <!-- Slides will be injected here -->
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">
+      <span id="slideCounter">Slide 1 of 6</span>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+    <div>Press <span style="color: #00ff00;">h</span> for help</div>
+  </div>
+
+  <div class="help-overlay" id="helpOverlay">
+    <div class="help-content">
+      <h2 style="color: #00ff00;">Navigation</h2>
+      <ul>
+        <li><span class="key">→</span> / <span class="key">n</span> / <span class="key">Space</span> Next slide</li>
+        <li><span class="key">←</span> / <span class="key">p</span> Previous slide</li>
+        <li><span class="key">g</span> First slide</li>
+        <li><span class="key">G</span> Last slide</li>
+        <li><span class="key">1-9</span> Jump to slide</li>
+        <li><span class="key">f</span> Toggle fullscreen</li>
+        <li><span class="key">h</span> / <span class="key">?</span> Toggle help</li>
+        <li><span class="key">Esc</span> Close help / Exit fullscreen</li>
+      </ul>
+      <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #888888;">
+        Made with <a href="https://github.com/nb/presentercli" target="_blank" rel="noopener" style="color: #00aaff;">presentercli</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const slides = [{"title":"Claude Indexer","content":"<p style=\"color: #ffffff;\"><strong>Djalma's current ADHD hyperfocus</strong></p>\n","asciiArt":"   _____ _                 _        _____           _                    \n  / ____| |               | |      |_   _|         | |                   \n | |    | | __ _ _   _  __| | ___    | |  _ __   __| | _____  _____ _ __ \n | |    | |/ _` | | | |/ _` |/ _ \\   | | | '_ \\ / _` |/ _ \\ \\/ / _ \\ '__|\n | |____| | (_| | |_| | (_| |  __/  _| |_| | | | (_| |  __/>  <  __/ |   \n  \\_____|_|\\__,_|\\__,_|\\__,_|\\___| |_____|_| |_|\\__,_|\\___/_/\\_\\___|_|   \n                                                                         \n                                                                         ","asciiArtWidth":73},{"title":"How it Works","content":"<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> <strong>Index</strong>: LanceDB vector database with sentence-transformers embeddings (MiniLM/CodeBERT/MPNet)</li>\n<li><span class=\"bullet\">•</span> <strong>Speed</strong>: Sub-100ms queries (~65ms avg) with local RAG, GPU acceleration, and embedding cache</li>\n<li><span class=\"bullet\">•</span> <strong>Claude Integration</strong>: <code class=\"inline-code\">cc</code> command pipes search results directly to Claude CLI with context injection</li>\n<li><span class=\"bullet\">•</span> <strong>Why <code class=\"inline-code\">cc</code> command</strong>: Automates semantic search + context formatting before the first Claude API call</li>\n</ul>\n","asciiArt":"  _    _                 _ _    __          __        _        \n | |  | |               (_) |   \\ \\        / /       | |       \n | |__| | _____      __  _| |_   \\ \\  /\\  / /__  _ __| | _____ \n |  __  |/ _ \\ \\ /\\ / / | | __|   \\ \\/  \\/ / _ \\| '__| |/ / __|\n | |  | | (_) \\ V  V /  | | |_     \\  /\\  / (_) | |  |   <\\__ \\\n |_|  |_|\\___/ \\_/\\_/   |_|\\__|     \\/  \\/ \\___/|_|  |_|\\_\\___/\n                                                               \n                                                               ","asciiArtWidth":63},{"title":"So, it works?","content":"<p style=\"color: #ffffff;\"><strong>Oh my Claude!</strong></p>\n","asciiArt":"   _____          _ _                        _       ___  \n  / ____|        (_) |                      | |     |__ \\ \n | (___   ___     _| |_  __      _____  _ __| | _____  ) |\n  \\___ \\ / _ \\   | | __| \\ \\ /\\ / / _ \\| '__| |/ / __|/ / \n  ____) | (_) |  | | |_   \\ V  V / (_) | |  |   <\\__ \\_|  \n |_____/ \\___( ) |_|\\__|   \\_/\\_/ \\___/|_|  |_|\\_\\___(_)  \n             |/                                           \n                                                          ","asciiArtWidth":58},{"title":"Tests Round 1","content":"<p style=\"color: #ffffff;\"><strong>Prompt:</strong> teach me how to make a query using mage to query the author name 'bridge'</p>\n<h2 style=\"color: #00aaff; font-weight: bold;\">Results</h2>\n<h2 style=\"color: #00aaff; font-weight: bold;\">Performance</h2>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> <strong>41.5% faster</strong> than Claude Pure</li>\n<li><span class=\"bullet\">•</span> <strong>40.2% faster</strong> than Cursor Auto Mode</li>\n<li><span class=\"bullet\">•</span> Claude Indexer wins by delivering results in under 27 seconds</li>\n</ul>\n","asciiArt":"  _______        _         _____                       _   __ \n |__   __|      | |       |  __ \\                     | | /_ |\n    | | ___  ___| |_ ___  | |__) |___  _   _ _ __   __| |  | |\n    | |/ _ \\/ __| __/ __| |  _  // _ \\| | | | '_ \\ / _` |  | |\n    | |  __/\\__ \\ |_\\__ \\ | | \\ \\ (_) | |_| | | | | (_| |  | |\n    |_|\\___||___/\\__|___/ |_|  \\_\\___/ \\__,_|_| |_|\\__,_|  |_|\n                                                              \n                                                              ","asciiArtWidth":62},{"title":"Tests Round 2","content":"<p style=\"color: #ffffff;\"><strong>Prompt:</strong> teach me how to make a query using mage to query tags starting with 'computer'</p>\n<h2 style=\"color: #00aaff; font-weight: bold;\">Results (3 runs each)</h2>\n<h2 style=\"color: #00aaff; font-weight: bold;\">Performance</h2>\n<ul class=\"terminal-list\">\n<li><span class=\"bullet\">•</span> <strong>53.7% faster</strong> than Claude Pure (avg)</li>\n<li><span class=\"bullet\">•</span> <strong>26.7% faster</strong> than Cursor Auto Mode (avg)</li>\n<li><span class=\"bullet\">•</span> Most consistent performance across all three runs</li>\n</ul>\n","asciiArt":"  _______        _         _____                       _   ___  \n |__   __|      | |       |  __ \\                     | | |__ \\ \n    | | ___  ___| |_ ___  | |__) |___  _   _ _ __   __| |    ) |\n    | |/ _ \\/ __| __/ __| |  _  // _ \\| | | | '_ \\ / _` |   / / \n    | |  __/\\__ \\ |_\\__ \\ | | \\ \\ (_) | |_| | | | | (_| |  / /_ \n    |_|\\___||___/\\__|___/ |_|  \\_\\___/ \\__,_|_| |_|\\__,_| |____|\n                                                                \n                                                                ","asciiArtWidth":64},{"title":"Thank You","content":"<p style=\"color: #ffffff;\"><strong>Questions?</strong></p>\n","asciiArt":"  _______ _                 _     __     __         \n |__   __| |               | |    \\ \\   / /         \n    | |  | |__   __ _ _ __ | | __  \\ \\_/ /__  _   _ \n    | |  | '_ \\ / _` | '_ \\| |/ /   \\   / _ \\| | | |\n    | |  | | | | (_| | | | |   <     | | (_) | |_| |\n    |_|  |_| |_|\\__,_|_| |_|_|\\_\\    |_|\\___/ \\__,_|\n                                                    \n                                                    ","asciiArtWidth":52}];
+    let currentSlide = 0;
+
+    const MAX_CONTAINER_CHARS = 80;
+
+    function getAsciiArtScale(artWidth) {
+      if (!artWidth || artWidth <= MAX_CONTAINER_CHARS) return 1;
+      return MAX_CONTAINER_CHARS / artWidth;
+    }
+
+    function renderSlides() {
+      const container = document.getElementById('slideContainer');
+      container.innerHTML = slides.map((slide, index) => {
+        if (slide.asciiArt) {
+          const scale = getAsciiArtScale(slide.asciiArtWidth);
+          const scaleStyle = scale < 1 ? `transform: scale(${scale}); margin: ${-(1-scale) * 2}rem 0;` : '';
+          return `
+            <div class="slide ${index === 0 ? 'active' : ''}" data-index="${index}">
+              <div class="ascii-art-wrapper">
+                <pre class="ascii-art" style="${scaleStyle}">${escapeHtml(slide.asciiArt)}</pre>
+              </div>
+              ${slide.content}
+            </div>
+          `;
+        }
+        return `
+          <div class="slide ${index === 0 ? 'active' : ''}" data-index="${index}">
+            ${slide.content}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function updateSlide() {
+      document.querySelectorAll('.slide').forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+      document.getElementById('slideCounter').textContent = `Slide ${currentSlide + 1} of ${slides.length}`;
+      document.getElementById('progressFill').style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(index) {
+      if (index >= 0 && index < slides.length) {
+        currentSlide = index;
+        updateSlide();
+      }
+    }
+
+    function toggleHelp() {
+      document.getElementById('helpOverlay').classList.toggle('active');
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log('Fullscreen not available:', err);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const helpOverlay = document.getElementById('helpOverlay');
+      const helpActive = helpOverlay.classList.contains('active');
+
+      if (helpActive) {
+        if (e.key === 'Escape' || e.key === 'h' || e.key === '?') {
+          toggleHelp();
+        }
+        return;
+      }
+
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'n':
+        case ' ':
+          e.preventDefault();
+          nextSlide();
+          break;
+        case 'ArrowLeft':
+        case 'p':
+          e.preventDefault();
+          prevSlide();
+          break;
+        case 'g':
+          goToSlide(0);
+          break;
+        case 'G':
+          goToSlide(slides.length - 1);
+          break;
+        case 'f':
+          toggleFullscreen();
+          break;
+        case 'h':
+        case '?':
+          toggleHelp();
+          break;
+        default:
+          // Number keys for direct slide access
+          if (/^[1-9]$/.test(e.key)) {
+            goToSlide(parseInt(e.key) - 1);
+          }
+          break;
+      }
+    });
+
+    // Touch support for mobile
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    });
+
+    // Initialize
+    renderSlides();
+    updateSlide();
+  </script>
+</body>
+</html>
