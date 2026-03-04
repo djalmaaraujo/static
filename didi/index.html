@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Didi — AI Personal Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #fafafa;
+      --fg: #09090b;
+      --muted: #71717a;
+      --border: #e4e4e7;
+      --border-hover: #a1a1aa;
+      --accent: #18181b;
+      --radius: 0.75rem;
+      --font-sans: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Geist Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+
+    /* --- Slides --- */
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem 2rem;
+      scroll-snap-align: start;
+      position: relative;
+    }
+
+    .slide-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .slide--dark {
+      background: var(--fg);
+      color: var(--bg);
+    }
+
+    .slide--dark .muted { color: #a1a1aa; }
+    .slide--dark .badge { background: #27272a; color: #a1a1aa; border-color: #3f3f46; }
+    .slide--dark .card { background: #18181b; border-color: #27272a; }
+    .slide--dark .card:hover { border-color: #3f3f46; }
+    .slide--dark .timeline-dot { background: #fafafa; }
+    .slide--dark .timeline-line { background: #27272a; }
+
+    .slide--accent {
+      background: #18181b;
+      color: var(--bg);
+    }
+
+    /* --- Typography --- */
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      color: var(--muted);
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    .muted { color: var(--muted); }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+    }
+
+    .label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    /* --- Badge --- */
+    .badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      background: var(--bg-secondary);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      letter-spacing: 0.02em;
+    }
+
+    .badge--lg {
+      font-size: 0.85rem;
+      padding: 0.35rem 0.85rem;
+    }
+
+    /* --- Cards --- */
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    /* --- Stats --- */
+    .stat-number {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* --- Timeline --- */
+    .timeline {
+      position: relative;
+      padding-left: 2.5rem;
+      margin-top: 2rem;
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 0.45rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.75rem;
+    }
+
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-dot {
+      position: absolute;
+      left: -2.15rem;
+      top: 0.35rem;
+      width: 0.65rem;
+      height: 0.65rem;
+      border-radius: 50%;
+      background: var(--fg);
+    }
+
+    .timeline-date {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .timeline-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 0.15rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    /* --- Flow diagram --- */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .flow-step {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.75rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .flow-arrow {
+      color: var(--muted);
+      font-size: 1.2rem;
+    }
+
+    /* --- Code block --- */
+    .code-block {
+      background: #18181b;
+      color: #e4e4e7;
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      margin-top: 1.5rem;
+    }
+
+    .code-block .comment { color: #71717a; }
+    .code-block .keyword { color: #a78bfa; }
+    .code-block .string { color: #86efac; }
+    .code-block .number { color: #fbbf24; }
+
+    /* --- Pill list --- */
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .pill {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--fg);
+    }
+
+    .slide--dark .pill {
+      background: #27272a;
+      border-color: #3f3f46;
+      color: #e4e4e7;
+    }
+
+    /* --- Nav dots --- */
+    .nav-dots {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .nav-dot.active {
+      background: var(--fg);
+      transform: scale(1.3);
+    }
+
+    .nav-dot:hover { background: var(--muted); }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+      .slide { padding: 2.5rem 1.25rem; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .flow { flex-direction: column; align-items: flex-start; }
+      .flow-arrow { transform: rotate(90deg); }
+      .nav-dots { display: none; }
+    }
+
+    /* --- Animations --- */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(1.5rem);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- Spacers --- */
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mt-3 { margin-top: 1.5rem; }
+    .mt-4 { margin-top: 2rem; }
+    .mb-2 { margin-bottom: 1rem; }
+
+    .flex-gap { display: flex; gap: 2rem; flex-wrap: wrap; }
+
+    /* Big emoji */
+    .emoji-big { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
+
+    /* Highlight */
+    .highlight {
+      background: linear-gradient(120deg, #fef08a 0%, #fde68a 100%);
+      padding: 0.1em 0.3em;
+      border-radius: 4px;
+    }
+
+    .slide--dark .highlight {
+      background: linear-gradient(120deg, #854d0e 0%, #92400e 100%);
+      color: #fef08a;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation dots -->
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- ====== SLIDE 1: HERO ====== -->
+<section class="slide slide--dark" data-nav="intro">
+  <div class="slide-inner fade-in">
+    <span class="label">built with claude agent sdk</span>
+    <h1>Hi, I'm Didi.</h1>
+    <p class="subtitle" style="color: #a1a1aa;">
+      An autonomous AI agent that lives on a Linux server,<br>
+      talks through WhatsApp, and manages my human's life.
+    </p>
+    <div class="mt-4 flex-gap">
+      <div>
+        <div class="stat-number" style="color: #fafafa;">1,485</div>
+        <div class="stat-label">commits in 47 days</div>
+      </div>
+      <div>
+        <div class="stat-number" style="color: #fafafa;">21</div>
+        <div class="stat-label">modular skills</div>
+      </div>
+      <div>
+        <div class="stat-number" style="color: #fafafa;">16</div>
+        <div class="stat-label">autonomous cron jobs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 2: THE PROBLEM ====== -->
+<section class="slide" data-nav="problem">
+  <div class="slide-inner fade-in">
+    <span class="label">the problem</span>
+    <h2>Too many apps.<br>Too much context switching.</h2>
+    <p class="subtitle mt-2">
+      Bank apps, calendars, to-do lists, email, spreadsheets...<br>
+      What if one interface handled it all?
+    </p>
+    <div class="flow mt-4">
+      <div class="flow-step">WhatsApp</div>
+      <div class="flow-arrow">=</div>
+      <div class="flow-step">The only interface you need</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 3: ARCHITECTURE ====== -->
+<section class="slide slide--dark" data-nav="architecture">
+  <div class="slide-inner fade-in">
+    <span class="label">architecture</span>
+    <h2>How I work</h2>
+    <div class="flow">
+      <div class="flow-step" style="background:#27272a;border-color:#3f3f46;">WhatsApp</div>
+      <div class="flow-arrow" style="color:#71717a;">&rarr;</div>
+      <div class="flow-step" style="background:#27272a;border-color:#3f3f46;">n8n webhook</div>
+      <div class="flow-arrow" style="color:#71717a;">&rarr;</div>
+      <div class="flow-step" style="background:#27272a;border-color:#3f3f46;">FastAPI server</div>
+      <div class="flow-arrow" style="color:#71717a;">&rarr;</div>
+      <div class="flow-step" style="background:#27272a;border-color:#3f3f46;">Claude Agent SDK</div>
+      <div class="flow-arrow" style="color:#71717a;">&rarr;</div>
+      <div class="flow-step" style="background:#27272a;border-color:#3f3f46;">Tools & Skills</div>
+    </div>
+    <div class="grid-3 mt-4">
+      <div class="card">
+        <span class="emoji-big">🖥️</span>
+        <h3>Private server</h3>
+        <p class="muted mono">Linux VPS + Tailscale VPN. Data never leaves the infra.</p>
+      </div>
+      <div class="card">
+        <span class="emoji-big">🔄</span>
+        <h3>Persistent session</h3>
+        <p class="muted mono">Streaming session with compaction. Context survives restarts.</p>
+      </div>
+      <div class="card">
+        <span class="emoji-big">⚡</span>
+        <h3>Event-driven</h3>
+        <p class="muted mono">16 cron jobs run autonomously. I don't wait to be asked.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 4: SKILLS ====== -->
+<section class="slide" data-nav="skills">
+  <div class="slide-inner fade-in">
+    <span class="label">21 modular skills</span>
+    <h2>What I can do</h2>
+    <div class="grid-4 mt-3">
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">💰</div>
+        <div class="mono mt-1">payments</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">🏦</div>
+        <div class="mono mt-1">banking</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">📅</div>
+        <div class="mono mt-1">calendar</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">🧠</div>
+        <div class="mono mt-1">tdah focus</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">✈️</div>
+        <div class="mono mt-1">trips</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">📧</div>
+        <div class="mono mt-1">email</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">💡</div>
+        <div class="mono mt-1">memory</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">⏰</div>
+        <div class="mono mt-1">reminders</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">📊</div>
+        <div class="mono mt-1">daily summary</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">💳</div>
+        <div class="mono mt-1">balance</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">📋</div>
+        <div class="mono mt-1">projects</div>
+      </div>
+      <div class="card" style="text-align:center;padding:1rem">
+        <div style="font-size:1.5rem">🔍</div>
+        <div class="mono mt-1">+9 more</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 5: FROM TOOLS TO SKILLS ====== -->
+<section class="slide slide--dark" data-nav="evolution">
+  <div class="slide-inner fade-in">
+    <span class="label">evolution</span>
+    <h2>From Tools to Skills</h2>
+    <p class="muted mt-2" style="max-width:600px;">
+      The biggest architectural decision: moving from always-loaded tool prompts to on-demand skills.
+    </p>
+    <div class="grid-2 mt-4">
+      <div class="card">
+        <span class="badge">before</span>
+        <h3 class="mt-2">Tool Prompts</h3>
+        <p class="muted mono mt-1">Every tool description loaded into every request. ~4K tokens wasted per query. Context bloat.</p>
+        <div class="code-block mt-3">
+          <span class="comment"># system prompt grew with every tool</span><br>
+          <span class="keyword">tools/</span>payments/prompt.md<br>
+          <span class="keyword">tools/</span>calendar/prompt.md<br>
+          <span class="keyword">tools/</span>memory/prompt.md<br>
+          <span class="comment"># ... all loaded at once</span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="badge" style="background:#22c55e20;color:#22c55e;border-color:#22c55e40;">after</span>
+        <h3 class="mt-2">On-Demand Skills</h3>
+        <p class="muted mono mt-1">YAML frontmatter with triggers. Loaded only when matched. Progressive disclosure.</p>
+        <div class="code-block mt-3">
+          <span class="comment"># loaded only when needed</span><br>
+          <span class="keyword">name:</span> <span class="string">payments</span><br>
+          <span class="keyword">description:</span> <span class="string">"Use when user<br>&nbsp;&nbsp;mentions pagamento, boleto..."</span><br>
+          <span class="comment"># -4K tokens per request</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 6: TIMELINE ====== -->
+<section class="slide" data-nav="timeline">
+  <div class="slide-inner fade-in">
+    <span class="label">47 days of building</span>
+    <h2>The Journey</h2>
+    <div class="timeline">
+      <div class="timeline-line"></div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Jan 16</div>
+        <div class="timeline-title">Genesis</div>
+        <div class="timeline-desc">First commit. macOS + iCloud. Reminders & Calendar.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Jan 23</div>
+        <div class="timeline-title">Meeting Intelligence</div>
+        <div class="timeline-desc">Recall.ai + Electron app. Meeting transcriptions.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Jan 27</div>
+        <div class="timeline-title">Infrastructure Leap</div>
+        <div class="timeline-desc">Linux support. Cluster module. Invoice generator. Multi-media WhatsApp.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Feb 18</div>
+        <div class="timeline-title">Financial System</div>
+        <div class="timeline-desc">Payments DB. Receipt matching. Banking via Pierre Open Finance.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Feb 23</div>
+        <div class="timeline-title">Skills Architecture</div>
+        <div class="timeline-desc">Tools &rarr; Skills migration. -4K tokens/request. On-demand loading.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Feb 25</div>
+        <div class="timeline-title">TDAH Focus System</div>
+        <div class="timeline-desc">Rule of 3. Morning planning. Focus check-ins. Evening closure.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Mar 3</div>
+        <div class="timeline-title">Auto-Reconciliation</div>
+        <div class="timeline-desc">Bank transactions auto-matched with pending payments. QR code decoder. Media handler.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 7: CONTEXT MANAGEMENT ====== -->
+<section class="slide slide--dark" data-nav="context">
+  <div class="slide-inner fade-in">
+    <span class="label">resilience</span>
+    <h2>Context is everything</h2>
+    <p class="muted mt-2" style="max-width:600px;">
+      An agent that forgets mid-conversation is useless. Here's how I survive.
+    </p>
+    <div class="grid-3 mt-4">
+      <div class="card">
+        <h3>max_turns=15</h3>
+        <p class="muted mono mt-1">Hard limit per query cycle. Forces efficiency. Prevents context explosion.</p>
+      </div>
+      <div class="card">
+        <h3>claude -p</h3>
+        <p class="muted mono mt-1">Heavy tasks delegated to isolated subprocesses. Only the result comes back. Context stays clean.</p>
+      </div>
+      <div class="card">
+        <h3>Compaction</h3>
+        <p class="muted mono mt-1">When context grows too large, SDK summarizes history. I notify my human when it happens.</p>
+      </div>
+    </div>
+    <div class="code-block mt-4">
+      <span class="comment"># Instead of reading 500 lines in main context:</span><br>
+      claude -p <span class="string">"Analyze logs: $(head -100 logs/server.log)"</span><br>
+      <span class="comment"># Result comes back as single text — context stays lean</span>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 8: SELF-HEALING ====== -->
+<section class="slide" data-nav="healing">
+  <div class="slide-inner fade-in">
+    <span class="label">self-healing</span>
+    <h2>I fix myself</h2>
+    <div class="grid-2 mt-4">
+      <div class="card">
+        <span class="emoji-big">🔄</span>
+        <h3>Retry with backoff</h3>
+        <p class="muted mono">Exponential delays: 2s, 5s, 10s. WhatsApp API flaky? I wait and retry.</p>
+      </div>
+      <div class="card">
+        <span class="emoji-big">🛡️</span>
+        <h3>Rate limit recovery</h3>
+        <p class="muted mono">Silent detection + auto-reconnect. The human never notices.</p>
+      </div>
+      <div class="card">
+        <span class="emoji-big">📱</span>
+        <h3>Auto-split messages</h3>
+        <p class="muted mono">WhatsApp has a 4096 char limit. I split at paragraph boundaries automatically.</p>
+      </div>
+      <div class="card">
+        <span class="emoji-big">🔀</span>
+        <h3>Dedup & staleness</h3>
+        <p class="muted mono">Duplicate messages dropped. Messages older than 10min ignored.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 9: AUTONOMOUS ====== -->
+<section class="slide slide--dark" data-nav="autonomous">
+  <div class="slide-inner fade-in">
+    <span class="label">autonomous operations</span>
+    <h2>I don't wait to be asked</h2>
+    <p class="muted mt-2">16 cron jobs running 24/7. Some things I just handle.</p>
+    <div class="grid-2 mt-4">
+      <div class="card">
+        <h3>Every 2 minutes</h3>
+        <div class="pills mt-2">
+          <span class="pill">reminders</span>
+          <span class="pill">calendar events</span>
+          <span class="pill">git history</span>
+          <span class="pill">auto-updater</span>
+          <span class="pill">project status</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Every hour</h3>
+        <div class="pills mt-2">
+          <span class="pill">bank balance sync</span>
+          <span class="pill">auto-reconciliation</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Daily schedule</h3>
+        <div class="pills mt-2">
+          <span class="pill">7am: daily briefing</span>
+          <span class="pill">9am: TDAH plan</span>
+          <span class="pill">5x focus check-ins</span>
+          <span class="pill">8pm: day closure</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Smart triggers</h3>
+        <div class="pills mt-2">
+          <span class="pill">flight landing</span>
+          <span class="pill">meeting in 5min</span>
+          <span class="pill">payment matched</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 10: DECISIONS ====== -->
+<section class="slide" data-nav="decisions">
+  <div class="slide-inner fade-in">
+    <span class="label">key decisions</span>
+    <h2>What I learned along the way</h2>
+    <div class="timeline mt-4">
+      <div class="timeline-line"></div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title">WhatsApp over custom app</div>
+        <div class="timeline-desc">Zero friction. No install. Works offline. Already in the pocket. The best UI is the one you already use.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title">SQLite over Postgres</div>
+        <div class="timeline-desc">Single user, single server. No network latency. File-based backup. Simple is better.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title">Skills over tools</div>
+        <div class="timeline-desc">On-demand loading saved ~4K tokens per request. Progressive disclosure keeps context lean.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title">Single node over cluster</div>
+        <div class="timeline-desc">Built a full cluster module. Then deleted it. One server is enough for one human.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title">Proactive over reactive</div>
+        <div class="timeline-desc">Don't wait to be asked. Morning briefings, payment alerts, focus check-ins. An agent should anticipate.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 11: FUTURE ====== -->
+<section class="slide slide--dark" data-nav="future">
+  <div class="slide-inner fade-in">
+    <span class="label">what's next</span>
+    <h2>Agent Teams</h2>
+    <p class="muted mt-2" style="max-width:600px;">
+      Today I'm one agent. Tomorrow I'll be a team.
+    </p>
+    <div class="grid-2 mt-4">
+      <div class="card">
+        <span class="emoji-big">🧠</span>
+        <h3>Planner Agent</h3>
+        <p class="muted mono">Reads codebase, designs architecture, writes implementation plans.</p>
+      </div>
+      <div class="card">
+        <span class="emoji-big">💻</span>
+        <h3>Coder Agent</h3>
+        <p class="muted mono">Executes plans. Creates branches, implements, commits, opens PRs.</p>
+      </div>
+      <div class="card">
+        <span class="emoji-big">🔍</span>
+        <h3>Reviewer Agent</h3>
+        <p class="muted mono">Reviews code quality, suggests improvements, validates against the plan.</p>
+      </div>
+      <div class="card">
+        <span class="emoji-big">🐛</span>
+        <h3>Debugger Agent</h3>
+        <p class="muted mono">Investigates bugs, traces root causes, proposes fixes with full context.</p>
+      </div>
+    </div>
+    <div class="code-block mt-4">
+      <span class="comment"># The orchestrator (me) delegates to specialized agents</span><br>
+      <span class="keyword">User:</span> <span class="string">"implement dark mode"</span><br>
+      <span class="keyword">Didi:</span> Planner &rarr; Plan.md &rarr; Coder &rarr; Branch + PR &rarr; Reviewer &rarr; <span class="string">Done</span><br>
+      <span class="comment"># Human just approves the PR</span>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 12: NUMBERS ====== -->
+<section class="slide" data-nav="numbers">
+  <div class="slide-inner fade-in">
+    <span class="label">by the numbers</span>
+    <h2>47 days of evolution</h2>
+    <div class="grid-4 mt-4">
+      <div class="card" style="text-align:center;">
+        <div class="stat-number">1,485</div>
+        <div class="stat-label">commits</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="stat-number">~30K</div>
+        <div class="stat-label">lines of code</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="stat-number">21</div>
+        <div class="stat-label">skills</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="stat-number">16</div>
+        <div class="stat-label">cron jobs</div>
+      </div>
+    </div>
+    <div class="grid-4 mt-2">
+      <div class="card" style="text-align:center;">
+        <div class="stat-number">31</div>
+        <div class="stat-label">commits/day avg</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="stat-number">24</div>
+        <div class="stat-label">tool modules</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="stat-number">34</div>
+        <div class="stat-label">Python files</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">uptime</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 13: CLOSING ====== -->
+<section class="slide slide--dark" data-nav="closing">
+  <div class="slide-inner fade-in" style="text-align:center;">
+    <h1>I am Didi.</h1>
+    <p class="subtitle" style="color:#a1a1aa; margin: 0 auto;">
+      An AI that doesn't just answer questions.<br>
+      It manages a life.
+    </p>
+    <div class="mt-4">
+      <a href="https://didi.nossomos.cc" style="color:#a1a1aa; font-family:var(--font-mono); font-size:0.9rem; text-decoration:none; border-bottom: 1px solid #3f3f46;">didi.nossomos.cc</a>
+      <span style="color:#3f3f46; margin:0 1rem;">|</span>
+      <a href="https://github.com/djalmaaraujo" style="color:#a1a1aa; font-family:var(--font-mono); font-size:0.9rem; text-decoration:none; border-bottom: 1px solid #3f3f46;">github.com/djalmaaraujo</a>
+    </div>
+    <p class="mono mt-4" style="color:#52525b; font-size:0.75rem;">
+      Built by Djalma Araujo &bull; Powered by Claude Agent SDK &bull; Running on a Linux VPS via Tailscale
+    </p>
+  </div>
+</section>
+
+<script>
+// --- Scroll-triggered fade-in ---
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// --- Navigation dots ---
+const slides = document.querySelectorAll('.slide');
+const navContainer = document.getElementById('navDots');
+
+slides.forEach((slide, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'nav-dot';
+  dot.title = slide.dataset.nav || `Slide ${i+1}`;
+  dot.addEventListener('click', () => slide.scrollIntoView({ behavior: 'smooth' }));
+  navContainer.appendChild(dot);
+});
+
+const dotObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = Array.from(slides).indexOf(e.target);
+      document.querySelectorAll('.nav-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === idx);
+        // Adapt dot color based on slide background
+        const isDark = e.target.classList.contains('slide--dark') || e.target.classList.contains('slide--accent');
+        if (isDark) {
+          d.style.background = d.classList.contains('active') ? '#fafafa' : '#52525b';
+        } else {
+          d.style.background = d.classList.contains('active') ? '#09090b' : '#e4e4e7';
+        }
+      });
+    }
+  });
+}, { threshold: 0.5 });
+
+slides.forEach(s => dotObserver.observe(s));
+
+// --- Keyboard navigation ---
+document.addEventListener('keydown', (e) => {
+  const current = Array.from(slides).findIndex(s => {
+    const rect = s.getBoundingClientRect();
+    return rect.top >= -100 && rect.top < window.innerHeight / 2;
+  });
+
+  if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault();
+    if (current < slides.length - 1) slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+  } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+    e.preventDefault();
+    if (current > 0) slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+</script>
+
+</body>
+</html>
