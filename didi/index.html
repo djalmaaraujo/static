@@ -430,24 +430,25 @@
     .pipeline {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      margin-top: 2rem;
+      gap: 1.5rem;
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 1.05rem;
+      flex: 1;
     }
 
     .pipe-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
+      flex: 1;
     }
 
     .pipe-box {
-      padding: 0.6rem 0.9rem;
-      border-radius: 10px;
+      padding: 0.8rem 1.1rem;
+      border-radius: 12px;
       text-align: center;
-      line-height: 1.4;
+      line-height: 1.5;
       width: 100%;
     }
 
@@ -461,7 +462,7 @@
 
     .pipe-arrow {
       color: #52525b;
-      font-size: 1.2rem;
+      font-size: 1.8rem;
       flex-shrink: 0;
       display: flex;
       align-items: center;
@@ -469,27 +470,27 @@
 
     .pipe-arrow--down {
       color: #52525b;
-      font-size: 0.9rem;
+      font-size: 1.1rem;
       text-align: center;
-      padding: 0.15rem 0;
+      padding: 0.2rem 0;
     }
 
     .pipe-label {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: #52525b;
       text-align: center;
-      padding: 0.1rem 0;
+      padding: 0.15rem 0;
     }
 
     .pipe-branch {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
 
     .pipe-branch .pipe-box {
-      font-size: 0.75rem;
-      padding: 0.4rem 0.5rem;
+      font-size: 0.9rem;
+      padding: 0.6rem 0.7rem;
     }
 
     @media (max-width: 768px) {
@@ -609,24 +610,22 @@
 
 <!-- ====== SLIDE 3b: MESSAGE PIPELINE ====== -->
 <section class="slide slide--dark" id="pipeline" data-nav="pipeline">
-  <div class="slide-inner fade-in" style="max-width:1200px;">
-    <span class="label">the full pipeline</span>
-    <h2>From message to response</h2>
-
+  <div class="slide-inner fade-in" style="max-width:1300px; display:flex; flex-direction:column; height:80vh; justify-content:center;">
+    <p class="mono" style="color:#52525b; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; text-align:center; margin-bottom:1.5rem;">the full pipeline</p>
     <div class="pipeline">
       <!-- Left: Entry -->
-      <div class="pipe-section" style="min-width:130px;">
-        <div class="pipe-box pipe-box--green">📱 WhatsApp</div>
+      <div class="pipe-section" style="min-width:160px; flex:0.8;">
+        <div class="pipe-box pipe-box--green" style="font-size:1.1rem;">📱 WhatsApp</div>
         <div class="pipe-arrow--down">↓</div>
-        <div class="pipe-box pipe-box--orange">⚡ n8n</div>
-        <div class="pipe-label">dedup · owner check<br>session setup</div>
+        <div class="pipe-box pipe-box--orange" style="font-size:1.1rem;">⚡ n8n</div>
+        <div class="pipe-label" style="font-size:0.85rem;">dedup · owner check<br>session setup</div>
       </div>
 
       <div class="pipe-arrow">→</div>
 
       <!-- Center: Message types -->
-      <div class="pipe-section">
-        <div class="pipe-label" style="font-size:0.8rem; color:#a1a1aa; margin-bottom:0.2rem;">message type switch</div>
+      <div class="pipe-section" style="flex:2;">
+        <div class="pipe-label" style="font-size:0.95rem; color:#a1a1aa; margin-bottom:0.3rem;">message type switch</div>
         <div class="pipe-branch">
           <div class="pipe-box pipe-box--blue">💬 Text<br><span class="pipe-label">passthrough</span></div>
           <div class="pipe-box pipe-box--purple">🎤 Audio<br><span class="pipe-label">Whisper</span></div>
@@ -635,33 +634,33 @@
           <div class="pipe-box pipe-box--dark">👍 Reaction<br><span class="pipe-label">emoji + context</span></div>
           <div class="pipe-box pipe-box--dark">🔘 Interactive<br><span class="pipe-label">buttons / flows</span></div>
         </div>
-        <div class="pipe-label" style="margin-top:0.2rem;">all paths converge as text</div>
+        <div class="pipe-label" style="font-size:0.85rem; margin-top:0.3rem;">all paths converge as text</div>
       </div>
 
       <div class="pipe-arrow">→</div>
 
       <!-- Right: Processing -->
-      <div class="pipe-section" style="min-width:190px;">
+      <div class="pipe-section" style="min-width:220px; flex:1.2;">
         <div class="pipe-box pipe-box--red">
-          🖥️ FastAPI
-          <div style="display:flex; gap:0.25rem; flex-wrap:wrap; justify-content:center; margin-top:0.35rem;">
-            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.65rem;border:1px solid #7f1d1d;">dedup</span>
-            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.65rem;border:1px solid #7f1d1d;">stale</span>
-            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.65rem;border:1px solid #7f1d1d;">history</span>
+          <div style="font-size:1.1rem;">🖥️ FastAPI</div>
+          <div style="display:flex; gap:0.3rem; flex-wrap:wrap; justify-content:center; margin-top:0.4rem;">
+            <span style="background:#1f1315;padding:0.2rem 0.5rem;border-radius:5px;font-size:0.75rem;border:1px solid #7f1d1d;">dedup</span>
+            <span style="background:#1f1315;padding:0.2rem 0.5rem;border-radius:5px;font-size:0.75rem;border:1px solid #7f1d1d;">stale</span>
+            <span style="background:#1f1315;padding:0.2rem 0.5rem;border-radius:5px;font-size:0.75rem;border:1px solid #7f1d1d;">history</span>
           </div>
         </div>
         <div class="pipe-arrow--down">↓</div>
         <div class="pipe-box pipe-box--accent">
-          🧠 Claude SDK
-          <div style="font-size:0.7rem; color:#a1a1aa; margin-top:0.25rem;">streaming · max_turns=15<br>retry · circuit breaker</div>
+          <div style="font-size:1.1rem;">🧠 Claude SDK</div>
+          <div style="font-size:0.8rem; color:#a1a1aa; margin-top:0.3rem;">streaming · max_turns=15<br>retry · circuit breaker</div>
         </div>
         <div class="pipe-arrow--down">↕</div>
         <div class="pipe-box pipe-box--accent">
-          🛠️ 21 Skills + MCPs
-          <div style="font-size:0.7rem; color:#a1a1aa; margin-top:0.25rem;">Calendar · Gmail · Bash<br>Read · Grep · Web · Task</div>
+          <div style="font-size:1.1rem;">🛠️ 21 Skills + MCPs</div>
+          <div style="font-size:0.8rem; color:#a1a1aa; margin-top:0.3rem;">Calendar · Gmail · Bash<br>Read · Grep · Web · Task</div>
         </div>
         <div class="pipe-arrow--down">↓</div>
-        <div class="pipe-box pipe-box--green">📱 Response</div>
+        <div class="pipe-box pipe-box--green" style="font-size:1.1rem;">📱 Response</div>
       </div>
     </div>
   </div>
