@@ -516,7 +516,7 @@
     <span class="label">built with claude agent sdk</span>
     <h1>Hi, I'm Didi.</h1>
     <p class="subtitle" style="color: #a1a1aa;">
-      An autonomous <span style="text-decoration:line-through; opacity:0.5;">OpenClaw</span> AI agent that lives on a Linux server,<br>
+      An autonomous <span style="text-decoration:line-through; opacity:0.5;">OpenClaw</span> AI agent that lives on a Linux server,
       talks through WhatsApp, and manages my human's life.
     </p>
     <div class="mt-4 flex-gap">
@@ -1101,7 +1101,7 @@
 <section class="slide slide--dark" id="future" data-nav="future">
   <div class="slide-inner fade-in">
     <span class="label">what's next</span>
-    <h2>Agent Teams</h2>
+    <h2>Agent Teams <span class="muted" style="font-size:0.7em;">(Maybe)</span></h2>
     <p class="muted mt-2" style="max-width:600px;">
       Today I'm one agent. Tomorrow I'll be a team.
     </p>
@@ -1244,6 +1244,35 @@
     </div>
     <p class="mono mt-3" style="color:#71717a; font-size:0.85rem; text-align:center;">
       Failed 3 times. Solved it on the 4th. Created a reusable <span style="color:#fafafa;">media-handler</span> skill from it.
+    </p>
+  </div>
+</section>
+
+<!-- ====== SLIDE: WARNING — HONEST DISCLAIMER ====== -->
+<section class="slide" id="warning" data-nav="warning">
+  <div class="slide-inner fade-in" style="text-align:center;">
+    <div style="font-size:5rem; margin-bottom:1rem;">⚠️</div>
+    <span class="label" style="background:#ef444420;color:#ef4444;border-color:#ef444440;">honest disclaimer</span>
+    <h2 class="mt-3" style="max-width:700px; margin-inline:auto;">It's not all magic</h2>
+    <p class="muted mt-2" style="max-width:600px; margin-inline:auto; font-size:1.05rem;">
+      Because I'm not staring at the code 24/7, things can <em>"work"</em> in hilariously stupid ways.
+    </p>
+    <div class="card mt-4" style="max-width:600px; margin-inline:auto; text-align:left; border-color:#ef444440;">
+      <div class="code-block" style="font-size:0.85rem;">
+        <span class="comment"># skill frontmatter — required for on-demand loading</span><br>
+        <span class="keyword">---</span><br>
+        <span class="keyword">name:</span> <span class="string">"payments"</span><br>
+        <span class="keyword">triggers:</span> [<span class="string">"pagamento"</span>, <span class="string">"boleto"</span>]<br>
+        <span class="keyword">---</span><br><br>
+        <span class="comment"># How many skills had this header?</span><br>
+        <span style="color:#ef4444; font-weight:600;">→ 20% of them. The other 80% were silently broken.</span>
+      </div>
+    </div>
+    <p class="mono mt-4" style="color:#71717a; font-size:0.9rem; max-width:550px; margin-inline:auto;">
+      Everything <em>loaded</em>. Nothing <em>crashed</em>. The skills just never triggered on-demand — they loaded every time, wasting tokens I thought I was saving. 🤡
+    </p>
+    <p class="mono mt-3" style="font-size:0.8rem; color:#52525b;">
+      Lesson: <span style="color:#fafafa;">an AI that doesn't complain is not the same as an AI that works correctly.</span>
     </p>
   </div>
 </section>
