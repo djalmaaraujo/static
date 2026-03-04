@@ -425,6 +425,84 @@
       background: linear-gradient(120deg, #854d0e 0%, #92400e 100%);
       color: #fef08a;
     }
+
+    /* --- Pipeline diagram --- */
+    .pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .pipe-row {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .pipe-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .pipe-box {
+      padding: 0.5rem 0.6rem;
+      border-radius: 8px;
+      text-align: center;
+      line-height: 1.35;
+      width: 100%;
+      max-width: 150px;
+    }
+
+    .pipe-box--green { background: #052e16; border: 1px solid #166534; color: #86efac; }
+    .pipe-box--blue { background: #0c1a3d; border: 1px solid #1e40af; color: #93c5fd; }
+    .pipe-box--purple { background: #1a0533; border: 1px solid #6b21a8; color: #c4b5fd; }
+    .pipe-box--orange { background: #2a1708; border: 1px solid #92400e; color: #fbbf24; }
+    .pipe-box--red { background: #2a0808; border: 1px solid #991b1b; color: #fca5a5; }
+    .pipe-box--dark { background: #18181b; border: 1px solid #3f3f46; color: #a1a1aa; }
+    .pipe-box--accent { background: #27272a; border: 1px solid #52525b; color: #e4e4e7; }
+
+    .pipe-arrow {
+      color: #52525b;
+      font-size: 0.9rem;
+      padding: 0.2rem 0;
+      text-align: center;
+    }
+
+    .pipe-arrow--h {
+      padding: 0 0.3rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .pipe-label {
+      font-size: 0.6rem;
+      color: #52525b;
+      text-align: center;
+      padding: 0.15rem 0;
+    }
+
+    .pipe-branch {
+      display: flex;
+      gap: 0.4rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0.5rem 0;
+    }
+
+    .pipe-branch .pipe-box {
+      max-width: 120px;
+      font-size: 0.65rem;
+    }
+
+    @media (max-width: 768px) {
+      .pipe-branch { flex-direction: column; align-items: center; }
+      .pipe-box { max-width: 200px !important; }
+    }
   </style>
 </head>
 <body>
@@ -536,7 +614,94 @@
   </div>
 </section>
 
-<!-- ====== SLIDE 3b: FROM CLUSTER TO SINGLE NODE ====== -->
+<!-- ====== SLIDE 3b: MESSAGE PIPELINE ====== -->
+<section class="slide slide--dark" id="pipeline" data-nav="pipeline">
+  <div class="slide-inner fade-in" style="max-width:1000px;">
+    <span class="label">the full pipeline</span>
+    <h2>From message to response</h2>
+
+    <div class="pipeline">
+      <!-- Row 1: Entry -->
+      <div style="display:flex; justify-content:center;">
+        <div class="pipe-box pipe-box--green" style="max-width:200px;">📱 WhatsApp<br><span style="font-size:0.6rem;color:#4ade80;">user sends a message</span></div>
+      </div>
+      <div class="pipe-arrow">↓</div>
+
+      <!-- Row 2: n8n entry -->
+      <div style="display:flex; justify-content:center;">
+        <div class="pipe-box pipe-box--orange" style="max-width:350px;">⚡ n8n Webhook<br><span style="font-size:0.6rem;color:#d97706;">dedup → owner check → session setup</span></div>
+      </div>
+      <div class="pipe-arrow">↓</div>
+      <div class="pipe-label">message type switch</div>
+
+      <!-- Row 3: Branches -->
+      <div class="pipe-branch">
+        <div style="text-align:center;">
+          <div class="pipe-box pipe-box--blue">💬 Text</div>
+          <div class="pipe-label">passthrough</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pipe-box pipe-box--purple">🎤 Audio</div>
+          <div class="pipe-label">OpenAI Whisper</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pipe-box pipe-box--purple">🖼️ Image</div>
+          <div class="pipe-label">GPT-4o-mini vision</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pipe-box pipe-box--purple">📄 Document</div>
+          <div class="pipe-label">PDF / CSV / XLS</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pipe-box pipe-box--dark">👍 Reaction</div>
+          <div class="pipe-label">emoji + context</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pipe-box pipe-box--dark">🔘 Interactive</div>
+          <div class="pipe-label">buttons / flows</div>
+        </div>
+      </div>
+
+      <div class="pipe-arrow">↓ all paths converge as text</div>
+
+      <!-- Row 4: Server -->
+      <div style="display:flex; justify-content:center;">
+        <div class="pipe-box pipe-box--red" style="max-width:500px; padding:0.7rem 1rem;">
+          <div style="font-size:0.85rem; margin-bottom:0.3rem;">🖥️ FastAPI Server <span style="font-size:0.6rem;color:#f87171;">(POST /message via Tailscale)</span></div>
+          <div style="display:flex; gap:0.3rem; flex-wrap:wrap; justify-content:center; margin-top:0.3rem;">
+            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.58rem;border:1px solid #7f1d1d;">dedup</span>
+            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.58rem;border:1px solid #7f1d1d;">stale check</span>
+            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.58rem;border:1px solid #7f1d1d;">reaction resolve</span>
+            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.58rem;border:1px solid #7f1d1d;">reply context</span>
+            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.58rem;border:1px solid #7f1d1d;">history log</span>
+          </div>
+        </div>
+      </div>
+      <div class="pipe-arrow">↓</div>
+
+      <!-- Row 5: Claude + response -->
+      <div style="display:flex; gap:0.6rem; justify-content:center; align-items:flex-start; flex-wrap:wrap;">
+        <div class="pipe-box pipe-box--accent" style="max-width:260px; padding:0.7rem;">
+          <div style="font-size:0.85rem; margin-bottom:0.3rem;">🧠 Claude Agent SDK</div>
+          <div style="font-size:0.6rem; color:#a1a1aa; line-height:1.5;">streaming · max_turns=15<br>retry + backoff · circuit breaker<br>compaction on overflow</div>
+        </div>
+        <div class="pipe-arrow--h">→</div>
+        <div class="pipe-box pipe-box--accent" style="max-width:260px; padding:0.7rem;">
+          <div style="font-size:0.85rem; margin-bottom:0.3rem;">🛠️ Tools & Skills</div>
+          <div style="font-size:0.6rem; color:#a1a1aa; line-height:1.5;">21 on-demand skills<br>MCP: Google Calendar, Gmail<br>Bash, Read, Grep, Web, Task</div>
+        </div>
+      </div>
+      <div class="pipe-arrow">↓ format_for_whatsapp() → auto-split 4096 chars</div>
+
+      <!-- Row 6: Response -->
+      <div style="display:flex; justify-content:center;">
+        <div class="pipe-box pipe-box--green" style="max-width:200px;">📱 WhatsApp<br><span style="font-size:0.6rem;color:#4ade80;">response delivered</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 3c: FROM CLUSTER TO SINGLE NODE ====== -->
 <section class="slide" id="cluster" data-nav="cluster">
   <div class="slide-inner fade-in">
     <span class="label">the apple era</span>
