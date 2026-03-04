@@ -1051,32 +1051,47 @@
   <div class="slide-inner fade-in">
     <span class="label">key decisions</span>
     <h2>What I learned along the way</h2>
-    <div class="timeline mt-4">
-      <div class="timeline-line"></div>
-      <div class="timeline-item">
+    <div class="timeline mt-4" style="column-count:2; column-gap:2.5rem;">
+      <div class="timeline-line" style="display:none;"></div>
+      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
         <div class="timeline-dot"></div>
         <div class="timeline-title">WhatsApp over custom app</div>
-        <div class="timeline-desc">Zero friction. No install. Works offline. Already in the pocket. The best UI is the one you already use.</div>
+        <div class="timeline-desc">Built an Electron app + Recall.ai. Then deleted it. The best UI is the one already in the pocket. <span class="muted mono" style="font-size:0.7rem;">Jan 16 · 8429e66</span></div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
         <div class="timeline-dot"></div>
-        <div class="timeline-title">SQLite over Postgres</div>
-        <div class="timeline-desc">Single user, single server. No network latency. File-based backup. Simple is better.</div>
+        <div class="timeline-title">Haiku → Sonnet</div>
+        <div class="timeline-desc">Started with the cheapest model. It couldn't follow skill instructions reliably. Upgraded to Sonnet — worth every token. <span class="muted mono" style="font-size:0.7rem;">Jan 28 · 3f4dd1c</span></div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
         <div class="timeline-dot"></div>
-        <div class="timeline-title">Skills over tools</div>
-        <div class="timeline-desc">On-demand loading saved ~4K tokens per request. Progressive disclosure keeps context lean.</div>
+        <div class="timeline-title">Cluster built → deleted</div>
+        <div class="timeline-desc">1,274 lines of leader election, heartbeat, and task routing across Mac + VPS. Then 2,830 lines deleted. One server for one human. <span class="muted mono" style="font-size:0.7rem;">Jan 27 → Feb 23</span></div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
         <div class="timeline-dot"></div>
-        <div class="timeline-title">Single node over cluster</div>
-        <div class="timeline-desc">Built a full cluster module. Then deleted it. One server is enough for one human.</div>
+        <div class="timeline-title">TTS: 3 engines tried → removed</div>
+        <div class="timeline-desc">OpenAI, Edge-TTS, pyttsx3. All worked. None worth the context cost. Not every feature should ship. <span class="muted mono" style="font-size:0.7rem;">Feb 17 · 2a85e29</span></div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
         <div class="timeline-dot"></div>
-        <div class="timeline-title">Proactive over reactive</div>
-        <div class="timeline-desc">Don't wait to be asked. Morning briefings, payment alerts, focus check-ins. An agent should anticipate.</div>
+        <div class="timeline-title">reload=False</div>
+        <div class="timeline-desc">The agent edits its own code. Hot-reload would restart itself mid-conversation. Learned the hard way. <span class="muted mono" style="font-size:0.7rem;">Feb 18 · 68dada4</span></div>
+      </div>
+      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title">Skills over tools: −58% tokens</div>
+        <div class="timeline-desc">Tools loaded all prompts upfront (7K tokens). Skills load on-demand via YAML triggers (3K). Context is expensive — be lazy. <span class="muted mono" style="font-size:0.7rem;">Feb 24 · eb79375</span></div>
+      </div>
+      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title">max_turns=15 + claude -p</div>
+        <div class="timeline-desc">Cap the main session. Heavy tasks delegate to isolated subprocesses. Result comes back as one message. Context stays clean. <span class="muted mono" style="font-size:0.7rem;">Feb 24 · d153ce0</span></div>
+      </div>
+      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title">Flat files, not databases</div>
+        <div class="timeline-desc">JSONL for history. Markdown for memory. YAML for skills. SQLite only for payments. Git is the version control. Keep it simple. <span class="muted mono" style="font-size:0.7rem;">always</span></div>
       </div>
     </div>
   </div>
