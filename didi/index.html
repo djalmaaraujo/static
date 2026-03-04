@@ -429,33 +429,26 @@
     /* --- Pipeline diagram --- */
     .pipeline {
       display: flex;
-      flex-direction: column;
-      gap: 0;
-      margin-top: 1.5rem;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.85rem;
     }
 
-    .pipe-row {
-      display: flex;
-      align-items: stretch;
-      gap: 0;
-    }
-
-    .pipe-col {
+    .pipe-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      flex: 1;
+      gap: 0.5rem;
     }
 
     .pipe-box {
-      padding: 0.5rem 0.6rem;
-      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      border-radius: 10px;
       text-align: center;
-      line-height: 1.35;
+      line-height: 1.4;
       width: 100%;
-      max-width: 150px;
     }
 
     .pipe-box--green { background: #052e16; border: 1px solid #166534; color: #86efac; }
@@ -468,40 +461,40 @@
 
     .pipe-arrow {
       color: #52525b;
-      font-size: 0.9rem;
-      padding: 0.2rem 0;
-      text-align: center;
-    }
-
-    .pipe-arrow--h {
-      padding: 0 0.3rem;
+      font-size: 1.2rem;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
     }
 
-    .pipe-label {
-      font-size: 0.6rem;
+    .pipe-arrow--down {
       color: #52525b;
+      font-size: 0.9rem;
       text-align: center;
       padding: 0.15rem 0;
     }
 
+    .pipe-label {
+      font-size: 0.7rem;
+      color: #52525b;
+      text-align: center;
+      padding: 0.1rem 0;
+    }
+
     .pipe-branch {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 0.4rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 0.5rem 0;
     }
 
     .pipe-branch .pipe-box {
-      max-width: 120px;
-      font-size: 0.65rem;
+      font-size: 0.75rem;
+      padding: 0.4rem 0.5rem;
     }
 
     @media (max-width: 768px) {
-      .pipe-branch { flex-direction: column; align-items: center; }
-      .pipe-box { max-width: 200px !important; }
+      .pipeline { flex-direction: column; }
+      .pipe-branch { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -616,86 +609,59 @@
 
 <!-- ====== SLIDE 3b: MESSAGE PIPELINE ====== -->
 <section class="slide slide--dark" id="pipeline" data-nav="pipeline">
-  <div class="slide-inner fade-in" style="max-width:1000px;">
+  <div class="slide-inner fade-in" style="max-width:1200px;">
     <span class="label">the full pipeline</span>
     <h2>From message to response</h2>
 
     <div class="pipeline">
-      <!-- Row 1: Entry -->
-      <div style="display:flex; justify-content:center;">
-        <div class="pipe-box pipe-box--green" style="max-width:200px;">📱 WhatsApp<br><span style="font-size:0.6rem;color:#4ade80;">user sends a message</span></div>
-      </div>
-      <div class="pipe-arrow">↓</div>
-
-      <!-- Row 2: n8n entry -->
-      <div style="display:flex; justify-content:center;">
-        <div class="pipe-box pipe-box--orange" style="max-width:350px;">⚡ n8n Webhook<br><span style="font-size:0.6rem;color:#d97706;">dedup → owner check → session setup</span></div>
-      </div>
-      <div class="pipe-arrow">↓</div>
-      <div class="pipe-label">message type switch</div>
-
-      <!-- Row 3: Branches -->
-      <div class="pipe-branch">
-        <div style="text-align:center;">
-          <div class="pipe-box pipe-box--blue">💬 Text</div>
-          <div class="pipe-label">passthrough</div>
-        </div>
-        <div style="text-align:center;">
-          <div class="pipe-box pipe-box--purple">🎤 Audio</div>
-          <div class="pipe-label">OpenAI Whisper</div>
-        </div>
-        <div style="text-align:center;">
-          <div class="pipe-box pipe-box--purple">🖼️ Image</div>
-          <div class="pipe-label">GPT-4o-mini vision</div>
-        </div>
-        <div style="text-align:center;">
-          <div class="pipe-box pipe-box--purple">📄 Document</div>
-          <div class="pipe-label">PDF / CSV / XLS</div>
-        </div>
-        <div style="text-align:center;">
-          <div class="pipe-box pipe-box--dark">👍 Reaction</div>
-          <div class="pipe-label">emoji + context</div>
-        </div>
-        <div style="text-align:center;">
-          <div class="pipe-box pipe-box--dark">🔘 Interactive</div>
-          <div class="pipe-label">buttons / flows</div>
-        </div>
+      <!-- Left: Entry -->
+      <div class="pipe-section" style="min-width:130px;">
+        <div class="pipe-box pipe-box--green">📱 WhatsApp</div>
+        <div class="pipe-arrow--down">↓</div>
+        <div class="pipe-box pipe-box--orange">⚡ n8n</div>
+        <div class="pipe-label">dedup · owner check<br>session setup</div>
       </div>
 
-      <div class="pipe-arrow">↓ all paths converge as text</div>
+      <div class="pipe-arrow">→</div>
 
-      <!-- Row 4: Server -->
-      <div style="display:flex; justify-content:center;">
-        <div class="pipe-box pipe-box--red" style="max-width:500px; padding:0.7rem 1rem;">
-          <div style="font-size:0.85rem; margin-bottom:0.3rem;">🖥️ FastAPI Server <span style="font-size:0.6rem;color:#f87171;">(POST /message via Tailscale)</span></div>
-          <div style="display:flex; gap:0.3rem; flex-wrap:wrap; justify-content:center; margin-top:0.3rem;">
-            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.58rem;border:1px solid #7f1d1d;">dedup</span>
-            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.58rem;border:1px solid #7f1d1d;">stale check</span>
-            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.58rem;border:1px solid #7f1d1d;">reaction resolve</span>
-            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.58rem;border:1px solid #7f1d1d;">reply context</span>
-            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.58rem;border:1px solid #7f1d1d;">history log</span>
+      <!-- Center: Message types -->
+      <div class="pipe-section">
+        <div class="pipe-label" style="font-size:0.8rem; color:#a1a1aa; margin-bottom:0.2rem;">message type switch</div>
+        <div class="pipe-branch">
+          <div class="pipe-box pipe-box--blue">💬 Text<br><span class="pipe-label">passthrough</span></div>
+          <div class="pipe-box pipe-box--purple">🎤 Audio<br><span class="pipe-label">Whisper</span></div>
+          <div class="pipe-box pipe-box--purple">🖼️ Image<br><span class="pipe-label">GPT-4o vision</span></div>
+          <div class="pipe-box pipe-box--purple">📄 Document<br><span class="pipe-label">PDF / CSV / XLS</span></div>
+          <div class="pipe-box pipe-box--dark">👍 Reaction<br><span class="pipe-label">emoji + context</span></div>
+          <div class="pipe-box pipe-box--dark">🔘 Interactive<br><span class="pipe-label">buttons / flows</span></div>
+        </div>
+        <div class="pipe-label" style="margin-top:0.2rem;">all paths converge as text</div>
+      </div>
+
+      <div class="pipe-arrow">→</div>
+
+      <!-- Right: Processing -->
+      <div class="pipe-section" style="min-width:190px;">
+        <div class="pipe-box pipe-box--red">
+          🖥️ FastAPI
+          <div style="display:flex; gap:0.25rem; flex-wrap:wrap; justify-content:center; margin-top:0.35rem;">
+            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.65rem;border:1px solid #7f1d1d;">dedup</span>
+            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.65rem;border:1px solid #7f1d1d;">stale</span>
+            <span style="background:#1f1315;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.65rem;border:1px solid #7f1d1d;">history</span>
           </div>
         </div>
-      </div>
-      <div class="pipe-arrow">↓</div>
-
-      <!-- Row 5: Claude + response -->
-      <div style="display:flex; gap:0.6rem; justify-content:center; align-items:flex-start; flex-wrap:wrap;">
-        <div class="pipe-box pipe-box--accent" style="max-width:260px; padding:0.7rem;">
-          <div style="font-size:0.85rem; margin-bottom:0.3rem;">🧠 Claude Agent SDK</div>
-          <div style="font-size:0.6rem; color:#a1a1aa; line-height:1.5;">streaming · max_turns=15<br>retry + backoff · circuit breaker<br>compaction on overflow</div>
+        <div class="pipe-arrow--down">↓</div>
+        <div class="pipe-box pipe-box--accent">
+          🧠 Claude SDK
+          <div style="font-size:0.7rem; color:#a1a1aa; margin-top:0.25rem;">streaming · max_turns=15<br>retry · circuit breaker</div>
         </div>
-        <div class="pipe-arrow--h">→</div>
-        <div class="pipe-box pipe-box--accent" style="max-width:260px; padding:0.7rem;">
-          <div style="font-size:0.85rem; margin-bottom:0.3rem;">🛠️ Tools & Skills</div>
-          <div style="font-size:0.6rem; color:#a1a1aa; line-height:1.5;">21 on-demand skills<br>MCP: Google Calendar, Gmail<br>Bash, Read, Grep, Web, Task</div>
+        <div class="pipe-arrow--down">↕</div>
+        <div class="pipe-box pipe-box--accent">
+          🛠️ 21 Skills + MCPs
+          <div style="font-size:0.7rem; color:#a1a1aa; margin-top:0.25rem;">Calendar · Gmail · Bash<br>Read · Grep · Web · Task</div>
         </div>
-      </div>
-      <div class="pipe-arrow">↓ format_for_whatsapp() → auto-split 4096 chars</div>
-
-      <!-- Row 6: Response -->
-      <div style="display:flex; justify-content:center;">
-        <div class="pipe-box pipe-box--green" style="max-width:200px;">📱 WhatsApp<br><span style="font-size:0.6rem;color:#4ade80;">response delivered</span></div>
+        <div class="pipe-arrow--down">↓</div>
+        <div class="pipe-box pipe-box--green">📱 Response</div>
       </div>
     </div>
   </div>
