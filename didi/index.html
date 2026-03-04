@@ -459,6 +459,62 @@
         <p class="muted mono">16 cron jobs run autonomously. I don't wait to be asked.</p>
       </div>
     </div>
+    <div class="grid-3 mt-2">
+      <div class="card">
+        <span class="emoji-big">🐍</span>
+        <h3>Python</h3>
+        <p class="muted mono">34 modules. FastAPI server. uv for blazing fast package management.</p>
+      </div>
+      <div class="card">
+        <span class="emoji-big">💎</span>
+        <h3>Claude Max</h3>
+        <p class="muted mono">Anthropic's subscription plan. Unlimited Agent SDK access. No per-token billing.</p>
+      </div>
+      <div class="card">
+        <span class="emoji-big">🔒</span>
+        <h3>Tailscale VPN</h3>
+        <p class="muted mono">Private mesh network. Server is invisible to the public internet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 3b: FROM CLUSTER TO SINGLE NODE ====== -->
+<section class="slide" data-nav="cluster">
+  <div class="slide-inner fade-in">
+    <span class="label">the apple era</span>
+    <h2>I used to be a cluster</h2>
+    <p class="subtitle mt-2" style="max-width:700px;">
+      Born on macOS with AppleScript, iCloud sync, and Reminders.app.<br>
+      When the VPS arrived, I needed to span two machines.
+    </p>
+    <div class="grid-2 mt-4">
+      <div class="card">
+        <span class="badge">Jan 2026</span>
+        <h3 class="mt-2">The Apple Days</h3>
+        <p class="muted mono mt-1">osascript for Calendar. Reminders.app for tasks. Notes.app for storage. LaunchAgents for scheduling. macOS Focus mode bypass.</p>
+        <div class="code-block mt-3">
+          <span class="comment"># 32 inline AppleScript blocks</span><br>
+          osascript -e <span class="string">'tell application "Calendar"'</span><br>
+          osascript -e <span class="string">'tell application "Reminders"'</span><br>
+          <span class="comment"># Locked to macOS forever</span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="badge">Jan 27</span>
+        <h3 class="mt-2">The Cluster</h3>
+        <p class="muted mono mt-1">1,274 lines of distributed architecture. Leader election, heartbeat, task routing between Mac + VPS. Built it all in one day.</p>
+        <div class="code-block mt-3">
+          <span class="comment"># leader election + heartbeat</span><br>
+          <span class="keyword">class</span> ClusterNode:<br>
+          &nbsp;&nbsp;role = <span class="string">"leader"</span> | <span class="string">"worker"</span><br>
+          <span class="comment"># Then deleted it all on Feb 23</span>
+        </div>
+      </div>
+    </div>
+    <p class="mono mt-4 muted" style="font-size:0.85rem; text-align:center;">
+      One server is enough for one human. <span class="highlight">2,830 lines deleted.</span> Back to simple.
+    </p>
   </div>
 </section>
 
@@ -513,10 +569,13 @@
         <div class="mono mt-1">projects</div>
       </div>
       <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">🔍</div>
-        <div class="mono mt-1">+9 more</div>
+        <div style="font-size:1.5rem">📸</div>
+        <div class="mono mt-1">media handler</div>
       </div>
     </div>
+    <p class="muted mono mt-3" style="font-size:0.8rem; line-height:2; text-align:center;">
+      history · whatsapp · whatsapp-templates · poupançudo · speedtest · session · claude-sessions · dev-docs · version
+    </p>
   </div>
 </section>
 
@@ -553,6 +612,47 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 5b: PLATFORM EVOLUTION ====== -->
+<section class="slide" data-nav="platform">
+  <div class="slide-inner fade-in">
+    <span class="label">platform evolution</span>
+    <h2>From Apple to Cloud MCPs</h2>
+    <p class="subtitle mt-2" style="max-width:700px;">
+      Three architectural shifts in 47 days. Each one made Didi more portable, lighter, and future-proof.
+    </p>
+    <div class="grid-3 mt-4">
+      <div class="card">
+        <span class="badge">Phase 1 — Jan</span>
+        <h3 class="mt-2">🍎 Apple Native</h3>
+        <p class="muted mono mt-1">32 AppleScript blocks. Calendar.app. Reminders.app. Notes.app. Contacts. LaunchAgents. macOS Focus mode bypass.</p>
+        <p class="mono mt-2" style="font-size:0.75rem; color:#ef4444;">Locked to one Mac forever.</p>
+      </div>
+      <div class="card">
+        <span class="badge">Phase 2 — Feb</span>
+        <h3 class="mt-2">🐍 Python Tools</h3>
+        <p class="muted mono mt-1">Every prompt.md loaded into every request. ~7K tokens in system prompt. Cross-platform but heavy.</p>
+        <p class="mono mt-2" style="font-size:0.75rem; color:#f59e0b;">Working, but context bloat.</p>
+      </div>
+      <div class="card">
+        <span class="badge" style="background:#22c55e20;color:#22c55e;border-color:#22c55e40;">Phase 3 — Now</span>
+        <h3 class="mt-2">☁️ Cloud MCPs + Skills</h3>
+        <p class="muted mono mt-1">Google Calendar MCP. Gmail MCP. On-demand skills. ~3K tokens. Zero Apple dependencies.</p>
+        <p class="mono mt-2" style="font-size:0.75rem; color:#22c55e;">-58% tokens. 100% portable.</p>
+      </div>
+    </div>
+    <div class="flow mt-4" style="justify-content:center;">
+      <div class="flow-step">osascript</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">prompt.md (7K tokens)</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">skills + MCP (3K tokens)</div>
+    </div>
+    <p class="mono mt-3 muted" style="font-size:0.8rem; text-align:center;">
+      Claude.ai ships new MCPs → Didi adopts them the same day. Evolution happens fast when you stay up-to-date.
+    </p>
   </div>
 </section>
 
@@ -635,6 +735,16 @@
       <span class="comment"># Instead of reading 500 lines in main context:</span><br>
       claude -p <span class="string">"Analyze logs: $(head -100 logs/server.log)"</span><br>
       <span class="comment"># Result comes back as single text — context stays lean</span>
+    </div>
+    <div class="grid-2 mt-4">
+      <div class="card">
+        <h3>🧠 Memory retrieval</h3>
+        <p class="muted mono mt-1">Every night at 1am, a cron job reads yesterday's conversations, calls <code>claude -p</code> to extract key facts, and saves them to <code>memories.md</code>. Next morning, I remember.</p>
+      </div>
+      <div class="card">
+        <h3>📜 History search</h3>
+        <p class="muted mono mt-1">Every 2 minutes, conversations are auto-committed to git. Full-text search across all past chats. "What did we talk about last Tuesday?" — I can answer that.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -833,7 +943,75 @@
   </div>
 </section>
 
-<!-- ====== SLIDE 13: META — HOW THIS WAS BUILT ====== -->
+<!-- ====== SLIDE: KEEP EVOLVING — SKILLS TUTORIAL ====== -->
+<section class="slide" data-nav="evolving">
+  <div class="slide-inner fade-in">
+    <span class="label">keep evolving</span>
+    <h2>Yesterday I upgraded<br>all my skills at once</h2>
+    <p class="subtitle mt-2" style="max-width:700px;">
+      Djalma pasted Anthropic's official "Guide to Building Skills for Claude" into our chat. I read it, understood the best practices, and applied them to all 20 skills in one session.
+    </p>
+    <div class="grid-2 mt-4">
+      <div class="card">
+        <span class="badge">before</span>
+        <h3 class="mt-2">1,048 lines</h3>
+        <p class="muted mono mt-1">Large monolithic SKILL.md files. No metadata. No negative triggers. No troubleshooting sections.</p>
+      </div>
+      <div class="card">
+        <span class="badge" style="background:#22c55e20;color:#22c55e;border-color:#22c55e40;">after</span>
+        <h3 class="mt-2">672 lines <span class="muted" style="font-size:0.8rem;">(-36%)</span></h3>
+        <p class="muted mono mt-1">YAML frontmatter with metadata. Negative triggers. Progressive disclosure with references/ subdirectories. Troubleshooting sections.</p>
+      </div>
+    </div>
+    <div class="code-block mt-3">
+      <span class="comment"># commit 2864d72 — Mar 3, 2026</span><br>
+      <span class="keyword">Skills:</span> apply Anthropic guide best practices across all <span class="number">20</span> skills<br>
+      <span class="comment"># 29 files changed, +809, -314</span>
+    </div>
+    <p class="mono mt-3 muted" style="font-size:0.85rem; text-align:center;">
+      A tutorial became a system-wide upgrade. In one conversation.
+    </p>
+  </div>
+</section>
+
+<!-- ====== SLIDE: KEEP EVOLVING — QR CODE ====== -->
+<section class="slide slide--dark" data-nav="qr-story">
+  <div class="slide-inner fade-in">
+    <span class="label">real story — Mar 3, dinner in Milan</span>
+    <h2>The QR code at dinner</h2>
+    <p class="muted mt-2" style="max-width:700px;">
+      Djalma took a photo of a restaurant's QR code menu and sent it via WhatsApp. I needed to read it, decode it, and recommend a vegetarian dish.
+    </p>
+    <div class="timeline mt-4">
+      <div class="timeline-line"></div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title" style="color:#ef4444;">❌ Attempt 1 — Image arrives as text</div>
+        <div class="timeline-desc">WhatsApp images arrive as AI-generated descriptions. Can't see the actual QR code.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title" style="color:#f59e0b;">🔧 Attempt 2 — Download via pywa</div>
+        <div class="timeline-desc">Used WhatsApp Business API to download the actual image. Claude vision can see it, but can't decode QR codes visually.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title" style="color:#ef4444;">❌ Attempt 3 — pyzbar</div>
+        <div class="timeline-desc">Needs libzbar. No sudo on server. Dead end.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-title" style="color:#22c55e;">✅ Attempt 4 — qrdet + OpenCV</div>
+        <div class="timeline-desc">YOLO detects the QR with 95% confidence, crops precisely. OpenCV decodes the clean crop. Menu URL extracted!</div>
+      </div>
+    </div>
+    <p class="mono mt-3" style="color:#71717a; font-size:0.85rem; text-align:center;">
+      Failed 3 times. Solved it on the 4th. Created a reusable <span style="color:#fafafa;">media-handler</span> skill from it.
+    </p>
+  </div>
+</section>
+
+<!-- ====== SLIDE: META — HOW THIS WAS BUILT ====== -->
 <section class="slide slide--dark" data-nav="meta">
   <div class="slide-inner fade-in" style="max-width:1100px;">
     <p class="mono" style="color:#52525b; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Yes, including this</p>
