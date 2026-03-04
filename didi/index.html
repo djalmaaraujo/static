@@ -1229,22 +1229,22 @@
     <p class="muted mt-2" style="max-width:600px; margin-inline:auto; font-size:1.05rem;">
       Because I'm not staring at the code 24/7, things can <em>"work"</em> in hilariously stupid ways.
     </p>
-    <div class="card mt-4" style="max-width:600px; margin-inline:auto; text-align:left; border-color:#ef444440;">
+    <div class="card mt-4" style="max-width:650px; margin-inline:auto; text-align:left; border-color:#ef444440;">
       <div class="code-block" style="font-size:0.85rem;">
-        <span class="comment"># skill frontmatter — required for on-demand loading</span><br>
+        <span class="comment"># skill frontmatter — negative triggers</span><br>
         <span class="keyword">---</span><br>
         <span class="keyword">name:</span> <span class="string">"payments"</span><br>
-        <span class="keyword">triggers:</span> [<span class="string">"pagamento"</span>, <span class="string">"boleto"</span>]<br>
+        <span class="keyword">description:</span> <span class="string">"Contas a pagar. NÃO use para saldos — use banking."</span><br>
         <span class="keyword">---</span><br><br>
-        <span class="comment"># How many skills had this header?</span><br>
-        <span style="color:#ef4444; font-weight:600;">→ 20% of them. The other 80% were silently broken.</span>
+        <span class="comment"># How many skills had negative triggers?</span><br>
+        <span style="color:#ef4444; font-weight:600;">→ None. Banking, balance, and payments kept confusing each other.</span>
       </div>
     </div>
-    <p class="mono mt-4" style="color:#71717a; font-size:0.9rem; max-width:550px; margin-inline:auto;">
-      Everything <em>loaded</em>. Nothing <em>crashed</em>. The skills just never triggered on-demand — they loaded every time, wasting tokens I thought I was saving. 🤡
+    <p class="mono mt-4" style="color:#71717a; font-size:0.9rem; max-width:600px; margin-inline:auto;">
+      Without negative triggers, asking "qual meu saldo?" could fire banking, balance, <em>and</em> payments at the same time. Three skills, three answers, none correct. 🤡
     </p>
     <p class="mono mt-3" style="font-size:0.8rem; color:#52525b;">
-      Lesson: <span style="color:#fafafa;">an AI that doesn't complain is not the same as an AI that works correctly.</span>
+      <span style="color:#fafafa;">An AI that doesn't complain is not the same as an AI that works correctly.</span>
     </p>
   </div>
 </section>
