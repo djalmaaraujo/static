@@ -429,7 +429,7 @@
     /* --- Pipeline diagram --- */
     .pipeline {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 1.5rem;
       font-family: var(--font-mono);
       font-size: 1.05rem;
@@ -614,14 +614,14 @@
     <p class="mono" style="color:#52525b; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; text-align:center; margin-bottom:1.5rem;">the full pipeline</p>
     <div class="pipeline">
       <!-- Left: Entry -->
-      <div class="pipe-section" style="min-width:160px; flex:0.8;">
+      <div class="pipe-section" style="min-width:160px; flex:0.8; padding-top:2rem;">
         <div class="pipe-box pipe-box--green" style="font-size:1.1rem;">📱 WhatsApp</div>
         <div class="pipe-arrow--down">↓</div>
         <div class="pipe-box pipe-box--orange" style="font-size:1.1rem;">⚡ n8n</div>
         <div class="pipe-label" style="font-size:0.85rem;">dedup · owner check<br>session setup</div>
       </div>
 
-      <div class="pipe-arrow">→</div>
+      <div class="pipe-arrow" style="padding-top:3rem;">→</div>
 
       <!-- Center: Message types -->
       <div class="pipe-section" style="flex:2;">
@@ -637,7 +637,7 @@
         <div class="pipe-label" style="font-size:0.85rem; margin-top:0.3rem;">all paths converge as text</div>
       </div>
 
-      <div class="pipe-arrow">→</div>
+      <div class="pipe-arrow" style="margin-top:0.5rem;">→</div>
 
       <!-- Right: Processing -->
       <div class="pipe-section" style="min-width:220px; flex:1.2;">
