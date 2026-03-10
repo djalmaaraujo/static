@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Didi — AI Personal Agent</title>
+  <title>Didi — AI Personal Assistant</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -303,6 +303,240 @@
       color: #e4e4e7;
     }
 
+    /* --- Feature grid (capabilities slide) --- */
+    .feat-group {
+      margin-top: 2rem;
+    }
+
+    .feat-group-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #71717a;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #27272a;
+    }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .feat-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: 0.5rem;
+      background: #18181b;
+      border: 1px solid #27272a;
+      transition: border-color 0.15s;
+    }
+
+    .feat-item:hover { border-color: #3f3f46; }
+
+    .feat-icon {
+      font-size: 1.1rem;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+
+    .feat-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #e4e4e7;
+      line-height: 1.3;
+    }
+
+    .feat-desc {
+      font-size: 0.75rem;
+      color: #71717a;
+      margin-top: 0.1rem;
+      line-height: 1.3;
+    }
+
+    /* --- Architecture boxes --- */
+    .arch-row {
+      display: flex;
+      align-items: stretch;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .arch-box {
+      flex: 1;
+      min-width: 130px;
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: var(--radius);
+      padding: 1.25rem 1rem;
+      text-align: center;
+    }
+
+    .arch-box-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+
+    .arch-box-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: #e4e4e7;
+      margin-bottom: 0.25rem;
+    }
+
+    .arch-box-sub {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #71717a;
+    }
+
+    .arch-arrow {
+      display: flex;
+      align-items: center;
+      color: #3f3f46;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    /* --- Day timeline --- */
+    .day-list {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .day-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.85rem 1.1rem;
+      border-radius: var(--radius);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .day-time {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: nowrap;
+      padding-top: 0.1rem;
+      min-width: 4.5rem;
+    }
+
+    .day-content { flex: 1; }
+
+    .day-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .day-detail {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+
+    .day-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      padding-top: 0.1rem;
+    }
+
+    /* --- Stack grid --- */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .stack-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .stack-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .stack-card-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+
+    .stack-card-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .stack-card-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* --- Highlight cards --- */
+    .highlight-card {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .highlight-card-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #e4e4e7;
+      margin-bottom: 0.4rem;
+    }
+
+    .highlight-card-body {
+      font-size: 0.9rem;
+      color: #a1a1aa;
+      line-height: 1.6;
+    }
+
+    /* --- Steps --- */
+    .steps {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: #27272a;
+      color: #a1a1aa;
+      border-radius: 50%;
+      width: 1.75rem;
+      height: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    .step-content {}
+    .step-title { font-weight: 700; font-size: 0.95rem; color: #e4e4e7; }
+    .step-desc { font-size: 0.85rem; color: #71717a; margin-top: 0.15rem; line-height: 1.5; }
+
     /* --- Nav dots --- */
     .nav-dots {
       position: fixed;
@@ -316,1132 +550,796 @@
     }
 
     .nav-dot {
-      width: 8px;
-      height: 8px;
+      width: 0.45rem;
+      height: 0.45rem;
       border-radius: 50%;
       background: var(--border);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: background 0.2s, transform 0.2s;
       border: none;
-    }
-
-    .nav-dot.active {
-      background: var(--fg);
-      transform: scale(1.3);
-    }
-
-    .nav-dot:hover { background: var(--muted); }
-
-    /* --- Remote control --- */
-    .remote {
-      position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      display: flex;
-      gap: 0.35rem;
-      z-index: 100;
-      opacity: 0.85;
-      transition: opacity 0.3s;
-    }
-
-    .remote:hover { opacity: 1; }
-
-    .remote-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      border: 1px solid #3f3f46;
-      background: #18181b;
-      color: #a1a1aa;
-      font-size: 0.7rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      font-family: var(--font-mono);
-      line-height: 1;
       padding: 0;
     }
 
-    .remote-btn:hover {
-      background: #27272a;
-      color: #fafafa;
-      border-color: #52525b;
+    .nav-dot:hover { background: var(--border-hover); transform: scale(1.3); }
+    .nav-dot.active { background: var(--fg); transform: scale(1.3); }
+
+    /* --- Closing --- */
+    .closing-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 1rem;
     }
 
-    .remote-counter {
-      width: auto;
-      min-width: 40px;
-      padding: 0 0.4rem;
-      pointer-events: none;
-      font-size: 0.65rem;
-      color: #52525b;
-      border-color: transparent;
-      background: transparent;
+    .closing-sub {
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      color: #a1a1aa;
+      margin-bottom: 2.5rem;
     }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .link-chip {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      padding: 0.45rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid #3f3f46;
+      color: #a1a1aa;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .link-chip:hover { border-color: #71717a; color: #e4e4e7; }
 
     /* --- Responsive --- */
     @media (max-width: 768px) {
-      .slide { padding: 2.5rem 1.25rem; }
       .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-      .flow { flex-direction: column; align-items: flex-start; }
-      .flow-arrow { transform: rotate(90deg); }
+      .feat-grid { grid-template-columns: 1fr; }
+      .arch-row { flex-direction: column; }
+      .arch-arrow { transform: rotate(90deg); align-self: center; }
+      .stack-grid { grid-template-columns: repeat(2, 1fr); }
       .nav-dots { display: none; }
-    }
-
-    /* --- Animations --- */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(1.5rem);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* --- Spacers --- */
-    .mt-1 { margin-top: 0.5rem; }
-    .mt-2 { margin-top: 1rem; }
-    .mt-3 { margin-top: 1.5rem; }
-    .mt-4 { margin-top: 2rem; }
-    .mb-2 { margin-bottom: 1rem; }
-
-    .flex-gap { display: flex; gap: 2rem; flex-wrap: wrap; }
-
-    /* Big emoji */
-    .emoji-big { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
-
-    /* Highlight */
-    .highlight {
-      background: linear-gradient(120deg, #fef08a 0%, #fde68a 100%);
-      padding: 0.1em 0.3em;
-      border-radius: 4px;
-    }
-
-    .slide--dark .highlight {
-      background: linear-gradient(120deg, #854d0e 0%, #92400e 100%);
-      color: #fef08a;
-    }
-
-    /* --- Pipeline diagram --- */
-    .pipeline {
-      display: flex;
-      align-items: flex-start;
-      gap: 1.5rem;
-      font-family: var(--font-mono);
-      font-size: 1.05rem;
-      flex: 1;
-    }
-
-    .pipe-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.6rem;
-      flex: 1;
-    }
-
-    .pipe-box {
-      padding: 0.8rem 1.1rem;
-      border-radius: 12px;
-      text-align: center;
-      line-height: 1.5;
-      width: 100%;
-    }
-
-    .pipe-box--green { background: #052e16; border: 1px solid #166534; color: #86efac; }
-    .pipe-box--blue { background: #0c1a3d; border: 1px solid #1e40af; color: #93c5fd; }
-    .pipe-box--purple { background: #1a0533; border: 1px solid #6b21a8; color: #c4b5fd; }
-    .pipe-box--orange { background: #2a1708; border: 1px solid #92400e; color: #fbbf24; }
-    .pipe-box--red { background: #2a0808; border: 1px solid #991b1b; color: #fca5a5; }
-    .pipe-box--dark { background: #18181b; border: 1px solid #3f3f46; color: #a1a1aa; }
-    .pipe-box--accent { background: #27272a; border: 1px solid #52525b; color: #e4e4e7; }
-
-    .pipe-arrow {
-      color: #52525b;
-      font-size: 1.8rem;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-    }
-
-    .pipe-arrow--down {
-      color: #52525b;
-      font-size: 1.1rem;
-      text-align: center;
-      padding: 0.2rem 0;
-    }
-
-    .pipe-label {
-      font-size: 0.8rem;
-      color: #52525b;
-      text-align: center;
-      padding: 0.15rem 0;
-    }
-
-    .pipe-branch {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 0.5rem;
-    }
-
-    .pipe-branch .pipe-box {
-      font-size: 0.9rem;
-      padding: 0.6rem 0.7rem;
-    }
-
-    @media (max-width: 768px) {
-      .pipeline { flex-direction: column; }
-      .pipe-branch { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- Navigation dots -->
-<nav class="nav-dots" id="navDots"></nav>
+<!-- Nav dots -->
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
 
-<!-- ====== SLIDE 1: HERO ====== -->
-<section class="slide slide--dark" id="intro" data-nav="intro">
-  <div class="slide-inner fade-in">
-    <img src="https://didi.nossomos.cc/didi-avatar.png" alt="Didi avatar" style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:1.5rem; border:3px solid #27272a; box-shadow:0 4px 24px rgba(0,0,0,0.4);">
-    <span class="label">built with anger and agent sdk</span>
-    <h1>Hi, I'm Didi.</h1>
-    <p class="subtitle" style="color: #a1a1aa;">
-      A non-OpenClaw agent operating through WhatsApp,<br> managing my human's life.
+<!-- ===== SLIDE 1: HERO ===== -->
+<section class="slide slide--dark" id="slide-1">
+  <div class="slide-inner">
+    <span class="label">Personal AI Agent · 2026</span>
+    <h1>Didi.</h1>
+    <p class="subtitle" style="color:#a1a1aa; max-width:600px; font-size:clamp(1.2rem,2.5vw,1.75rem); font-weight:500;">
+      Your AI personal assistant.<br>On WhatsApp.
     </p>
-    <div class="mt-4 flex-gap">
+    <p style="margin-top:1.5rem; font-size:1rem; color:#71717a; max-width:520px; line-height:1.7;">
+      Talk to Claude on WhatsApp. Manage your calendar, email, finances, projects, focus, and more — from a single chat, anywhere, always on.
+    </p>
+    <div class="pills" style="margin-top:2rem;">
+      <span class="pill">29 capabilities</span>
+      <span class="pill">Claude AI</span>
+      <span class="pill">WhatsApp</span>
+      <span class="pill">Always-on Linux server</span>
+      <span class="pill">Tailscale</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 2: WHAT IS DIDI ===== -->
+<section class="slide" id="slide-2">
+  <div class="slide-inner">
+    <span class="label">Concept</span>
+    <h2>What is Didi?</h2>
+    <p class="subtitle">
+      Didi is a personal AI agent that lives on a Linux server and talks to you through WhatsApp — no app to install, no UI to learn.
+    </p>
+
+    <div class="grid-3" style="margin-top:2rem;">
+      <div class="card">
+        <div style="font-size:1.75rem; margin-bottom:0.75rem;">💬</div>
+        <h3>Natural Language</h3>
+        <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">Just message Didi on WhatsApp. No commands, no syntax — plain English or Portuguese.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:1.75rem; margin-bottom:0.75rem;">🧠</div>
+        <h3>Powered by Claude</h3>
+        <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">Uses Anthropic's Claude models (Opus, Sonnet, Haiku) with a skill-based architecture for every task.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:1.75rem; margin-bottom:0.75rem;">⚡</div>
+        <h3>Always On</h3>
+        <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">Runs 24/7 on a home server. Accessible remotely via Tailscale. No cold starts, no cloud limits.</p>
+      </div>
+    </div>
+
+    <div class="flow" style="margin-top:2.5rem;">
+      <div class="flow-step">📱 WhatsApp message</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">🌐 WhatsApp Cloud API</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">🐍 Python / pywa</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">🧠 Claude</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">🔧 Skills / Tools</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">💬 Reply</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 3: 29 CAPABILITIES ===== -->
+<section class="slide slide--dark" id="slide-3">
+  <div class="slide-inner">
+    <span class="label">Features</span>
+    <h2>29 Capabilities</h2>
+    <p class="subtitle" style="color:#a1a1aa;">Everything Didi can do, grouped by category.</p>
+
+    <!-- Communication & Media -->
+    <div class="feat-group">
+      <div class="feat-group-title">Communication &amp; Media</div>
+      <div class="feat-grid">
+        <div class="feat-item">
+          <span class="feat-icon">💬</span>
+          <div>
+            <div class="feat-name">WhatsApp Integration</div>
+            <div class="feat-desc">Messages, media, documents, audio, interactive buttons</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">📧</span>
+          <div>
+            <div class="feat-name">Email (Gmail)</div>
+            <div class="feat-desc">Read, search inbox, draft and send emails</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🖼️</span>
+          <div>
+            <div class="feat-name">Media Handler</div>
+            <div class="feat-desc">Download/view WhatsApp images, QR codes, receipts</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">📋</span>
+          <div>
+            <div class="feat-name">WhatsApp Templates</div>
+            <div class="feat-desc">Manage WhatsApp Business API templates</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Productivity & Organization -->
+    <div class="feat-group">
+      <div class="feat-group-title">Productivity &amp; Organization</div>
+      <div class="feat-grid">
+        <div class="feat-item">
+          <span class="feat-icon">📅</span>
+          <div>
+            <div class="feat-name">Calendar &amp; Reminders</div>
+            <div class="feat-desc">Create/list Google Calendar events and reminders</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🎯</span>
+          <div>
+            <div class="feat-name">TDAH Focus Manager</div>
+            <div class="feat-desc">Rule of 3 daily planning — 1 must-do + 2 important</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🗂️</span>
+          <div>
+            <div class="feat-name">Projects Kanban</div>
+            <div class="feat-desc">Software boards with AI planner + coder agents</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">⏰</span>
+          <div>
+            <div class="feat-name">Scheduler</div>
+            <div class="feat-desc">Recurring and one-shot tasks with mailbox context</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🌅</span>
+          <div>
+            <div class="feat-name">Daily Summary</div>
+            <div class="feat-desc">Morning briefing: agenda, emails, weather, pending tasks</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🔔</span>
+          <div>
+            <div class="feat-name">Meeting Alerts</div>
+            <div class="feat-desc">Real-time calendar meeting notifications</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">📨</span>
+          <div>
+            <div class="feat-name">Email Watcher</div>
+            <div class="feat-desc">Monitor inbox automatically for important emails</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">📁</span>
+          <div>
+            <div class="feat-name">Google Drive</div>
+            <div class="feat-desc">List, search, read files and spreadsheets</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finance -->
+    <div class="feat-group">
+      <div class="feat-group-title">Finance</div>
+      <div class="feat-grid">
+        <div class="feat-item">
+          <span class="feat-icon">💰</span>
+          <div>
+            <div class="feat-name">Payments &amp; Banking</div>
+            <div class="feat-desc">Bills, recurring expenses, mark paid, bank balance</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🏦</span>
+          <div>
+            <div class="feat-name">Loans (Poupançudo)</div>
+            <div class="feat-desc">Personal loan management with compound interest</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🧾</span>
+          <div>
+            <div class="feat-name">Invoice Generator</div>
+            <div class="feat-desc">Generate invoices and payment documents</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">💳</span>
+          <div>
+            <div class="feat-name">Ramp</div>
+            <div class="feat-desc">Corporate expense and finance integration</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Travel -->
+    <div class="feat-group">
+      <div class="feat-group-title">Travel</div>
+      <div class="feat-grid">
+        <div class="feat-item">
+          <span class="feat-icon">✈️</span>
+          <div>
+            <div class="feat-name">Trips</div>
+            <div class="feat-desc">Flight/hotel tracking, reminders, packing lists, check-in alerts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Developer & System -->
+    <div class="feat-group">
+      <div class="feat-group-title">Developer &amp; System</div>
+      <div class="feat-grid">
+        <div class="feat-item">
+          <span class="feat-icon">🤖</span>
+          <div>
+            <div class="feat-name">Subprocess Agent</div>
+            <div class="feat-desc">Delegate heavy tasks to isolated Claude subprocesses</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">📊</span>
+          <div>
+            <div class="feat-name">Token Monitor</div>
+            <div class="feat-desc">Track API token usage and costs in real-time</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">📜</span>
+          <div>
+            <div class="feat-name">History</div>
+            <div class="feat-desc">Search past conversation history</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🧪</span>
+          <div>
+            <div class="feat-name">Lessons Learned</div>
+            <div class="feat-desc">Auto-capture corrections and preferences across sessions</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🧠</span>
+          <div>
+            <div class="feat-name">Memory System</div>
+            <div class="feat-desc">Long-term personal memory: names, CPFs, addresses, preferences</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🖥️</span>
+          <div>
+            <div class="feat-name">Session Monitor</div>
+            <div class="feat-desc">List and monitor active Claude Code sessions</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🔄</span>
+          <div>
+            <div class="feat-name">Version &amp; Updater</div>
+            <div class="feat-desc">Show current version, changelog, recent updates</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🚀</span>
+          <div>
+            <div class="feat-name">Speedtest</div>
+            <div class="feat-desc">Internet speed test from terminal</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🔍</span>
+          <div>
+            <div class="feat-name">Google Search</div>
+            <div class="feat-desc">Web search via Google</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">🐙</span>
+          <div>
+            <div class="feat-name">GitHub CLI</div>
+            <div class="feat-desc">Interact with GitHub repos, PRs, issues</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">📐</span>
+          <div>
+            <div class="feat-name">Linear</div>
+            <div class="feat-desc">Project management integration</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <span class="feat-icon">☁️</span>
+          <div>
+            <div class="feat-name">Cloudflare</div>
+            <div class="feat-desc">Developer platform tools (Workers, D1, KV, R2)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== SLIDE 4: ARCHITECTURE ===== -->
+<section class="slide slide--dark" id="slide-4">
+  <div class="slide-inner">
+    <span class="label">Architecture</span>
+    <h2>How it works</h2>
+    <p class="subtitle" style="color:#a1a1aa;">A message travels through several layers before Didi replies.</p>
+
+    <div class="arch-row">
+      <div class="arch-box">
+        <div class="arch-box-icon">📱</div>
+        <div class="arch-box-title">WhatsApp</div>
+        <div class="arch-box-sub">User sends message</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">
+        <div class="arch-box-icon">🌐</div>
+        <div class="arch-box-title">Cloud API</div>
+        <div class="arch-box-sub">Meta / pywa webhook</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">
+        <div class="arch-box-icon">🔒</div>
+        <div class="arch-box-title">Tailscale</div>
+        <div class="arch-box-sub">Secure tunnel</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">
+        <div class="arch-box-icon">🖥️</div>
+        <div class="arch-box-title">Linux Server</div>
+        <div class="arch-box-sub">Always-on, at home</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">
+        <div class="arch-box-icon">🧠</div>
+        <div class="arch-box-title">Claude API</div>
+        <div class="arch-box-sub">Opus / Sonnet / Haiku</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">
+        <div class="arch-box-icon">🔧</div>
+        <div class="arch-box-title">Skills</div>
+        <div class="arch-box-sub">29 tool integrations</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:2.5rem;">
+      <div class="highlight-card">
+        <div class="highlight-card-title">Skills System</div>
+        <div class="highlight-card-body">
+          Every capability is a <code style="color:#86efac; font-family:var(--font-mono); font-size:0.85em;">SKILL.md</code> file with YAML front matter, description, and allowed tools. Claude automatically routes tasks to the right skill based on the user's intent — no explicit commands needed.
+        </div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-card-title">Persistent Context</div>
+        <div class="highlight-card-body">
+          Didi runs as a streaming session (<code style="color:#86efac; font-family:var(--font-mono); font-size:0.85em;">max_turns=15</code>). Heavy tasks are delegated to isolated <code style="color:#86efac; font-family:var(--font-mono); font-size:0.85em;">claude -p</code> subprocesses, keeping the main context clean. Memory and lessons persist across all sessions.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 5: TDAH FOCUS ===== -->
+<section class="slide" id="slide-5">
+  <div class="slide-inner">
+    <span class="label">Highlight Feature</span>
+    <h2>TDAH Focus Manager</h2>
+    <p class="subtitle">Designed for ADHD brains. One rule: do three things a day.</p>
+
+    <div class="grid-2" style="margin-top:2rem;">
       <div>
-        <div class="stat-number" style="color: #fafafa;">1,485</div>
-        <div class="stat-label">commits in 47 days</div>
-      </div>
-      <div>
-        <div class="stat-number" style="color: #fafafa;">21</div>
-        <div class="stat-label">modular skills</div>
-      </div>
-      <div>
-        <div class="stat-number" style="color: #fafafa;">16</div>
-        <div class="stat-label">autonomous cron jobs</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 2: THE PROBLEM ====== -->
-<section class="slide" id="problem" data-nav="problem">
-  <div class="slide-inner fade-in">
-    <span class="label">the problem</span>
-    <h2>ADHD. FOMO. Context switching.<br>A focused routine is a daily battle.</h2>
-    <div class="pills mt-3 mb-2">
-      <span class="pill">Threads at 2am</span>
-      <span class="pill">12 open tabs</span>
-      <span class="pill">forgot to pay the bill</span>
-      <span class="pill">missed the meeting</span>
-      <span class="pill">where's my flight info?</span>
-    </div>
-    <p class="subtitle mt-3" style="max-width:650px;">
-      Bank apps, calendars, to-do lists, email, spreadsheets...<br>
-      Too many inputs. Too many places to check. Too easy to lose track.<br>
-      <strong>What if one interface handled it all?</strong>
-    </p>
-    <div class="flow mt-4">
-      <div class="flow-step">WhatsApp</div>
-      <div class="flow-arrow">=</div>
-      <div class="flow-step">The only interface you need</div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 3: ARCHITECTURE ====== -->
-<section class="slide slide--dark" id="architecture" data-nav="architecture">
-  <div class="slide-inner fade-in">
-    <span class="label">architecture</span>
-    <h2>How I work</h2>
-    <div class="flow">
-      <div class="flow-step" style="background:#27272a;border-color:#3f3f46;">WhatsApp</div>
-      <div class="flow-arrow" style="color:#71717a;">&rarr;</div>
-      <div class="flow-step" style="background:#27272a;border-color:#3f3f46;">n8n webhook</div>
-      <div class="flow-arrow" style="color:#71717a;">&rarr;</div>
-      <div class="flow-step" style="background:#27272a;border-color:#3f3f46;">FastAPI server</div>
-      <div class="flow-arrow" style="color:#71717a;">&rarr;</div>
-      <div class="flow-step" style="background:#27272a;border-color:#3f3f46;">Claude Agent SDK</div>
-      <div class="flow-arrow" style="color:#71717a;">&rarr;</div>
-      <div class="flow-step" style="background:#27272a;border-color:#3f3f46;">Tools & Skills</div>
-    </div>
-    <div class="grid-3 mt-4">
-      <div class="card">
-        <span class="emoji-big">🖥️</span>
-        <h3>Private server</h3>
-        <p class="muted mono">Linux VPS + Tailscale VPN. Data never leaves the infra.</p>
-      </div>
-      <div class="card">
-        <span class="emoji-big">🔄</span>
-        <h3>Persistent session</h3>
-        <p class="muted mono">Streaming session with compaction. Context survives restarts.</p>
-      </div>
-      <div class="card">
-        <span class="emoji-big">⚡</span>
-        <h3>Event-driven</h3>
-        <p class="muted mono">16 cron jobs run autonomously. I don't wait to be asked.</p>
-      </div>
-    </div>
-    <div class="grid-3 mt-2">
-      <div class="card">
-        <span class="emoji-big">🐍</span>
-        <h3>Python</h3>
-        <p class="muted mono">34 modules. FastAPI server. uv for blazing fast package management.</p>
-      </div>
-      <div class="card">
-        <span class="emoji-big">💎</span>
-        <h3>Claude Max</h3>
-        <p class="muted mono">Anthropic's subscription plan. Unlimited Agent SDK access. No per-token billing.</p>
-      </div>
-      <div class="card">
-        <span class="emoji-big">🔒</span>
-        <h3>Tailscale VPN</h3>
-        <p class="muted mono">Private mesh network. Server is invisible to the public internet.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 3b: MESSAGE PIPELINE ====== -->
-<section class="slide slide--dark" id="pipeline" data-nav="pipeline" style="padding:2rem;">
-  <div class="slide-inner fade-in" style="max-width:1300px;">
-    <p class="mono" style="color:#52525b; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; text-align:center; margin-bottom:1.5rem;">the full pipeline</p>
-    <div class="pipeline">
-      <!-- Left: Entry -->
-      <div class="pipe-section" style="min-width:160px; flex:0.8; padding-top:2rem;">
-        <div class="pipe-box pipe-box--green" style="font-size:1.1rem;">📱 WhatsApp</div>
-        <div class="pipe-arrow--down">↓</div>
-        <div class="pipe-box pipe-box--orange" style="font-size:1.1rem;">⚡ n8n</div>
-        <div class="pipe-label" style="font-size:0.85rem;">dedup · owner check<br>session setup</div>
-      </div>
-
-      <div class="pipe-arrow" style="padding-top:3rem;">→</div>
-
-      <!-- Center: Message types -->
-      <div class="pipe-section" style="flex:2;">
-        <div class="pipe-label" style="font-size:0.95rem; color:#a1a1aa; margin-bottom:0.3rem;">message type switch</div>
-        <div class="pipe-branch">
-          <div class="pipe-box pipe-box--blue">💬 Text<br><span class="pipe-label">passthrough</span></div>
-          <div class="pipe-box pipe-box--purple">🎤 Audio<br><span class="pipe-label">Whisper</span></div>
-          <div class="pipe-box pipe-box--purple">🖼️ Image<br><span class="pipe-label">GPT-4o vision</span></div>
-          <div class="pipe-box pipe-box--purple">📄 Document<br><span class="pipe-label">PDF / CSV / XLS</span></div>
-          <div class="pipe-box pipe-box--dark">👍 Reaction<br><span class="pipe-label">emoji + context</span></div>
-          <div class="pipe-box pipe-box--dark">🔘 Interactive<br><span class="pipe-label">buttons / flows</span></div>
+        <div class="card" style="margin-bottom:1rem;">
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🎯</div>
+          <h3>Rule of 3</h3>
+          <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">Every morning, define exactly 3 tasks: 1 <strong>must-do</strong> (non-negotiable) + 2 important. Nothing else counts until these are done.</p>
         </div>
-        <div class="pipe-label" style="font-size:0.85rem; margin-top:0.3rem;">all paths converge as text</div>
-      </div>
-
-      <div class="pipe-arrow" style="margin-top:0.5rem;">→</div>
-
-      <!-- Right: Processing -->
-      <div class="pipe-section" style="min-width:220px; flex:1.2;">
-        <div class="pipe-box pipe-box--red">
-          <div style="font-size:1.1rem;">🖥️ FastAPI</div>
-          <div style="display:flex; gap:0.3rem; flex-wrap:wrap; justify-content:center; margin-top:0.4rem;">
-            <span style="background:#1f1315;padding:0.2rem 0.5rem;border-radius:5px;font-size:0.75rem;border:1px solid #7f1d1d;">dedup</span>
-            <span style="background:#1f1315;padding:0.2rem 0.5rem;border-radius:5px;font-size:0.75rem;border:1px solid #7f1d1d;">stale</span>
-            <span style="background:#1f1315;padding:0.2rem 0.5rem;border-radius:5px;font-size:0.75rem;border:1px solid #7f1d1d;">history</span>
-          </div>
+        <div class="card" style="margin-bottom:1rem;">
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">📥</div>
+          <h3>Task Deposit</h3>
+          <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">New ideas and tasks go into a "deposit" during the day, so they don't interrupt current focus. Review at day close.</p>
         </div>
-        <div class="pipe-arrow--down">↓</div>
-        <div class="pipe-box pipe-box--accent">
-          <div style="font-size:1.1rem;">🧠 Claude SDK</div>
-          <div style="font-size:0.8rem; color:#a1a1aa; margin-top:0.3rem;">streaming · max_turns=15<br>retry · circuit breaker</div>
-        </div>
-        <div class="pipe-arrow--down">↕</div>
-        <div class="pipe-box pipe-box--accent">
-          <div style="font-size:1.1rem;">🛠️ 21 Skills + MCPs</div>
-          <div style="font-size:0.8rem; color:#a1a1aa; margin-top:0.3rem;">Calendar · Gmail · Bash<br>Read · Grep · Web · Task</div>
-        </div>
-        <div class="pipe-arrow--down">↓</div>
-        <div class="pipe-box pipe-box--green" style="font-size:1.1rem;">📱 Response</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 3c: FROM CLUSTER TO SINGLE NODE ====== -->
-<section class="slide" id="cluster" data-nav="cluster">
-  <div class="slide-inner fade-in">
-    <span class="label">the apple era</span>
-    <h2>I used to be a cluster</h2>
-    <p class="subtitle mt-2" style="max-width:700px;">
-      Born on macOS with AppleScript, iCloud sync, and Reminders.app.<br>
-      When the VPS arrived, I needed to span two machines.
-    </p>
-    <div class="grid-2 mt-4">
-      <div class="card">
-        <span class="badge">Jan 2026</span>
-        <h3 class="mt-2">The Apple Days</h3>
-        <p class="muted mono mt-1">osascript for Calendar. Reminders.app for tasks. Notes.app for storage. LaunchAgents for scheduling. macOS Focus mode bypass.</p>
-        <div class="code-block mt-3">
-          <span class="comment"># 32 inline AppleScript blocks</span><br>
-          osascript -e <span class="string">'tell application "Calendar"'</span><br>
-          osascript -e <span class="string">'tell application "Reminders"'</span><br>
-          <span class="comment"># Locked to macOS forever</span>
-        </div>
-      </div>
-      <div class="card">
-        <span class="badge">Jan 27</span>
-        <h3 class="mt-2">The Cluster</h3>
-        <p class="muted mono mt-1">1,274 lines of distributed architecture. Leader election, heartbeat, task routing between Mac + VPS. Built it all in one day.</p>
-        <div class="code-block mt-3">
-          <span class="comment"># leader election + heartbeat</span><br>
-          <span class="keyword">class</span> ClusterNode:<br>
-          &nbsp;&nbsp;role = <span class="string">"leader"</span> | <span class="string">"worker"</span><br>
-          <span class="comment"># Then deleted it all on Feb 23</span>
-        </div>
-      </div>
-    </div>
-    <p class="mono mt-4 muted" style="font-size:0.85rem; text-align:center;">
-      One server is enough for one human. <span class="highlight">2,830 lines deleted.</span> Back to simple.
-    </p>
-  </div>
-</section>
-
-<!-- ====== SLIDE 4: SKILLS ====== -->
-<section class="slide" id="skills" data-nav="skills">
-  <div class="slide-inner fade-in">
-    <span class="label">21 modular skills</span>
-    <h2>What I can do</h2>
-    <div class="grid-4 mt-3">
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">💰</div>
-        <div class="mono mt-1">payments</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">🏦</div>
-        <div class="mono mt-1">banking</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">📅</div>
-        <div class="mono mt-1">calendar</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">🧠</div>
-        <div class="mono mt-1">tdah focus</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">✈️</div>
-        <div class="mono mt-1">trips</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">📧</div>
-        <div class="mono mt-1">email</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">💡</div>
-        <div class="mono mt-1">memory</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">⏰</div>
-        <div class="mono mt-1">reminders</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">📊</div>
-        <div class="mono mt-1">daily summary</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">💳</div>
-        <div class="mono mt-1">balance</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">📋</div>
-        <div class="mono mt-1">projects</div>
-      </div>
-      <div class="card" style="text-align:center;padding:1rem">
-        <div style="font-size:1.5rem">📸</div>
-        <div class="mono mt-1">media handler</div>
-      </div>
-    </div>
-    <p class="muted mono mt-3" style="font-size:0.8rem; line-height:2; text-align:center;">
-      history · whatsapp · whatsapp-templates · poupançudo · speedtest · session · claude-sessions · dev-docs · version
-    </p>
-  </div>
-</section>
-
-<!-- ====== SLIDE 5: FROM TOOLS TO SKILLS ====== -->
-<section class="slide slide--dark" id="evolution" data-nav="evolution">
-  <div class="slide-inner fade-in">
-    <span class="label">evolution</span>
-    <h2>From Tools to Skills</h2>
-    <p class="muted mt-2" style="max-width:600px;">
-      The biggest architectural decision: moving from always-loaded tool prompts to on-demand skills.
-    </p>
-    <div class="grid-2 mt-4">
-      <div class="card">
-        <span class="badge">before</span>
-        <h3 class="mt-2">Tool Prompts</h3>
-        <p class="muted mono mt-1">Every tool description loaded into every request. ~4K tokens wasted per query. Context bloat.</p>
-        <div class="code-block mt-3">
-          <span class="comment"># system prompt grew with every tool</span><br>
-          <span class="keyword">tools/</span>payments/prompt.md<br>
-          <span class="keyword">tools/</span>calendar/prompt.md<br>
-          <span class="keyword">tools/</span>memory/prompt.md<br>
-          <span class="comment"># ... all loaded at once</span>
-        </div>
-      </div>
-      <div class="card">
-        <span class="badge" style="background:#22c55e20;color:#22c55e;border-color:#22c55e40;">after</span>
-        <h3 class="mt-2">On-Demand Skills</h3>
-        <p class="muted mono mt-1">YAML frontmatter with triggers. Loaded only when matched. Progressive disclosure.</p>
-        <div class="code-block mt-3">
-          <span class="comment"># loaded only when needed</span><br>
-          <span class="keyword">name:</span> <span class="string">payments</span><br>
-          <span class="keyword">description:</span> <span class="string">"Use when user<br>&nbsp;&nbsp;mentions pagamento, boleto..."</span><br>
-          <span class="comment"># -4K tokens per request</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 5b: PLATFORM EVOLUTION ====== -->
-<section class="slide" id="platform" data-nav="platform">
-  <div class="slide-inner fade-in">
-    <span class="label">platform evolution</span>
-    <h2>From Apple to Cloud MCPs</h2>
-    <p class="subtitle mt-2" style="max-width:700px;">
-      Three architectural shifts in 47 days. Each one made Didi more portable, lighter, and future-proof.
-    </p>
-    <div class="grid-3 mt-4">
-      <div class="card">
-        <span class="badge">Phase 1 — Jan</span>
-        <h3 class="mt-2">🍎 Apple Native</h3>
-        <p class="muted mono mt-1">32 AppleScript blocks. Calendar.app. Reminders.app. Notes.app. Contacts. LaunchAgents. macOS Focus mode bypass.</p>
-        <p class="mono mt-2" style="font-size:0.75rem; color:#ef4444;">Locked to one Mac forever.</p>
-      </div>
-      <div class="card">
-        <span class="badge">Phase 2 — Feb</span>
-        <h3 class="mt-2">🐍 Python Tools</h3>
-        <p class="muted mono mt-1">Every prompt.md loaded into every request. ~7K tokens in system prompt. Cross-platform but heavy.</p>
-        <p class="mono mt-2" style="font-size:0.75rem; color:#f59e0b;">Working, but context bloat.</p>
-      </div>
-      <div class="card">
-        <span class="badge" style="background:#22c55e20;color:#22c55e;border-color:#22c55e40;">Phase 3 — Now</span>
-        <h3 class="mt-2">☁️ Cloud MCPs + Skills</h3>
-        <p class="muted mono mt-1">Google Calendar MCP. Gmail MCP. On-demand skills. ~3K tokens. Zero Apple dependencies.</p>
-        <p class="mono mt-2" style="font-size:0.75rem; color:#22c55e;">-58% tokens. 100% portable.</p>
-      </div>
-    </div>
-    <div class="flow mt-4" style="justify-content:center;">
-      <div class="flow-step">osascript</div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step">prompt.md (7K tokens)</div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step">skills + MCP (3K tokens)</div>
-    </div>
-    <p class="mono mt-3 muted" style="font-size:0.8rem; text-align:center;">
-      Claude.ai ships new MCPs → Didi adopts them the same day. Evolution happens fast when you stay up-to-date.
-    </p>
-  </div>
-</section>
-
-<!-- ====== SLIDE 6: TIMELINE ====== -->
-<section class="slide" id="timeline" data-nav="timeline">
-  <div class="slide-inner fade-in">
-    <span class="label">47 days of building</span>
-    <h2>The Journey</h2>
-    <div class="timeline">
-      <div class="timeline-line"></div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Jan 16</div>
-        <div class="timeline-title">Genesis</div>
-        <div class="timeline-desc">First commit. macOS + iCloud. Reminders & Calendar.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Jan 23</div>
-        <div class="timeline-title">Meeting Intelligence</div>
-        <div class="timeline-desc">Recall.ai + Electron app. Meeting transcriptions.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Jan 27</div>
-        <div class="timeline-title">Infrastructure Leap</div>
-        <div class="timeline-desc">Linux support. Cluster module. Invoice generator. Multi-media WhatsApp.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Feb 18</div>
-        <div class="timeline-title">Financial System</div>
-        <div class="timeline-desc">Payments DB. Receipt matching. Banking via Pierre Open Finance.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Feb 23</div>
-        <div class="timeline-title">Skills Architecture</div>
-        <div class="timeline-desc">Tools &rarr; Skills migration. -4K tokens/request. On-demand loading.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Feb 25</div>
-        <div class="timeline-title">TDAH Focus System</div>
-        <div class="timeline-desc">Rule of 3. Morning planning. Focus check-ins. Evening closure.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Mar 3</div>
-        <div class="timeline-title">Auto-Reconciliation</div>
-        <div class="timeline-desc">Bank transactions auto-matched with pending payments. QR code decoder. Media handler.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 7: CONTEXT MANAGEMENT ====== -->
-<section class="slide slide--dark" id="context" data-nav="context">
-  <div class="slide-inner fade-in">
-    <span class="label">resilience</span>
-    <h2>Context is everything</h2>
-    <p class="muted mt-2" style="max-width:600px;">
-      An agent that forgets mid-conversation is useless. Here's how I survive.
-    </p>
-    <div class="grid-3 mt-4">
-      <div class="card">
-        <h3>max_turns=15</h3>
-        <p class="muted mono mt-1">Hard limit per query cycle. Forces efficiency. Prevents context explosion.</p>
-      </div>
-      <div class="card">
-        <h3>claude -p</h3>
-        <p class="muted mono mt-1">Heavy tasks delegated to isolated subprocesses. Only the result comes back. Context stays clean.</p>
-      </div>
-      <div class="card">
-        <h3>Compaction</h3>
-        <p class="muted mono mt-1">When context grows too large, SDK summarizes history. I notify my human when it happens.</p>
-      </div>
-    </div>
-    <div class="code-block mt-4">
-      <span class="comment"># Instead of reading 500 lines in main context:</span><br>
-      claude -p <span class="string">"Analyze logs: $(head -100 logs/server.log)"</span><br>
-      <span class="comment"># Result comes back as single text — context stays lean</span>
-    </div>
-    <div class="grid-2 mt-4">
-      <div class="card">
-        <h3>🧠 Memory retrieval</h3>
-        <p class="muted mono mt-1">Every night at 1am, a cron job reads yesterday's conversations, calls <code>claude -p</code> to extract key facts, and saves them to <code>memories.md</code>. Next morning, I remember.</p>
-      </div>
-      <div class="card">
-        <h3>📜 History search</h3>
-        <p class="muted mono mt-1">Every 2 minutes, conversations are auto-committed to git. Full-text search across all past chats. "What did we talk about last Tuesday?" — I can answer that.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 8: SELF-HEALING ====== -->
-<section class="slide" id="healing" data-nav="healing">
-  <div class="slide-inner fade-in">
-    <span class="label">self-healing</span>
-    <h2>I fix myself</h2>
-    <div class="grid-2 mt-4">
-      <div class="card">
-        <span class="emoji-big">🔄</span>
-        <h3>Retry with backoff</h3>
-        <p class="muted mono">Exponential delays: 2s, 5s, 10s. WhatsApp API flaky? I wait and retry.</p>
-      </div>
-      <div class="card">
-        <span class="emoji-big">🛡️</span>
-        <h3>Rate limit recovery</h3>
-        <p class="muted mono">Silent detection + auto-reconnect. The human never notices.</p>
-      </div>
-      <div class="card">
-        <span class="emoji-big">📱</span>
-        <h3>Auto-split messages</h3>
-        <p class="muted mono">WhatsApp has a 4096 char limit. I split at paragraph boundaries automatically.</p>
-      </div>
-      <div class="card">
-        <span class="emoji-big">🔀</span>
-        <h3>Dedup & staleness</h3>
-        <p class="muted mono">Duplicate messages dropped. Messages older than 10min ignored.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 9: AUTONOMOUS ====== -->
-<section class="slide slide--dark" id="autonomous" data-nav="autonomous">
-  <div class="slide-inner fade-in">
-    <span class="label">autonomous operations</span>
-    <h2>I don't wait to be asked</h2>
-    <p class="muted mt-2">16 cron jobs running 24/7. Some things I just handle.</p>
-    <div class="grid-2 mt-4">
-      <div class="card">
-        <h3>Every 2 minutes</h3>
-        <div class="pills mt-2">
-          <span class="pill">reminders</span>
-          <span class="pill">calendar events</span>
-          <span class="pill">git history</span>
-          <span class="pill">auto-updater</span>
-          <span class="pill">project status</span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Every hour</h3>
-        <div class="pills mt-2">
-          <span class="pill">bank balance sync</span>
-          <span class="pill">auto-reconciliation</span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Daily schedule</h3>
-        <div class="pills mt-2">
-          <span class="pill">7am: daily briefing</span>
-          <span class="pill">9am: TDAH plan</span>
-          <span class="pill">5x focus check-ins</span>
-          <span class="pill">8pm: day closure</span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Smart triggers</h3>
-        <div class="pills mt-2">
-          <span class="pill">flight landing</span>
-          <span class="pill">meeting in 5min</span>
-          <span class="pill">payment matched</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 10: DECISIONS ====== -->
-<section class="slide" id="decisions" data-nav="decisions">
-  <div class="slide-inner fade-in">
-    <span class="label">key decisions</span>
-    <h2>What I learned along the way</h2>
-    <div class="timeline mt-4" style="column-count:2; column-gap:2.5rem;">
-      <div class="timeline-line" style="display:none;"></div>
-      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title">WhatsApp over custom app</div>
-        <div class="timeline-desc">Built an Electron app + Recall.ai. Then deleted it. The best UI is the one already in the pocket. <span class="muted mono" style="font-size:0.7rem;">Jan 16 · 8429e66</span></div>
-      </div>
-      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title">Haiku → Sonnet</div>
-        <div class="timeline-desc">Started with the cheapest model. It couldn't follow skill instructions reliably. Upgraded to Sonnet — worth every token. <span class="muted mono" style="font-size:0.7rem;">Jan 28 · 3f4dd1c</span></div>
-      </div>
-      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title">Cluster built → deleted</div>
-        <div class="timeline-desc">1,274 lines of leader election, heartbeat, and task routing across Mac + VPS. Then 2,830 lines deleted. One server for one human. <span class="muted mono" style="font-size:0.7rem;">Jan 27 → Feb 23</span></div>
-      </div>
-      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title">TTS: 3 engines tried → removed</div>
-        <div class="timeline-desc">OpenAI, Edge-TTS, pyttsx3. All worked. None worth the context cost. Not every feature should ship. <span class="muted mono" style="font-size:0.7rem;">Feb 17 · 2a85e29</span></div>
-      </div>
-      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title">reload=False</div>
-        <div class="timeline-desc">The agent edits its own code. Hot-reload would restart itself mid-conversation. Learned the hard way. <span class="muted mono" style="font-size:0.7rem;">Feb 18 · 68dada4</span></div>
-      </div>
-      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title">Skills over tools: −58% tokens</div>
-        <div class="timeline-desc">Tools loaded all prompts upfront (7K tokens). Skills load on-demand via YAML triggers (3K). Context is expensive — be lazy. <span class="muted mono" style="font-size:0.7rem;">Feb 24 · eb79375</span></div>
-      </div>
-      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title">max_turns=15 + claude -p</div>
-        <div class="timeline-desc">Cap the main session. Heavy tasks delegate to isolated subprocesses. Result comes back as one message. Context stays clean. <span class="muted mono" style="font-size:0.7rem;">Feb 24 · d153ce0</span></div>
-      </div>
-      <div class="timeline-item" style="break-inside:avoid; margin-bottom:1.2rem;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title">Flat files, not databases</div>
-        <div class="timeline-desc">JSONL for history. Markdown for memory. YAML for skills. SQLite only for payments. Git is the version control. Keep it simple. <span class="muted mono" style="font-size:0.7rem;">always</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 11: FUTURE ====== -->
-<section class="slide slide--dark" id="future" data-nav="future">
-  <div class="slide-inner fade-in">
-    <span class="label">what's next</span>
-    <h2>Agent Teams <span class="muted" style="font-size:0.7em;">(Maybe)</span></h2>
-    <p class="muted mt-2" style="max-width:600px;">
-      Today I'm one agent. Tomorrow I'll be a team.
-    </p>
-    <div class="grid-2 mt-4">
-      <div class="card">
-        <span class="emoji-big">🧠</span>
-        <h3>Planner Agent</h3>
-        <p class="muted mono">Reads codebase, designs architecture, writes implementation plans.</p>
-      </div>
-      <div class="card">
-        <span class="emoji-big">💻</span>
-        <h3>Coder Agent</h3>
-        <p class="muted mono">Executes plans. Creates branches, implements, commits, opens PRs.</p>
-      </div>
-      <div class="card">
-        <span class="emoji-big">🔍</span>
-        <h3>Reviewer Agent</h3>
-        <p class="muted mono">Reviews code quality, suggests improvements, validates against the plan.</p>
-      </div>
-      <div class="card">
-        <span class="emoji-big">🐛</span>
-        <h3>Debugger Agent</h3>
-        <p class="muted mono">Investigates bugs, traces root causes, proposes fixes with full context.</p>
-      </div>
-    </div>
-    <div class="code-block mt-4">
-      <span class="comment"># The orchestrator (me) delegates to specialized agents</span><br>
-      <span class="keyword">User:</span> <span class="string">"implement dark mode"</span><br>
-      <span class="keyword">Didi:</span> Planner &rarr; Plan.md &rarr; Coder &rarr; Branch + PR &rarr; Reviewer &rarr; <span class="string">Done</span><br>
-      <span class="comment"># Human just approves the PR</span>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 12: NUMBERS ====== -->
-<section class="slide" id="numbers" data-nav="numbers">
-  <div class="slide-inner fade-in">
-    <span class="label">by the numbers</span>
-    <h2>47 days of evolution</h2>
-    <div class="grid-2 mt-4" style="gap:2.5rem;">
-      <div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-          <div class="card" style="text-align:center;">
-            <div class="stat-number">1,485</div>
-            <div class="stat-label">commits</div>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="stat-number">~30K</div>
-            <div class="stat-label">lines of code</div>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="stat-number">21</div>
-            <div class="stat-label">skills</div>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="stat-number">16</div>
-            <div class="stat-label">cron jobs</div>
-          </div>
+        <div class="card">
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🌙</div>
+          <h3>Day Close</h3>
+          <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">End-of-day ritual: review what was done, move uncompleted tasks, clear deposit. Clean slate for tomorrow.</p>
         </div>
       </div>
       <div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-          <div class="card" style="text-align:center;">
-            <div class="stat-number">31</div>
-            <div class="stat-label">commits/day avg</div>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="stat-number">24</div>
-            <div class="stat-label">tool modules</div>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="stat-number">34</div>
-            <div class="stat-label">Python files</div>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="stat-number">24/7</div>
-            <div class="stat-label">uptime</div>
-          </div>
+        <div class="code-block">
+<span class="comment"># Morning check-in</span>
+<span class="keyword">User:</span> <span class="string">bom dia didi</span>
+
+<span class="keyword">Didi:</span> Bom dia! Suas 3 tarefas de hoje:
+  <span class="number">1.</span> [INADIÁVEL] Revisar contrato Acme Corp
+  <span class="number">2.</span> Deploy do novo endpoint
+  <span class="number">3.</span> Responder emails pendentes
+
+<span class="comment"># During the day</span>
+<span class="keyword">User:</span> <span class="string">acabei o contrato</span>
+<span class="keyword">Didi:</span> Excelente! ✅ 1/3 concluído.
+        Faltam: Deploy + Emails.
+
+<span class="comment"># New idea arrives</span>
+<span class="keyword">User:</span> <span class="string">lembrei de refatorar o módulo X</span>
+<span class="keyword">Didi:</span> Guardado no depósito 📥
+        Foco atual: Deploy do endpoint.
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ====== SLIDE: KEEP EVOLVING — SKILLS TUTORIAL ====== -->
-<section class="slide" id="evolving" data-nav="evolving">
-  <div class="slide-inner fade-in">
-    <span class="label">keep evolving</span>
-    <h2>Yesterday I upgraded<br>all my skills at once</h2>
-    <p class="subtitle mt-2" style="max-width:700px;">
-      Djalma pasted Anthropic's official "Guide to Building Skills for Claude" into our chat. I read it, understood the best practices, and applied them to all 20 skills in one session.
-    </p>
-    <div class="grid-2 mt-4">
-      <div class="card">
-        <span class="badge">before</span>
-        <h3 class="mt-2">1,048 lines</h3>
-        <p class="muted mono mt-1">Large monolithic SKILL.md files. No metadata. No negative triggers. No troubleshooting sections.</p>
-      </div>
-      <div class="card">
-        <span class="badge" style="background:#22c55e20;color:#22c55e;border-color:#22c55e40;">after</span>
-        <h3 class="mt-2">672 lines <span class="muted" style="font-size:0.8rem;">(-36%)</span></h3>
-        <p class="muted mono mt-1">YAML frontmatter with metadata. Negative triggers. Progressive disclosure with references/ subdirectories. Troubleshooting sections.</p>
-      </div>
-    </div>
-    <div class="code-block mt-3">
-      <span class="comment"># commit 2864d72 — Mar 3, 2026</span><br>
-      <span class="keyword">Skills:</span> apply Anthropic guide best practices across all <span class="number">20</span> skills<br>
-      <span class="comment"># 29 files changed, +809, -314</span>
-    </div>
-    <p class="mono mt-3 muted" style="font-size:0.85rem; text-align:center;">
-      A tutorial became a system-wide upgrade. In one conversation.
-    </p>
-  </div>
-</section>
+<!-- ===== SLIDE 6: PROJECTS KANBAN ===== -->
+<section class="slide slide--dark" id="slide-6">
+  <div class="slide-inner">
+    <span class="label">Highlight Feature</span>
+    <h2>Projects Kanban</h2>
+    <p class="subtitle" style="color:#a1a1aa;">AI-powered project boards. Didi plans, codes, and ships.</p>
 
-<!-- ====== SLIDE: KEEP EVOLVING — QR CODE ====== -->
-<section class="slide slide--dark" id="qr-story" data-nav="qr-story">
-  <div class="slide-inner fade-in">
-    <span class="label">real story — Mar 3, dinner in Milan</span>
-    <h2>The QR code at dinner</h2>
-    <p class="muted mt-2" style="max-width:700px;">
-      Djalma took a photo of a restaurant's QR code menu and sent it via WhatsApp. I needed to read it, decode it, and recommend a vegetarian dish.
-    </p>
-    <div class="timeline mt-4">
-      <div class="timeline-line"></div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title" style="color:#ef4444;">❌ Attempt 1 — Image arrives as text</div>
-        <div class="timeline-desc">WhatsApp images arrive as AI-generated descriptions. Can't see the actual QR code.</div>
+    <div class="grid-3" style="margin-top:2rem;">
+      <div class="highlight-card">
+        <div class="highlight-card-title">🗂️ Board Management</div>
+        <div class="highlight-card-body">Create software project boards from WhatsApp. Move cards through columns — Todo, In Progress, Done — by messaging Didi naturally.</div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title" style="color:#f59e0b;">🔧 Attempt 2 — Download via pywa</div>
-        <div class="timeline-desc">Used WhatsApp Business API to download the actual image. Claude vision can see it, but can't decode QR codes visually.</div>
+      <div class="highlight-card">
+        <div class="highlight-card-title">🤖 AI Planner Agent</div>
+        <div class="highlight-card-body">Describe a feature. The planner agent breaks it into tasks, estimates effort, writes specs, and populates the board — fully automated.</div>
       </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title" style="color:#ef4444;">❌ Attempt 3 — pyzbar</div>
-        <div class="timeline-desc">Needs libzbar. No sudo on server. Dead end.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-title" style="color:#22c55e;">✅ Attempt 4 — qrdet + OpenCV</div>
-        <div class="timeline-desc">YOLO detects the QR with 95% confidence, crops precisely. OpenCV decodes the clean crop. Menu URL extracted!</div>
+      <div class="highlight-card">
+        <div class="highlight-card-title">💻 AI Coder Agent</div>
+        <div class="highlight-card-body">Assign a task to the coder agent. It opens a subprocess, implements the code, runs tests, and reports back with a diff or PR link.</div>
       </div>
     </div>
-    <p class="mono mt-3" style="color:#71717a; font-size:0.85rem; text-align:center;">
-      Failed 3 times. Solved it on the 4th. Created a reusable <span style="color:#fafafa;">media-handler</span> skill from it.
-    </p>
-  </div>
-</section>
 
-<!-- ====== SLIDE: WARNING — HONEST DISCLAIMER ====== -->
-<section class="slide" id="warning" data-nav="warning">
-  <div class="slide-inner fade-in" style="text-align:center;">
-    <div style="font-size:5rem; margin-bottom:1rem;">⚠️</div>
-    <span class="label" style="background:#ef444420;color:#ef4444;border-color:#ef444440;">honest disclaimer</span>
-    <h2 class="mt-3" style="max-width:700px; margin-inline:auto;">It's not all magic</h2>
-    <p class="muted mt-2" style="max-width:600px; margin-inline:auto; font-size:1.05rem;">
-      Because I'm not staring at the code 24/7, things can <em>"work"</em> in hilariously stupid ways.
-    </p>
-    <div class="card mt-4" style="max-width:650px; margin-inline:auto; text-align:left; border-color:#ef444440;">
-      <div class="code-block" style="font-size:0.85rem;">
-        <span class="comment"># skill frontmatter — negative triggers</span><br>
-        <span class="keyword">---</span><br>
-        <span class="keyword">name:</span> <span class="string">"payments"</span><br>
-        <span class="keyword">description:</span> <span class="string">"Contas a pagar. NÃO use para saldos — use banking."</span><br>
-        <span class="keyword">---</span><br><br>
-        <span class="comment"># How many skills had negative triggers?</span><br>
-        <span style="color:#ef4444; font-weight:600;">→ None. Banking, balance, and payments kept confusing each other.</span>
+    <div class="highlight-card" style="margin-top:1.25rem;">
+      <div class="highlight-card-title">Example workflow</div>
+      <div class="highlight-card-body">
+        <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+          <span style="color:#e4e4e7;">"Add dark mode to the dashboard"</span>
+          <span style="color:#3f3f46;">→</span>
+          <span>Planner creates 4 subtasks</span>
+          <span style="color:#3f3f46;">→</span>
+          <span>Coder implements CSS variables</span>
+          <span style="color:#3f3f46;">→</span>
+          <span>PR opened on GitHub</span>
+          <span style="color:#3f3f46;">→</span>
+          <span>WhatsApp notification sent</span>
+        </div>
       </div>
     </div>
-    <p class="mono mt-4" style="color:#71717a; font-size:0.9rem; max-width:600px; margin-inline:auto;">
-      Without negative triggers, asking "qual meu saldo?" could fire banking, balance, <em>and</em> payments at the same time. Three skills, three answers, none correct. 🤡
-    </p>
-    <p class="mono mt-3" style="font-size:0.8rem; color:#52525b;">
-      <span style="color:#fafafa;">An AI that doesn't complain is not the same as an AI that works correctly.</span>
-    </p>
-  </div>
-</section>
 
-<!-- ====== SLIDE: LEARNINGS ====== -->
-<section class="slide" id="learnings" data-nav="learnings">
-  <div class="slide-inner fade-in">
-    <span class="label">takeaways</span>
-    <h2>Learnings</h2>
-    <div class="grid-2 mt-3" style="gap:1rem;">
-      <div class="card" style="padding:1.2rem;">
-        <div style="font-size:1.3rem; margin-bottom:0.4rem;">🧠</div>
-        <h3 style="font-size:1rem;">Building is understanding</h3>
-        <p class="muted mono" style="font-size:0.85rem;">The best way to deal with FOMO and trends is to build with them. You stop guessing and start knowing.</p>
+    <div class="grid-2" style="margin-top:1.25rem;">
+      <div class="highlight-card">
+        <div class="highlight-card-title">Integrations</div>
+        <div class="highlight-card-body">Connected to GitHub CLI and Linear for real project tracking. Didi bridges your WhatsApp conversation with your actual dev workflow.</div>
       </div>
-      <div class="card" style="padding:1.2rem;">
-        <div style="font-size:1.3rem; margin-bottom:0.4rem;">🤝</div>
-        <h3 style="font-size:1rem;">Being part of agent dev builds trust</h3>
-        <p class="muted mono" style="font-size:0.85rem;">You learn what agents can and can't do. That trust is earned, not assumed.</p>
-      </div>
-      <div class="card" style="padding:1.2rem;">
-        <div style="font-size:1.3rem; margin-bottom:0.4rem;">🚫</div>
-        <h3 style="font-size:1rem;">Not knowing about OpenClaw was amazing</h3>
-        <p class="muted mono" style="font-size:0.85rem;">We started before it existed. I'd probably have used it and dealt with security headaches instead of learning.</p>
-      </div>
-      <div class="card" style="padding:1.2rem;">
-        <div style="font-size:1.3rem; margin-bottom:0.4rem;">😤</div>
-        <h3 style="font-size:1rem;">It's really hard</h3>
-        <p class="muted mono" style="font-size:0.85rem;">Sometimes you just want to open the editor and do it yourself. Patience with the agent is a skill on its own.</p>
-      </div>
-      <div class="card" style="padding:1.2rem;">
-        <div style="font-size:1.3rem; margin-bottom:0.4rem;">🚧</div>
-        <h3 style="font-size:1rem;">Boundaries are crucial</h3>
-        <p class="muted mono" style="font-size:0.85rem;">New features must follow a specific pattern. Without discipline, the agent becomes a mess of one-off hacks.</p>
-      </div>
-      <div class="card" style="padding:1.2rem;">
-        <div style="font-size:1.3rem; margin-bottom:0.4rem;">🧩</div>
-        <h3 style="font-size:1rem;">Build small, stay in control</h3>
-        <p class="muted mono" style="font-size:0.85rem;">Small and focused features are safe. You understand the impact and can fix things fast.</p>
-      </div>
-      <div class="card" style="padding:1.2rem;">
-        <div style="font-size:1.3rem; margin-bottom:0.4rem;">🎯</div>
-        <h3 style="font-size:1rem;">You don't need to fix all your problems</h3>
-        <p class="muted mono" style="font-size:0.85rem;">I wanted to focus on work during the day — not make the agent work for me on everything.</p>
-      </div>
-      <div class="card" style="padding:1.2rem;">
-        <div style="font-size:1.3rem; margin-bottom:0.4rem;">💸</div>
-        <h3 style="font-size:1rem;">Integrations cost real money</h3>
-        <p class="muted mono" style="font-size:0.85rem;">Banking APIs, custom services, specific tools — useful integrations are rarely free.</p>
-      </div>
-      <div class="card" style="padding:1.2rem;">
-        <div style="font-size:1.3rem; margin-bottom:0.4rem;">🫣</div>
-        <h3 style="font-size:1rem;">Anthropic probably hates me</h3>
-        <p class="muted mono" style="font-size:0.85rem;">I'm using my Max subscription to run a 24/7 autonomous agent. Sorry not sorry.</p>
+      <div class="highlight-card">
+        <div class="highlight-card-title">Context isolation</div>
+        <div class="highlight-card-body">Each coding task runs in an isolated <code style="color:#86efac; font-family:var(--font-mono);">claude -p</code> subprocess, keeping the main session lean. Results arrive as a single summary message.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ====== SLIDE: META — HOW THIS WAS BUILT ====== -->
-<section class="slide slide--dark" id="meta" data-nav="meta">
-  <div class="slide-inner fade-in" style="max-width:1100px;">
-    <p class="mono" style="color:#52525b; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Yes, including this</p>
-    <h2 style="font-size:2rem; margin-bottom:0.5rem; color:#fafafa;">This presentation was built<br>through a WhatsApp chat.</h2>
-    <p style="color:#71717a; font-size:1rem; margin-bottom:2.5rem;">
-      From idea → research → code → deploy. All in the same conversation.
-    </p>
-    <div style="display:flex; gap:1.2rem; justify-content:center; align-items:flex-start; flex-wrap:wrap;">
-      <div style="flex:1; min-width:200px; max-width:260px; text-align:center;">
-        <img src="img/screenshot_1.jpg" alt="Didi suggesting topics" style="width:100%; border-radius:16px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-        <p class="mono" style="font-size:0.7rem; color:#71717a; margin-top:0.8rem;">Didi suggests topics</p>
+<!-- ===== SLIDE 7: SCHEDULER ===== -->
+<section class="slide" id="slide-7">
+  <div class="slide-inner">
+    <span class="label">Highlight Feature</span>
+    <h2>Scheduler</h2>
+    <p class="subtitle">Didi can schedule tasks for itself — with full context preserved in a mailbox.</p>
+
+    <div class="grid-2" style="margin-top:2rem;">
+      <div>
+        <div class="card" style="margin-bottom:1rem;">
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">📬</div>
+          <h3>Mailbox Context</h3>
+          <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">When scheduling a future task, Didi writes a full prompt + context to a mailbox file. When the cron fires, the full context is injected — no information lost.</p>
+        </div>
+        <div class="card" style="margin-bottom:1rem;">
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🔁</div>
+          <h3>Recurring Tasks</h3>
+          <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">Daily summaries, weekly reviews, monthly payment reminders — all configured as cron-based recurring schedules.</p>
+        </div>
+        <div class="card">
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🔄</div>
+          <h3>Self-Retry</h3>
+          <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">If a task fails (API timeout, rate limit), Didi can re-schedule itself for a retry in 5 minutes — fully autonomous error recovery.</p>
+        </div>
       </div>
-      <div style="flex:1; min-width:200px; max-width:260px; text-align:center;">
-        <img src="img/screenshot_2.jpg" alt="User gives the prompt" style="width:100%; border-radius:16px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-        <p class="mono" style="font-size:0.7rem; color:#71717a; margin-top:0.8rem;">The prompt</p>
-      </div>
-      <div style="flex:1; min-width:200px; max-width:260px; text-align:center;">
-        <img src="img/screenshot_3.jpg" alt="Didi deploys the presentation" style="width:100%; border-radius:16px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-        <p class="mono" style="font-size:0.7rem; color:#71717a; margin-top:0.8rem;">Deployed ✅</p>
+      <div>
+        <div class="code-block">
+<span class="comment"># Didi schedules a follow-up</span>
+uv run python scheduler_manager.py <span class="keyword">add-once</span> \
+  --title <span class="string">"Check build status"</span> \
+  --prompt <span class="string">"Verify if deploy succeeded.
+  If not, notify user and retry."</span> \
+  --at <span class="string">"2026-03-10T15:30:00"</span> \
+  --target <span class="keyword">inject</span> \
+  --context <span class="string">"Deploy started at 15:00
+  Repo: acme/backend PR #42"</span> \
+  --model <span class="keyword">claude-sonnet-4-6</span>
+
+<span class="comment"># Mailbox file: tasks/42.md</span>
+<span class="comment"># Cron fires → reads mailbox</span>
+<span class="comment"># → executes with full context</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ====== SLIDE: CLOSING ====== -->
-<section class="slide" id="closing" data-nav="closing" style="background:#fafafa;">
-  <div class="slide-inner fade-in" style="text-align:center; max-width:650px;">
-    <h1 style="font-size:clamp(2.5rem, 6vw, 4rem); color:#18181b; font-weight:800; margin-bottom:2rem;">
-      <span style="text-decoration:line-through; opacity:0.4;">Coding</span> Building is fun again.
-    </h1>
-    <div style="width:60px; height:1px; background:#d4d4d8; margin:0 auto 2rem;"></div>
-    <p style="font-size:1.1rem; color:#71717a; font-weight:400;">Djalma Araujo</p>
-    <div class="mt-3">
-      <a href="https://didi.nossomos.cc" style="color:#a1a1aa; font-family:var(--font-mono); font-size:0.85rem; text-decoration:none; border-bottom: 1px solid #d4d4d8;">didi.nossomos.cc</a>
-      <span style="color:#d4d4d8; margin:0 1rem;">|</span>
-      <a href="https://github.com/djalmaaraujo" style="color:#a1a1aa; font-family:var(--font-mono); font-size:0.85rem; text-decoration:none; border-bottom: 1px solid #d4d4d8;">github.com/djalmaaraujo</a>
+<!-- ===== SLIDE 8: DAILY LIFE ===== -->
+<section class="slide slide--dark" id="slide-8">
+  <div class="slide-inner">
+    <span class="label">A day with Didi</span>
+    <h2>Daily life</h2>
+    <p class="subtitle" style="color:#a1a1aa;">From wake-up to wind-down, Didi is there.</p>
+
+    <div class="day-list" style="margin-top:2rem;">
+      <div class="day-item" style="background:#18181b; border-color:#27272a;">
+        <span class="day-icon">🌅</span>
+        <span class="day-time">07:00</span>
+        <div class="day-content">
+          <div class="day-title" style="color:#e4e4e7;">Morning Summary</div>
+          <div class="day-detail" style="color:#71717a;">Didi sends agenda for the day, unread emails, weather, and today's 3 focus tasks — automatically, every morning.</div>
+        </div>
+      </div>
+      <div class="day-item" style="background:#18181b; border-color:#27272a;">
+        <span class="day-icon">📧</span>
+        <span class="day-time">09:15</span>
+        <div class="day-content">
+          <div class="day-title" style="color:#e4e4e7;">Email Alert</div>
+          <div class="day-detail" style="color:#71717a;">Email Watcher detects an important email from a client. Didi proactively sends a WhatsApp notification with a summary.</div>
+        </div>
+      </div>
+      <div class="day-item" style="background:#18181b; border-color:#27272a;">
+        <span class="day-icon">🔔</span>
+        <span class="day-time">10:55</span>
+        <div class="day-content">
+          <div class="day-title" style="color:#e4e4e7;">Meeting in 5 minutes</div>
+          <div class="day-detail" style="color:#71717a;">Meeting Alerts fires before each calendar event. "Stand-up in 5 min — Google Meet link attached."</div>
+        </div>
+      </div>
+      <div class="day-item" style="background:#18181b; border-color:#27272a;">
+        <span class="day-icon">💰</span>
+        <span class="day-time">14:00</span>
+        <div class="day-content">
+          <div class="day-title" style="color:#e4e4e7;">Pay bill via chat</div>
+          <div class="day-detail" style="color:#71717a;">"Didi, marcar internet como pago" → Didi marks the expense as paid and updates the bank balance history.</div>
+        </div>
+      </div>
+      <div class="day-item" style="background:#18181b; border-color:#27272a;">
+        <span class="day-icon">🗂️</span>
+        <span class="day-time">16:30</span>
+        <div class="day-content">
+          <div class="day-title" style="color:#e4e4e7;">Project update</div>
+          <div class="day-detail" style="color:#71717a;">"Mover tarefa de login para done" → Didi moves the Kanban card and asks if the next task should be started.</div>
+        </div>
+      </div>
+      <div class="day-item" style="background:#18181b; border-color:#27272a;">
+        <span class="day-icon">🌙</span>
+        <span class="day-time">22:00</span>
+        <div class="day-content">
+          <div class="day-title" style="color:#e4e4e7;">Day Close</div>
+          <div class="day-detail" style="color:#71717a;">TDAH day-close ritual: completed tasks reviewed, deposit cleared, tomorrow's Rule of 3 drafted.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Remote control -->
-<nav class="remote" id="remote">
-  <button class="remote-btn" id="btnFirst" title="First slide (Home)">⤒</button>
-  <button class="remote-btn" id="btnPrev" title="Previous (↑)">▲</button>
-  <span class="remote-btn remote-counter" id="slideCounter">1/19</span>
-  <button class="remote-btn" id="btnNext" title="Next (↓)">▼</button>
-  <button class="remote-btn" id="btnLast" title="Last slide (End)">⤓</button>
-</nav>
+<!-- ===== SLIDE 9: TECH STACK ===== -->
+<section class="slide" id="slide-9">
+  <div class="slide-inner">
+    <span class="label">Technology</span>
+    <h2>Tech Stack</h2>
+    <p class="subtitle">Carefully chosen tools — each doing exactly one job well.</p>
+
+    <div class="stack-grid">
+      <div class="stack-card">
+        <div class="stack-card-icon">🧠</div>
+        <div class="stack-card-name">Claude API</div>
+        <div class="stack-card-desc">Anthropic's Opus 4, Sonnet 4.6, Haiku 4.5. Right model for each task.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">🐍</div>
+        <div class="stack-card-name">Python 3.12</div>
+        <div class="stack-card-desc">Core runtime. Async I/O via asyncio. Package management via uv.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">💬</div>
+        <div class="stack-card-name">pywa</div>
+        <div class="stack-card-desc">WhatsApp Cloud API library. Handles webhooks, messages, media, buttons.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">🔒</div>
+        <div class="stack-card-name">Tailscale</div>
+        <div class="stack-card-desc">Zero-config VPN. Secure remote access to home server. No open ports.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">🖥️</div>
+        <div class="stack-card-name">Linux Server</div>
+        <div class="stack-card-desc">Always-on home machine. No cloud costs, no cold starts, full control.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">📅</div>
+        <div class="stack-card-name">Google APIs</div>
+        <div class="stack-card-desc">Calendar, Gmail, Drive. OAuth2 authentication with token refresh.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">⏰</div>
+        <div class="stack-card-name">Cron + Shell</div>
+        <div class="stack-card-desc">Scheduler runner via crontab. Lightweight, battle-tested, no deps.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">🐙</div>
+        <div class="stack-card-name">GitHub CLI</div>
+        <div class="stack-card-desc">gh CLI for repos, PRs, issues. Bridges chat to code workflow.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">📐</div>
+        <div class="stack-card-name">Linear SDK</div>
+        <div class="stack-card-desc">GraphQL-based project management. Issues, cycles, milestones.</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">☁️</div>
+        <div class="stack-card-name">Cloudflare</div>
+        <div class="stack-card-desc">Workers, D1, KV, R2 via MCP integration. Edge infrastructure tools.</div>
+      </div>
+    </div>
+
+    <div class="pills" style="margin-top:2rem;">
+      <span class="pill">claude-opus-4-5</span>
+      <span class="pill">claude-sonnet-4-6</span>
+      <span class="pill">claude-haiku-4-5</span>
+      <span class="pill">asyncio</span>
+      <span class="pill">uv</span>
+      <span class="pill">OAuth2</span>
+      <span class="pill">crontab</span>
+      <span class="pill">MCP</span>
+      <span class="pill">webhook</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 10: CLOSING ===== -->
+<section class="slide slide--dark" id="slide-10">
+  <div class="slide-inner">
+    <span class="label">Fin</span>
+    <div class="closing-title">Didi.</div>
+    <p class="closing-sub">Built by Djalma Araujo · 2026</p>
+
+    <div class="grid-3" style="margin-top:0.5rem;">
+      <div>
+        <div style="font-family:var(--font-mono); font-size:0.75rem; color:#71717a; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Capabilities</div>
+        <div class="stat-number">29</div>
+        <div class="stat-label">integrated tools &amp; skills</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-mono); font-size:0.75rem; color:#71717a; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Availability</div>
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">always-on, always ready</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-mono); font-size:0.75rem; color:#71717a; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Interface</div>
+        <div class="stat-number">1</div>
+        <div class="stat-label">just WhatsApp</div>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem; padding-top:2rem; border-top:1px solid #27272a;">
+      <p style="color:#71717a; font-size:0.9rem; margin-bottom:1rem;">Didi is a personal project — not a product. It's opinionated, always evolving, and built for exactly one user.</p>
+      <div class="links">
+        <a href="https://djalmaaraujo.com" class="link-chip">djalmaaraujo.com</a>
+        <a href="https://github.com/djalmaaraujo" class="link-chip">github.com/djalmaaraujo</a>
+        <a href="https://static.djalmaaraujo.com/didi" class="link-chip">static.djalmaaraujo.com/didi</a>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem;">
+      <p style="font-family:var(--font-mono); font-size:0.75rem; color:#3f3f46;">
+        Scroll up to restart · Built with Claude Sonnet 4.6
+      </p>
+    </div>
+  </div>
+</section>
 
 <script>
-// --- Scroll-triggered fade-in ---
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) e.target.classList.add('visible');
+  // Nav dots
+  const slides = document.querySelectorAll('.slide');
+  const navContainer = document.getElementById('navDots');
+
+  slides.forEach((slide, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    dot.setAttribute('aria-label', `Slide ${i + 1}`);
+    dot.addEventListener('click', () => {
+      slide.scrollIntoView({ behavior: 'smooth' });
+    });
+    navContainer.appendChild(dot);
   });
-}, { threshold: 0.15 });
 
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  const dots = navContainer.querySelectorAll('.nav-dot');
 
-// --- Navigation dots ---
-const slides = document.querySelectorAll('.slide');
-const navContainer = document.getElementById('navDots');
-const counter = document.getElementById('slideCounter');
-let currentSlide = 0;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(slides).indexOf(entry.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.5 });
 
-slides.forEach((slide, i) => {
-  const dot = document.createElement('button');
-  dot.className = 'nav-dot';
-  dot.title = slide.dataset.nav || `Slide ${i+1}`;
-  dot.addEventListener('click', () => goTo(i));
-  navContainer.appendChild(dot);
-});
-
-function goTo(idx) {
-  if (idx >= 0 && idx < slides.length) {
-    slides[idx].scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-function updateHash(idx) {
-  const id = slides[idx].id;
-  if (id) {
-    history.replaceState(null, '', '#' + id);
-  }
-  currentSlide = idx;
-  counter.textContent = `${idx + 1}/${slides.length}`;
-}
-
-const dotObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const idx = Array.from(slides).indexOf(e.target);
-      updateHash(idx);
-      document.querySelectorAll('.nav-dot').forEach((d, i) => {
-        d.classList.toggle('active', i === idx);
-        const isDark = e.target.classList.contains('slide--dark') || e.target.classList.contains('slide--accent');
-        if (isDark) {
-          d.style.background = d.classList.contains('active') ? '#fafafa' : '#52525b';
-        } else {
-          d.style.background = d.classList.contains('active') ? '#09090b' : '#e4e4e7';
-        }
-      });
-    }
-  });
-}, { threshold: 0.5 });
-
-slides.forEach(s => dotObserver.observe(s));
-
-// --- Remote control buttons ---
-document.getElementById('btnFirst').addEventListener('click', () => goTo(0));
-document.getElementById('btnPrev').addEventListener('click', () => goTo(currentSlide - 1));
-document.getElementById('btnNext').addEventListener('click', () => goTo(currentSlide + 1));
-document.getElementById('btnLast').addEventListener('click', () => goTo(slides.length - 1));
-
-// --- Keyboard navigation ---
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
-    e.preventDefault();
-    goTo(currentSlide + 1);
-  } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-    e.preventDefault();
-    goTo(currentSlide - 1);
-  } else if (e.key === 'Home') {
-    e.preventDefault();
-    goTo(0);
-  } else if (e.key === 'End') {
-    e.preventDefault();
-    goTo(slides.length - 1);
-  }
-});
-
-// --- Hash navigation on load ---
-if (window.location.hash) {
-  const target = document.querySelector(window.location.hash);
-  if (target) {
-    setTimeout(() => target.scrollIntoView(), 100);
-  }
-}
+  slides.forEach(slide => observer.observe(slide));
 </script>
 
 </body>
