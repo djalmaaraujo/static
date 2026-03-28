@@ -908,52 +908,28 @@
     <h2>Linear is the state store</h2>
     <p class="subtitle">No local JSON files. No SQLite. No in-memory state. Everything lives in Linear — which means everything is resumable, inspectable, and human-readable.</p>
 
-    <div class="grid-2" style="margin-top:2rem; gap:2rem;">
-      <div>
-        <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.75rem;">Comment signals Brito reads</div>
-        <div class="linear-signals">
-          <div class="signal-row">
-            <span class="signal-tag">[ag/Brito] self-agent started</span>
-            <span class="signal-desc">Lock — prevents a second session from picking up the same sub-issue</span>
-          </div>
-          <div class="signal-row">
-            <span class="signal-tag">[ag/Brito] self-agent completed</span>
-            <span class="signal-desc">Completion signal — always includes the PR URL for the subissue-worker to detect</span>
-          </div>
-          <div class="signal-row">
-            <span class="signal-tag">[ag/Brito] self-agent failed</span>
-            <span class="signal-desc">Failure signal — subissue-worker marks the sub-issue failed and continues</span>
-          </div>
-          <div class="signal-row">
-            <span class="signal-tag">approved / lgtm / +1</span>
-            <span class="signal-desc">Human approval of the spec — Brito continues to dispatch phase</span>
-          </div>
-          <div class="signal-row">
-            <span class="signal-tag">github.com/.../pull/...</span>
-            <span class="signal-desc">PR URL in any comment — detected as completion for remote agents</span>
-          </div>
+    <div style="margin-top:2rem;">
+      <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.75rem;">Comment signals Brito reads</div>
+      <div class="linear-signals">
+        <div class="signal-row">
+          <span class="signal-tag">[ag/Brito] self-agent started</span>
+          <span class="signal-desc">Lock — prevents a second session from picking up the same sub-issue</span>
         </div>
-      </div>
-
-      <div>
-        <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.75rem;">What this enables</div>
-
-        <div class="card" style="margin-top:0; margin-bottom:1rem;">
-          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🔁</div>
-          <h3 style="font-size:1rem;">Crash recovery</h3>
-          <p style="font-size:0.85rem; color:var(--muted); margin-top:0.25rem;">If Brito crashes mid-flight, just run <code style="font-size:0.8rem;">/brito ISSUE</code> again. It reads Linear, detects which phases already completed, and resumes from where it left off.</p>
+        <div class="signal-row">
+          <span class="signal-tag">[ag/Brito] self-agent completed</span>
+          <span class="signal-desc">Completion signal — always includes the PR URL for the subissue-worker to detect</span>
         </div>
-
-        <div class="card" style="margin-top:0; margin-bottom:1rem;">
-          <div style="font-size:1.5rem; margin-bottom:0.5rem;">👁️</div>
-          <h3 style="font-size:1rem;">Full visibility</h3>
-          <p style="font-size:0.85rem; color:var(--muted); margin-top:0.25rem;">Anyone on the team can open the Linear issue and see exactly what Brito is doing, what the spec says, and which agents are running.</p>
+        <div class="signal-row">
+          <span class="signal-tag">[ag/Brito] self-agent failed</span>
+          <span class="signal-desc">Failure signal — subissue-worker marks the sub-issue failed and continues</span>
         </div>
-
-        <div class="card" style="margin-top:0;">
-          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🔒</div>
-          <h3 style="font-size:1rem;">Collision safety</h3>
-          <p style="font-size:0.85rem; color:var(--muted); margin-top:0.25rem;">Multiple machines running <code style="font-size:0.8rem;">/brito-watch</code> safely share work. Lock comments prevent duplicate processing.</p>
+        <div class="signal-row">
+          <span class="signal-tag">approved / lgtm / +1</span>
+          <span class="signal-desc">Human approval of the spec — Brito continues to dispatch phase</span>
+        </div>
+        <div class="signal-row">
+          <span class="signal-tag">github.com/.../pull/...</span>
+          <span class="signal-desc">PR URL in any comment — detected as completion for remote agents</span>
         </div>
       </div>
     </div>
