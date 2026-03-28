@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brito — Lead Systems Architect & Task Orchestrator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #fafafa;
+      --fg: #09090b;
+      --muted: #71717a;
+      --border: #e4e4e7;
+      --border-hover: #a1a1aa;
+      --accent: #18181b;
+      --radius: 0.75rem;
+      --font-sans: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Geist Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+
+    /* --- Slides --- */
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem 2rem;
+      scroll-snap-align: start;
+      position: relative;
+    }
+
+    .slide-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .slide--dark {
+      background: var(--fg);
+      color: var(--bg);
+    }
+
+    .slide--dark .muted { color: #a1a1aa; }
+    .slide--dark .badge { background: #27272a; color: #a1a1aa; border-color: #3f3f46; }
+    .slide--dark .card { background: #18181b; border-color: #27272a; }
+    .slide--dark .card:hover { border-color: #3f3f46; }
+    .slide--dark .timeline-dot { background: #fafafa; }
+    .slide--dark .timeline-line { background: #27272a; }
+
+    /* --- Typography --- */
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+      color: var(--muted);
+      max-width: 700px;
+      line-height: 1.5;
+    }
+
+    .muted { color: var(--muted); }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+    }
+
+    .label {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    /* --- Badge --- */
+    .badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      background: var(--bg-secondary);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      letter-spacing: 0.02em;
+    }
+
+    /* --- Cards --- */
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    /* --- Stats --- */
+    .stat-number {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* --- Flow diagram --- */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .flow-step {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.75rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .flow-arrow {
+      color: var(--muted);
+      font-size: 1.2rem;
+    }
+
+    /* --- Code block --- */
+    .code-block {
+      background: #18181b;
+      color: #e4e4e7;
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      overflow-x: auto;
+      margin-top: 1.5rem;
+    }
+
+    .code-block .comment { color: #71717a; }
+    .code-block .key { color: #a78bfa; }
+    .code-block .string { color: #86efac; }
+    .code-block .number { color: #fbbf24; }
+    .code-block .annotation { color: #f9a8d4; }
+
+    /* --- Pill list --- */
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .pill {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--fg);
+    }
+
+    .slide--dark .pill {
+      background: #27272a;
+      border-color: #3f3f46;
+      color: #e4e4e7;
+    }
+
+    /* --- Feature items --- */
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .feat-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: 0.5rem;
+      background: #18181b;
+      border: 1px solid #27272a;
+      transition: border-color 0.15s;
+    }
+
+    .feat-item:hover { border-color: #3f3f46; }
+
+    .feat-icon { font-size: 1.1rem; line-height: 1.4; flex-shrink: 0; }
+    .feat-name { font-size: 0.88rem; font-weight: 600; color: #e4e4e7; line-height: 1.3; }
+    .feat-desc { font-size: 0.75rem; color: #71717a; margin-top: 0.1rem; line-height: 1.3; }
+
+    .feat-item--light {
+      background: var(--bg-secondary);
+      border-color: var(--border);
+    }
+    .feat-item--light:hover { border-color: var(--border-hover); }
+    .feat-item--light .feat-name { color: var(--fg); }
+    .feat-item--light .feat-desc { color: var(--muted); }
+
+    /* --- Steps --- */
+    .steps {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: #27272a;
+      color: #a1a1aa;
+      border-radius: 50%;
+      width: 1.75rem;
+      height: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    .step-num--light {
+      background: var(--bg-secondary);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .step-title { font-weight: 700; font-size: 0.95rem; color: #e4e4e7; }
+    .step-title--light { color: var(--fg); }
+    .step-desc { font-size: 0.85rem; color: #71717a; margin-top: 0.15rem; line-height: 1.5; }
+    .step-desc--light { color: var(--muted); }
+
+    /* --- Orchestration diagram --- */
+    .orch-diagram {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .orch-node {
+      background: #18181b;
+      border: 1px solid #3f3f46;
+      border-radius: 0.6rem;
+      padding: 0.6rem 1.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #e4e4e7;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .orch-node--highlight {
+      border-color: #a78bfa;
+      color: #c4b5fd;
+    }
+
+    .orch-node--green {
+      border-color: #4ade80;
+      color: #86efac;
+    }
+
+    .orch-node--amber {
+      border-color: #fbbf24;
+      color: #fde68a;
+    }
+
+    .orch-node--pink {
+      border-color: #f472b6;
+      color: #f9a8d4;
+    }
+
+    .orch-arrow-v {
+      width: 2px;
+      height: 1.25rem;
+      background: #3f3f46;
+      margin: 0 auto;
+    }
+
+    .orch-fork {
+      display: flex;
+      align-items: flex-start;
+      gap: 2rem;
+      width: 100%;
+      justify-content: center;
+      position: relative;
+      margin-top: 0;
+    }
+
+    .orch-fork-branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .orch-fork-line {
+      width: 1px;
+      height: 1.25rem;
+      background: #3f3f46;
+    }
+
+    .orch-fork-connector {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 0;
+    }
+
+    .orch-fork-bar {
+      height: 2px;
+      background: #3f3f46;
+      flex: 1;
+      max-width: 120px;
+    }
+
+    .orch-fork-center-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #3f3f46;
+    }
+
+    /* --- Agent comparison --- */
+    .agent-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .agent-panel {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+
+    .agent-panel--self { border-top: 3px solid #a78bfa; }
+    .agent-panel--remote { border-top: 3px solid #4ade80; }
+
+    .agent-panel-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #e4e4e7;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .agent-panel-sub {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #71717a;
+      margin-bottom: 1rem;
+    }
+
+    .agent-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .agent-flow-step {
+      font-size: 0.82rem;
+      color: #a1a1aa;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .agent-flow-step::before {
+      content: '→';
+      color: #3f3f46;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    /* --- Linear state store --- */
+    .linear-signals {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .signal-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .signal-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.35rem;
+      background: #18181b;
+      color: #a78bfa;
+      border: 1px solid #3f3f46;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .signal-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* --- Agentic slide --- */
+    .agentic-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .agentic-card {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+
+    .agentic-card-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .agentic-card-title { font-weight: 700; font-size: 1rem; color: #e4e4e7; margin-bottom: 0.4rem; }
+    .agentic-card-body { font-size: 0.85rem; color: #71717a; line-height: 1.6; }
+
+    /* --- Closing --- */
+    .closing-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .closing-sub {
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      color: #a1a1aa;
+      margin-bottom: 2.5rem;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .link-chip {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      padding: 0.45rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid #3f3f46;
+      color: #a1a1aa;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .link-chip:hover { border-color: #71717a; color: #e4e4e7; }
+
+    /* --- Nav dots --- */
+    .nav-dots {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+
+    .nav-dot {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
+      padding: 0;
+    }
+
+    .nav-dot:hover { background: var(--border-hover); transform: scale(1.3); }
+    .nav-dot.active { background: var(--fg); transform: scale(1.3); }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+      .grid-2, .grid-3, .grid-4, .agent-split, .agentic-grid { grid-template-columns: 1fr; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+      .orch-fork { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav dots -->
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+<!-- ===== SLIDE 1: HERO ===== -->
+<section class="slide slide--dark" id="slide-1">
+  <div class="slide-inner">
+    <span class="label">Claude Code Plugin · Automattic · 2026</span>
+    <img src="./brito_avatar.png" alt="Brito avatar" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:1.25rem; border:3px solid #27272a; box-shadow:0 4px 24px rgba(0,0,0,0.4);">
+    <h1>Brito.</h1>
+    <p class="subtitle" style="color:#a1a1aa; max-width:620px; font-size:clamp(1.2rem,2.5vw,1.75rem); font-weight:500;">
+      Lead Systems Architect<br>&amp; Task Orchestrator.
+    </p>
+    <p style="margin-top:1.5rem; font-size:1rem; color:#71717a; max-width:560px; line-height:1.7;">
+      Give Brito a Linear issue. It brainstorms, writes a spec, dispatches focused agents per repository, monitors completion, and reports back — all through Linear.
+    </p>
+    <div class="pills" style="margin-top:2rem;">
+      <span class="pill">Multi-repo orchestration</span>
+      <span class="pill">Linear-native</span>
+      <span class="pill">Self &amp; remote agents</span>
+      <span class="pill">Git worktrees</span>
+      <span class="pill">Resumable</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 2: WHAT IS BRITO ===== -->
+<section class="slide" id="slide-2">
+  <div class="slide-inner">
+    <span class="label">Concept</span>
+    <h2>What is Brito?</h2>
+    <p class="subtitle">
+      A Claude Code plugin that turns a single Linear issue into a fully orchestrated, multi-repository implementation — without human hand-holding.
+    </p>
+
+    <div class="grid-3" style="margin-top:2rem;">
+      <div class="card">
+        <div style="font-size:1.75rem; margin-bottom:0.75rem;">🏗️</div>
+        <h3>Orchestrator, not a doer</h3>
+        <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">Brito breaks work down and dispatches focused agents. Each agent receives a precise implementation plan for one repository.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:1.75rem; margin-bottom:0.75rem;">📋</div>
+        <h3>Linear as the brain</h3>
+        <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">All state lives in Linear. Sub-issues are units of work. Comments are signals. Crashes are recoverable — just run the command again.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:1.75rem; margin-bottom:0.75rem;">🤝</div>
+        <h3>Human-centric handoff</h3>
+        <p style="font-size:0.9rem; color:var(--muted); margin-top:0.25rem;">Brito never marks issues as Done. It moves work to "In Review" and stops. A human decides when the work is truly complete.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:2.5rem; padding:1.5rem; background:var(--bg-secondary); border:1px solid var(--border); border-radius:var(--radius);">
+      <p style="font-size:0.9rem; color:var(--muted); line-height:1.7;">
+        Named after <strong>Saturnino de Brito</strong> — a Brazilian pioneer of urban hydraulic engineering who designed infrastructure so reliable that success was the only possible outcome.
+        Brito the plugin engineers the environment so agents can't fail: isolated worktrees, scoped tool permissions, precise plans, and a verification loop before every push.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 3: HOW IT WORKS ===== -->
+<section class="slide slide--dark" id="slide-3">
+  <div class="slide-inner">
+    <span class="label">Architecture</span>
+    <h2>How it works</h2>
+    <p class="subtitle" style="color:#a1a1aa;">Five phases, fully autonomous. Each phase leaves artifacts in Linear so work is always resumable.</p>
+
+    <!-- Orchestration diagram -->
+    <div class="orch-diagram">
+
+      <!-- Linear issue input -->
+      <div class="orch-node orch-node--highlight" style="width:220px;">📋 Linear Issue</div>
+      <div class="orch-arrow-v"></div>
+
+      <!-- Brainstorm -->
+      <div class="orch-node" style="width:260px;">🔍 1. Brainstorm — deep codebase analysis</div>
+      <div class="orch-arrow-v"></div>
+
+      <!-- Spec -->
+      <div class="orch-node" style="width:260px;">📝 2. Spec — per-repo plan, posted to Linear</div>
+      <div class="orch-arrow-v"></div>
+
+      <!-- Dispatch -->
+      <div class="orch-node" style="width:260px;">🚀 3. Dispatch — create sub-issues per repo</div>
+      <div class="orch-arrow-v"></div>
+
+      <!-- Fork connector -->
+      <div style="display:flex; align-items:flex-start; gap:3rem; justify-content:center; width:100%;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+          <div style="width:1px; height:1rem; background:#3f3f46;"></div>
+          <div class="orch-node orch-node--highlight" style="width:200px; font-size:0.78rem;">
+            🖥️ 4a. Self Agent<br>
+            <span style="color:#71717a; font-size:0.7rem;">local worktree · Claude Code</span>
+          </div>
+          <div style="width:1px; height:0.75rem; background:#3f3f46;"></div>
+          <div class="orch-node" style="width:200px; font-size:0.75rem; color:#c4b5fd; border-color:#7c3aed;">
+            git push → gh pr create
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; padding-top:1rem;">
+          <div style="width:3rem; height:1px; background:#3f3f46;"></div>
+          <span style="color:#3f3f46; font-size:0.7rem; font-family:var(--font-mono); padding:0 0.25rem;">or</span>
+          <div style="width:3rem; height:1px; background:#3f3f46;"></div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+          <div style="width:1px; height:1rem; background:#3f3f46;"></div>
+          <div class="orch-node orch-node--green" style="width:200px; font-size:0.78rem;">
+            🌐 4b. Remote Agent<br>
+            <span style="color:#71717a; font-size:0.7rem;">external system · issue_assignment</span>
+          </div>
+          <div style="width:1px; height:0.75rem; background:#3f3f46;"></div>
+          <div class="orch-node" style="width:200px; font-size:0.75rem; color:#86efac; border-color:#16a34a;">
+            posts PR URL to sub-issue
+          </div>
+        </div>
+      </div>
+
+      <div class="orch-arrow-v" style="margin-top:0;"></div>
+
+      <!-- Subissue worker -->
+      <div class="orch-node" style="width:300px;">🔁 5. Subissue-Worker — polls until all complete</div>
+      <div class="orch-arrow-v"></div>
+
+      <!-- Done -->
+      <div class="orch-node orch-node--amber" style="width:240px;">✅ Parent issue → In Review</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 4: SELF AGENTS ===== -->
+<section class="slide" id="slide-4">
+  <div class="slide-inner">
+    <span class="label">Agent Types · 1 / 2</span>
+    <h2>Self Agents</h2>
+    <p class="subtitle">Local execution in isolated git worktrees — running right on the machine where Brito lives.</p>
+
+    <div class="grid-2" style="margin-top:2rem;">
+      <div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num step-num--light">1</div>
+            <div>
+              <div class="step-title step-title--light">Dispatch creates the sub-issue</div>
+              <div class="step-desc step-desc--light">Labeled <code style="font-size:0.8rem; background:#f4f4f5; padding:0.1rem 0.35rem; border-radius:0.3rem;">brito-self-agent</code>, moved to "In Progress". Contains the full per-repo implementation plan.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num step-num--light">2</div>
+            <div>
+              <div class="step-title step-title--light">Self-Listener claims it</div>
+              <div class="step-desc step-desc--light">Posts a lock comment immediately. Creates an isolated worktree at <code style="font-size:0.8rem; background:#f4f4f5; padding:0.1rem 0.35rem; border-radius:0.3rem;">brito/self/ISSUE_ID</code>. No shared state with your working branch.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num step-num--light">3</div>
+            <div>
+              <div class="step-title step-title--light">A Claude Code session executes the plan</div>
+              <div class="step-desc step-desc--light">Launched with scoped tool permissions. Makes code changes, runs tests, verifies work before committing.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num step-num--light">4</div>
+            <div>
+              <div class="step-title step-title--light">PR created, signal posted</div>
+              <div class="step-desc step-desc--light">Session runs <code style="font-size:0.8rem; background:#f4f4f5; padding:0.1rem 0.35rem; border-radius:0.3rem;">gh pr create</code>. Brito detects the PR URL in output, posts completion comment to the sub-issue.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num step-num--light">5</div>
+            <div>
+              <div class="step-title step-title--light">Worktree cleaned up</div>
+              <div class="step-desc step-desc--light">Worktree removed. Branch preserved for the PR. Sub-issue moved to "In Review".</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="background:#fafafa; border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; margin-bottom:1rem;">
+          <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.75rem;">Config</div>
+          <pre style="font-family:var(--font-mono); font-size:0.82rem; color:#09090b; line-height:1.7;">repositories:
+  - name: <span style="color:#16a34a;">"dash"</span>
+    url: <span style="color:#16a34a;">"https://github.com/..."</span>
+    local_path: <span style="color:#16a34a;">"~/dev/parsely/dash"</span>
+    agent: <span style="color:#7c3aed; font-weight:700;">self</span>   <span style="color:#a1a1aa;"># ← that's it</span></pre>
+        </div>
+
+        <div style="background:#fafafa; border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem;">
+          <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.75rem;">Scoped tool permissions</div>
+          <div style="font-size:0.85rem; color:var(--muted); line-height:1.7;">
+            Self-agents can: Read, Edit, Write, Grep, Glob, Bash (git, gh, npm, node), Linear MCP<br><br>
+            Self-agents <strong style="color:#dc2626;">cannot</strong>: <code style="font-size:0.8rem;">rm -rf</code>, force push, reset --hard, branch delete
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 5: REMOTE AGENTS ===== -->
+<section class="slide slide--dark" id="slide-5">
+  <div class="slide-inner">
+    <span class="label">Agent Types · 2 / 2</span>
+    <h2>Remote Agents</h2>
+    <p class="subtitle" style="color:#a1a1aa;">External systems pick up work from Linear. The contract: receive a plan via sub-issue, post a PR URL when done.</p>
+
+    <div class="grid-2" style="margin-top:2rem; gap:2rem;">
+      <div>
+        <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:#71717a; margin-bottom:0.75rem;">How it works</div>
+        <div class="agent-flow">
+          <div class="agent-flow-step">Dispatch creates sub-issue assigned to <code style="font-size:0.78rem; color:#86efac;">bot-username</code> with label <code style="font-size:0.78rem; color:#86efac;">brito-remote-agent</code></div>
+          <div class="agent-flow-step">External agent system detects the assignment via its own watcher</div>
+          <div class="agent-flow-step">Reads the full implementation plan from the sub-issue description</div>
+          <div class="agent-flow-step">Executes: clone → branch → implement → test → PR</div>
+          <div class="agent-flow-step">Posts completion comment on the sub-issue with the PR URL</div>
+          <div class="agent-flow-step">Brito's subissue-worker detects the PR URL and marks complete</div>
+        </div>
+
+        <div style="margin-top:1.5rem; padding:1rem; background:#18181b; border:1px solid #27272a; border-radius:0.5rem;">
+          <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:#71717a; margin-bottom:0.6rem;">Detection signals</div>
+          <div style="font-size:0.82rem; color:#a1a1aa; line-height:1.7;">
+            Brito watches sub-issue comments for:<br>
+            <code style="color:#86efac;">github.com/.../pull/...</code> + "completed" or "done"<br>
+            <code style="color:#f9a8d4;">failed</code> or <code style="color:#f9a8d4;">blocked</code> → marks failed, moves to In Review
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:#71717a; margin-bottom:0.75rem;">agent-sandbox — example remote agent</div>
+
+        <div style="background:#18181b; border:1px solid #27272a; border-radius:var(--radius); padding:1.25rem; margin-bottom:0.75rem;">
+          <div style="font-weight:700; font-size:0.9rem; color:#e4e4e7; margin-bottom:0.4rem;">What is agent-sandbox?</div>
+          <div style="font-size:0.83rem; color:#a1a1aa; line-height:1.6;">An independent Claude Code session running on a separate machine (or in a container), continuously watching Linear for issues assigned to it. It picks up the plan, executes it autonomously, and posts back results.</div>
+        </div>
+
+        <div style="background:#18181b; border:1px solid #27272a; border-radius:var(--radius); padding:1.25rem;">
+          <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:#71717a; margin-bottom:0.6rem;">Config</div>
+          <pre style="font-family:var(--font-mono); font-size:0.8rem; color:#e4e4e7; line-height:1.7;">agent:
+  type: <span style="color:#86efac;">issue_assignment</span>
+  assignee: <span style="color:#86efac;">"agent-sandbox"</span>
+  label: <span style="color:#86efac;">"brito-remote-agent"</span></pre>
+        </div>
+
+        <div style="margin-top:0.75rem; padding:1rem; background:#18181b; border:1px solid #27272a; border-radius:var(--radius);">
+          <div style="font-size:0.82rem; color:#71717a; line-height:1.6;">
+            The remote agent reads the sub-issue description — which contains the full, self-contained plan from Brito's dispatch template — and needs no other context to execute.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 6: CONFIGURATION ===== -->
+<section class="slide slide--dark" id="slide-6">
+  <div class="slide-inner">
+    <span class="label">Configuration</span>
+    <h2>Anatomy of brito.local.md</h2>
+    <p class="subtitle" style="color:#a1a1aa;">One global config file at <code style="font-size:1rem; color:#c4b5fd;">~/.claude/brito.local.md</code> — defines all projects, repos, and agent types.</p>
+
+    <div class="code-block" style="font-size:0.8rem; line-height:1.85;">
+<span class="comment">---</span>
+<span class="key">projects</span>:
+  - <span class="key">name</span>: <span class="string">"Parse.ly Platform"</span>           <span class="comment"># human-readable label</span>
+    <span class="key">linear_project</span>: <span class="string">"https://linear.app/a8c/project/..."</span>
+    <span class="key">linear_team</span>: <span class="string">"PARSELY"</span>                <span class="comment"># issue ID prefix (e.g. PARSELY-42)</span>
+    <span class="key">repositories</span>:
+      - <span class="key">name</span>: <span class="string">"dash"</span>                       <span class="comment"># used in sub-issue title: [dash] ...</span>
+        <span class="key">url</span>: <span class="string">"https://github.com/Parsely/dash"</span>
+        <span class="key">local_path</span>: <span class="string">"~/dev/parsely/dash"</span>  <span class="comment"># clone path (auto-cloned if missing)</span>
+        <span class="key">agent</span>: <span class="annotation">self</span>                     <span class="comment"># ← local agent, runs in worktree</span>
+
+      - <span class="key">name</span>: <span class="string">"mage"</span>
+        <span class="key">url</span>: <span class="string">"https://github.com/Parsely/mage"</span>
+        <span class="key">local_path</span>: <span class="string">"~/dev/parsely/mage"</span>
+        <span class="key">agent</span>:                           <span class="comment"># ← remote agent</span>
+          <span class="key">type</span>: <span class="string">"issue_assignment"</span>
+          <span class="key">assignee</span>: <span class="string">"agent-sandbox"</span>       <span class="comment"># Linear username to assign sub-issues</span>
+          <span class="key">label</span>: <span class="string">"brito-remote-agent"</span>    <span class="comment"># label added to trigger external watcher</span>
+
+<span class="key">defaults</span>:
+  <span class="key">auto_mode</span>: <span class="number">false</span>                   <span class="comment"># true = skip spec approval gate</span>
+  <span class="key">loop_interval_seconds</span>: <span class="number">120</span>        <span class="comment"># polling frequency for all loops</span>
+  <span class="key">max_wait_minutes</span>: <span class="number">10</span>              <span class="comment"># 5 iterations × 120s before timeout</span>
+  <span class="key">watcher_interval_seconds</span>: <span class="number">60</span>      <span class="comment"># how often /brito-watch scans</span>
+  <span class="key">watcher_max_concurrent</span>: <span class="number">2</span>         <span class="comment"># max parallel issues processed</span>
+<span class="comment">---</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 7: LINEAR AS STATE STORE ===== -->
+<section class="slide" id="slide-7">
+  <div class="slide-inner">
+    <span class="label">Design Principle</span>
+    <h2>Linear is the state store</h2>
+    <p class="subtitle">No local JSON files. No SQLite. No in-memory state. Everything lives in Linear — which means everything is resumable, inspectable, and human-readable.</p>
+
+    <div class="grid-2" style="margin-top:2rem; gap:2rem;">
+      <div>
+        <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.75rem;">Comment signals Brito reads</div>
+        <div class="linear-signals">
+          <div class="signal-row">
+            <span class="signal-tag">[ag/Brito] self-agent started</span>
+            <span class="signal-desc">Lock — prevents a second session from picking up the same sub-issue</span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-tag">[ag/Brito] self-agent completed</span>
+            <span class="signal-desc">Completion signal — always includes the PR URL for the subissue-worker to detect</span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-tag">[ag/Brito] self-agent failed</span>
+            <span class="signal-desc">Failure signal — subissue-worker marks the sub-issue failed and continues</span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-tag">approved / lgtm / +1</span>
+            <span class="signal-desc">Human approval of the spec — Brito continues to dispatch phase</span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-tag">github.com/.../pull/...</span>
+            <span class="signal-desc">PR URL in any comment — detected as completion for remote agents</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.75rem;">What this enables</div>
+
+        <div class="card" style="margin-top:0; margin-bottom:1rem;">
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🔁</div>
+          <h3 style="font-size:1rem;">Crash recovery</h3>
+          <p style="font-size:0.85rem; color:var(--muted); margin-top:0.25rem;">If Brito crashes mid-flight, just run <code style="font-size:0.8rem;">/brito ISSUE</code> again. It reads Linear, detects which phases already completed, and resumes from where it left off.</p>
+        </div>
+
+        <div class="card" style="margin-top:0; margin-bottom:1rem;">
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">👁️</div>
+          <h3 style="font-size:1rem;">Full visibility</h3>
+          <p style="font-size:0.85rem; color:var(--muted); margin-top:0.25rem;">Anyone on the team can open the Linear issue and see exactly what Brito is doing, what the spec says, and which agents are running.</p>
+        </div>
+
+        <div class="card" style="margin-top:0;">
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🔒</div>
+          <h3 style="font-size:1rem;">Collision safety</h3>
+          <p style="font-size:0.85rem; color:var(--muted); margin-top:0.25rem;">Multiple machines running <code style="font-size:0.8rem;">/brito-watch</code> safely share work. Lock comments prevent duplicate processing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 8: MAKE YOUR REPO AGENTIC ===== -->
+<section class="slide slide--dark" id="slide-8">
+  <div class="slide-inner">
+    <span class="label">Before you dispatch</span>
+    <h2>The orchestration can't fix your repo.</h2>
+    <p class="subtitle" style="color:#a1a1aa;">You must make it agentic first. An agent is only as reliable as the feedback loops you give it.</p>
+
+    <div class="agentic-grid">
+      <div class="agentic-card" style="border-top:3px solid #a78bfa;">
+        <div class="agentic-card-icon">🧪</div>
+        <div class="agentic-card-title">Unit Testing</div>
+        <div class="agentic-card-body">Agents need fast, granular feedback. Unit tests tell the agent exactly which function broke and why — without standing up the full stack. Cover edge cases, not just happy paths.</div>
+      </div>
+
+      <div class="agentic-card" style="border-top:3px solid #4ade80;">
+        <div class="agentic-card-icon">🔬</div>
+        <div class="agentic-card-title">End-to-End Testing</div>
+        <div class="agentic-card-body">Integration and E2E tests catch what unit tests miss: wiring errors, API contract mismatches, database migrations. An agent that can't run E2E tests is working blindfolded.</div>
+      </div>
+
+      <div class="agentic-card" style="border-top:3px solid #fbbf24;">
+        <div class="agentic-card-icon">👁️</div>
+        <div class="agentic-card-title">Manual Testing Hooks</div>
+        <div class="agentic-card-body">Give agents a way to spin up a local environment and verify behavior visually. A <code style="font-size:0.8rem; color:#a1a1aa;">dev:start</code> script and a clear <code style="font-size:0.8rem; color:#a1a1aa;">AGENTS.md</code> tell the agent how to test its own work.</div>
+      </div>
+
+      <div class="agentic-card" style="border-top:3px solid #f472b6;">
+        <div class="agentic-card-icon">✅</div>
+        <div class="agentic-card-title">Verification Loop</div>
+        <div class="agentic-card-body">Before pushing, the agent must run all tests, check for lint errors, and confirm acceptance criteria from the plan. Brito uses the <code style="font-size:0.8rem; color:#a1a1aa;">verification-before-completion</code> superpowers skill for this — it refuses to push until checks pass.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem; padding:1.25rem 1.5rem; background:#18181b; border:1px solid #27272a; border-radius:var(--radius); border-left:3px solid #fbbf24;">
+      <p style="font-size:0.9rem; color:#a1a1aa; line-height:1.7;">
+        <strong style="color:#fde68a;">The rule:</strong> if you can't tell a human how to verify that a change works in under 2 minutes, your agent can't either. Write the verification steps down in <code style="color:#86efac;">AGENTS.md</code> — that file is the agent's operating manual.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 9: CLOSING ===== -->
+<section class="slide slide--dark" id="slide-9">
+  <div class="slide-inner">
+    <p class="closing-sub" style="font-family:var(--font-mono); font-size:0.85rem; color:#71717a; margin-bottom:1.5rem;">Claude Code Plugin · Automattic</p>
+    <h2 class="closing-title" style="color:var(--bg);">Brito.</h2>
+    <p class="closing-sub">Give it a Linear issue. Walk away.</p>
+
+    <div class="grid-3" style="margin-top:0.5rem;">
+      <div>
+        <div style="font-family:var(--font-mono); font-size:0.75rem; color:#71717a; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Phases</div>
+        <div class="stat-number">5</div>
+        <div class="stat-label">brainstorm → spec → dispatch → execute → review</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-mono); font-size:0.75rem; color:#71717a; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Agent types</div>
+        <div class="stat-number">2</div>
+        <div class="stat-label">self (local worktree) · remote (issue_assignment)</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-mono); font-size:0.75rem; color:#71717a; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">State store</div>
+        <div class="stat-number">1</div>
+        <div class="stat-label">Linear — no local files, always resumable</div>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem; padding-top:2rem; border-top:1px solid #27272a;">
+      <p style="color:#71717a; font-size:0.9rem; margin-bottom:1rem;">Brito is an internal Automattic tool. It is opinionated, always evolving, and built around the principle that the best orchestration is the one you never have to babysit.</p>
+      <div class="links">
+        <a href="https://github.a8c.com/Automattic/claude-code-plugins" class="link-chip">claude-code-plugins</a>
+        <a href="https://linear.app" class="link-chip">Linear</a>
+        <a href="https://github.com/djalmaaraujo" class="link-chip">github.com/djalmaaraujo</a>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem;">
+      <p style="font-family:var(--font-mono); font-size:0.75rem; color:#3f3f46;">
+        Scroll up to restart · Built with Claude Sonnet 4.6
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const navContainer = document.getElementById('navDots');
+
+  slides.forEach((slide, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    dot.setAttribute('aria-label', `Slide ${i + 1}`);
+    dot.addEventListener('click', () => {
+      slide.scrollIntoView({ behavior: 'smooth' });
+    });
+    navContainer.appendChild(dot);
+  });
+
+  const dots = navContainer.querySelectorAll('.nav-dot');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(slides).indexOf(entry.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.5 });
+
+  slides.forEach(slide => observer.observe(slide));
+</script>
+
+</body>
+</html>
