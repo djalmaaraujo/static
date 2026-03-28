@@ -677,43 +677,55 @@
       <div class="orch-arrow-v"></div>
 
       <!-- Dispatch -->
-      <div class="orch-node" style="width:260px;">🚀 3. Dispatch — create sub-issues per repo</div>
-      <div class="orch-arrow-v"></div>
+      <div class="orch-node" style="width:280px;">🚀 3. Dispatch — create sub-issues per repo</div>
 
-      <!-- Fork connector -->
-      <div style="display:flex; align-items:flex-start; gap:3rem; justify-content:center; width:100%;">
-        <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
-          <div style="width:1px; height:1rem; background:#3f3f46;"></div>
-          <div class="orch-node orch-node--highlight" style="width:200px; font-size:0.78rem;">
-            🖥️ 4a. Self Agent<br>
-            <span style="color:#71717a; font-size:0.7rem;">local worktree · Claude Code</span>
-          </div>
-          <div style="width:1px; height:0.75rem; background:#3f3f46;"></div>
-          <div class="orch-node" style="width:200px; font-size:0.75rem; color:#c4b5fd; border-color:#7c3aed;">
-            git push → gh pr create
-          </div>
-        </div>
-
-        <div style="display:flex; align-items:center; padding-top:1rem;">
-          <div style="width:3rem; height:1px; background:#3f3f46;"></div>
-          <span style="color:#3f3f46; font-size:0.7rem; font-family:var(--font-mono); padding:0 0.25rem;">or</span>
-          <div style="width:3rem; height:1px; background:#3f3f46;"></div>
-        </div>
-
-        <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
-          <div style="width:1px; height:1rem; background:#3f3f46;"></div>
-          <div class="orch-node orch-node--green" style="width:200px; font-size:0.78rem;">
-            🌐 4b. Remote Agent<br>
-            <span style="color:#71717a; font-size:0.7rem;">external system · issue_assignment</span>
-          </div>
-          <div style="width:1px; height:0.75rem; background:#3f3f46;"></div>
-          <div class="orch-node" style="width:200px; font-size:0.75rem; color:#86efac; border-color:#16a34a;">
-            posts PR URL to sub-issue
-          </div>
+      <!-- Fork: vertical down then horizontal bar -->
+      <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div style="width:1px; height:1rem; background:#3f3f46;"></div>
+        <!-- Horizontal spanning bar -->
+        <div style="width:60%; display:flex; align-items:center;">
+          <div style="flex:1; height:1px; background:#3f3f46;"></div>
+          <span style="font-family:var(--font-mono); font-size:0.68rem; color:#52525b; padding:0 0.6rem; white-space:nowrap;">or</span>
+          <div style="flex:1; height:1px; background:#3f3f46;"></div>
         </div>
       </div>
 
-      <div class="orch-arrow-v" style="margin-top:0;"></div>
+      <!-- Two-column fork -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; width:100%;">
+        <!-- Self agent column -->
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+          <div style="width:1px; height:1rem; background:#3f3f46;"></div>
+          <div class="orch-node orch-node--highlight" style="width:100%; text-align:center; font-size:0.82rem; padding:0.75rem 0.75rem;">
+            🖥️ 4a. Self Agent
+            <div style="color:#71717a; font-size:0.72rem; font-weight:400; margin-top:0.2rem;">local worktree · Claude Code</div>
+          </div>
+          <div style="width:1px; height:0.75rem; background:#3f3f46;"></div>
+          <div class="orch-node" style="width:100%; text-align:center; font-size:0.78rem; color:#c4b5fd; border-color:#7c3aed; padding:0.6rem 0.75rem;">
+            git push → gh pr create
+          </div>
+          <div style="width:1px; height:1rem; background:#3f3f46;"></div>
+        </div>
+
+        <!-- Remote agent column -->
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+          <div style="width:1px; height:1rem; background:#3f3f46;"></div>
+          <div class="orch-node orch-node--green" style="width:100%; text-align:center; font-size:0.82rem; padding:0.75rem 0.75rem;">
+            🌐 4b. Remote Agent
+            <div style="color:#71717a; font-size:0.72rem; font-weight:400; margin-top:0.2rem;">external system · issue_assignment</div>
+          </div>
+          <div style="width:1px; height:0.75rem; background:#3f3f46;"></div>
+          <div class="orch-node" style="width:100%; text-align:center; font-size:0.78rem; color:#86efac; border-color:#16a34a; padding:0.6rem 0.75rem;">
+            posts PR URL to sub-issue
+          </div>
+          <div style="width:1px; height:1rem; background:#3f3f46;"></div>
+        </div>
+      </div>
+
+      <!-- Join: horizontal bar then vertical down -->
+      <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+        <div style="width:60%; height:1px; background:#3f3f46;"></div>
+        <div style="width:1px; height:1rem; background:#3f3f46;"></div>
+      </div>
 
       <!-- Subissue worker -->
       <div class="orch-node" style="width:300px;">🔁 5. Subissue-Worker — polls until all complete</div>
