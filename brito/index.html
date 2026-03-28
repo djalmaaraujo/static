@@ -335,7 +335,8 @@
       font-size: 0.82rem;
       color: #e4e4e7;
       text-align: center;
-      white-space: nowrap;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .orch-node--highlight {
@@ -666,19 +667,19 @@
     <div class="orch-diagram">
 
       <!-- Linear issue input -->
-      <div class="orch-node orch-node--highlight" style="width:220px;">📋 Linear Issue</div>
+      <div class="orch-node orch-node--highlight" style="max-width:300px;">📋 Linear Issue</div>
       <div class="orch-arrow-v"></div>
 
       <!-- Brainstorm -->
-      <div class="orch-node" style="width:260px;">🔍 1. Brainstorm — deep codebase analysis</div>
+      <div class="orch-node" style="max-width:460px; width:100%;">🔍 1. Brainstorm — deep codebase analysis</div>
       <div class="orch-arrow-v"></div>
 
       <!-- Spec -->
-      <div class="orch-node" style="width:260px;">📝 2. Spec — per-repo plan, posted to Linear</div>
+      <div class="orch-node" style="max-width:460px; width:100%;">📝 2. Spec — per-repo plan, posted to Linear</div>
       <div class="orch-arrow-v"></div>
 
       <!-- Dispatch -->
-      <div class="orch-node" style="width:280px;">🚀 3. Dispatch — create sub-issues per repo</div>
+      <div class="orch-node" style="max-width:460px; width:100%;">🚀 3. Dispatch — create sub-issues per repo</div>
 
       <!-- Fork: vertical down then horizontal bar -->
       <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
@@ -729,11 +730,11 @@
       </div>
 
       <!-- Subissue worker -->
-      <div class="orch-node" style="width:300px;">🔁 5. Subissue-Worker — polls until all complete</div>
+      <div class="orch-node" style="max-width:460px; width:100%;">🔁 5. Subissue-Worker — polls until all complete</div>
       <div class="orch-arrow-v"></div>
 
       <!-- Done -->
-      <div class="orch-node orch-node--amber" style="width:240px;">✅ Parent issue → In Review</div>
+      <div class="orch-node orch-node--amber" style="max-width:340px; width:100%;">✅ Parent issue → In Review</div>
     </div>
   </div>
 </section>
