@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Analytics — DPL through the Parse.ly MCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #fafafa;
+      --fg: #09090b;
+      --muted: #71717a;
+      --border: #e4e4e7;
+      --border-hover: #a1a1aa;
+      --ok: #16a34a;
+      --radius: 0.75rem;
+      --font-sans: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Geist Mono', 'SF Mono', ui-monospace, monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+    body {
+      font-family: var(--font-sans); color: var(--fg); background: var(--bg);
+      -webkit-font-smoothing: antialiased; line-height: 1.6;
+    }
+
+    .slide {
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+      padding: 4rem 2rem; scroll-snap-align: start;
+    }
+    .slide-inner { max-width: 1100px; margin: 0 auto; width: 100%; }
+    .slide--dark { background: var(--fg); color: var(--bg); }
+    .slide--dark .muted, .slide--dark .subtitle { color: #a1a1aa; }
+    .slide--dark .card { background: #18181b; border-color: #27272a; }
+    .slide--dark .pill { background: #18181b; border-color: #27272a; color: #a1a1aa; }
+
+    h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; margin-bottom: 1.5rem; }
+    h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1.25rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.6rem; }
+    .subtitle { font-size: clamp(1.1rem, 2.2vw, 1.4rem); color: var(--muted); max-width: 720px; line-height: 1.5; }
+    .muted { color: var(--muted); }
+    .label {
+      font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; display: block;
+    }
+
+    .card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.6rem; }
+    .grid-2, .grid-3 { display: grid; gap: 1rem; margin-top: 2rem; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+    ul.list { list-style: none; display: grid; gap: 0.55rem; }
+    ul.list li { padding-left: 1.4rem; position: relative; }
+    ul.list li::before { content: "–"; position: absolute; left: 0; color: var(--muted); }
+    ul.list.check li::before { content: "✓"; color: var(--ok); font-weight: 700; }
+    ul.list.cross li::before { content: "✕"; color: #dc2626; font-weight: 700; }
+    ul.list.todo li::before { content: "○"; color: var(--muted); }
+
+    .pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; }
+    .pill {
+      font-family: var(--font-mono); font-size: 0.78rem; padding: 0.35rem 0.8rem; border-radius: 9999px;
+      background: var(--bg-secondary); color: var(--muted); border: 1px solid var(--border);
+    }
+
+    .stat { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+    .stat small { font-size: 0.45em; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin-top: 2rem; }
+    .node {
+      font-family: var(--font-mono); font-size: 0.85rem; border: 1px solid var(--border);
+      border-radius: 0.5rem; padding: 0.6rem 0.9rem; background: var(--bg); max-width: 220px;
+    }
+    .node--strong { border-color: var(--fg); font-weight: 500; }
+    .arrow { color: var(--muted); font-family: var(--font-mono); }
+
+    .note { margin-top: 2rem; font-size: 0.95rem; color: var(--muted); max-width: 760px; }
+
+    .nav-dots { position: fixed; right: 1.5rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.5rem; z-index: 100; }
+    .nav-dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--border); cursor: pointer; border: none; padding: 0; transition: background 0.2s, transform 0.2s; }
+    .nav-dot:hover { background: var(--border-hover); transform: scale(1.3); }
+    .nav-dot.active { background: var(--fg); transform: scale(1.3); }
+
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+<section class="slide slide--dark">
+  <div class="slide-inner">
+    <span class="label">Parse.ly · Agentic Analytics · 2026</span>
+    <h1>Raw DPL data,<br>through the Parse.ly MCP</h1>
+    <p class="subtitle">A first answer to a hard problem: query a customer's raw events without downloading them.</p>
+    <div class="pills">
+      <span class="pill">Athena</span>
+      <span class="pill">Glue</span>
+      <span class="pill">MCP</span>
+      <span class="pill">Per-site isolation</span>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <span class="label">The problem</span>
+    <h2>Today vs. what we want</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Today</h3>
+        <ul class="list cross">
+          <li>Plugin installed on one computer</li>
+          <li>S3 bucket keys on that computer</li>
+          <li>One user, a couple of reports</li>
+          <li>Full raw data downloaded</li>
+          <li>Hard for non-technical people</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What we want</h3>
+        <ul class="list check">
+          <li>No raw data download</li>
+          <li>More people with access</li>
+          <li>No terminal skills needed</li>
+          <li>Safe</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <span class="label">Two products</span>
+    <h2>Not one or the other</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>DPL data</h3>
+        <p class="muted">The raw files, for specialized customers who run their own pipelines. Stays as it is.</p>
+      </div>
+      <div class="card">
+        <h3>Raw data via MCP / API</h3>
+        <p class="muted">The middle-term product: full access to raw events with nothing downloaded. This is what we're starting.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <span class="label">How we got here</span>
+    <h2>DuckDB first, then Athena</h2>
+    <div class="flow">
+      <span class="node">MCP client</span><span class="arrow">→</span>
+      <span class="node">Dash MCP</span><span class="arrow">→</span>
+      <span class="node">DuckDB container, shared by every customer</span><span class="arrow">→</span>
+      <span class="node">S3 · 24 hourly files a day</span>
+    </div>
+    <p class="note">Slow over S3. A disk cache made it fast, but it duplicates customer data, grows to a size we can't predict and loads Dash's memory.</p>
+    <div class="grid-2">
+      <div class="card">
+        <span class="label">30 days</span>
+        <div class="stat">53 s → 2.5 s</div>
+        <p class="muted">DuckDB from S3 → Athena</p>
+      </div>
+      <div class="card">
+        <span class="label">90 days</span>
+        <div class="stat">158 s → 3.4 s</div>
+        <p class="muted">DuckDB from S3 → Athena</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <span class="label">First version</span>
+    <h2>What's in it</h2>
+    <div class="flow">
+      <span class="node">MCP client</span><span class="arrow">→</span>
+      <span class="node node--strong">Dash · checks the user can see the site</span><span class="arrow">→</span>
+      <span class="node node--strong">Athena · role limited to one site</span><span class="arrow">→</span>
+      <span class="node">Customer's S3 bucket, read in place</span>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h3>One Glue table per network</h3>
+        <p class="muted">Built from the customer's files, keeps their custom fields (<code>extra_data</code>). Holds no data, only where the files are.</p>
+      </div>
+      <div class="card">
+        <h3>Provisioned by Dash</h3>
+        <p class="muted">Success Admin registers the network, a daily sync picks up new buckets and fields, the Django admin shows each one.</p>
+      </div>
+      <div class="card">
+        <h3>Two MCP tools</h3>
+        <p class="muted"><code>query_dpl_events</code> and <code>get_dpl_fields</code>. A site without DPL gets a message, not an error.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <span class="label">Cost</span>
+    <h2>Pennies per thousand questions</h2>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Athena</h3>
+        <div class="stat">$5<small> / TB read</small></div>
+        <p class="muted">Reads only the columns it needs. Each query bills the 10 MB minimum: about $0.00005.</p>
+      </div>
+      <div class="card">
+        <h3>S3</h3>
+        <div class="stat">$0<small> transfer</small></div>
+        <p class="muted">Same region, so reading costs no transfer. Only tiny per-request fees.</p>
+      </div>
+      <div class="card">
+        <h3>Glue</h3>
+        <div class="stat">Free<small> at our size</small></div>
+        <p class="muted">Billed per 100,000 stored objects, not per read. We store dozens.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide--dark">
+  <div class="slide-inner">
+    <span class="label">Why now</span>
+    <h2>A temporary answer, on purpose</h2>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Ships now</h3>
+        <p class="muted">A working answer to a really complex problem, safe from day one.</p>
+      </div>
+      <div class="card">
+        <h3>Teaches us</h3>
+        <p class="muted">How heavy and what kind of queries customers actually run.</p>
+      </div>
+      <div class="card">
+        <h3>Unblocks us</h3>
+        <p class="muted">We decide the long-term architecture with data, not endless debate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <span class="label">First delivery</span>
+    <h2>This work + a new plugin release</h2>
+    <p class="subtitle">The Agentic Analytics plugin logs into the Parse.ly dashboard and ships the MCP inside it.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>To find out</h3>
+        <ul class="list todo">
+          <li>Can the plugin still write files on the customer's computer in Claude Desktop and ChatGPT? The agent needs it for tables and reports.</li>
+          <li>Could Claude's remote environments, part of the user's subscription, do that work instead?</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Goals it covers</h3>
+        <ul class="list check">
+          <li>One place to query DPL data</li>
+          <li>No shared credentials</li>
+          <li>Data exposed through the MCP</li>
+          <li>Cross-query with dashboard data</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-inner">
+    <span class="label">Agentic Analytics UI</span>
+    <h2>Why a dashboard?</h2>
+    <p class="subtitle">Reports already work in Claude Desktop and ChatGPT with the plugin. The value is integrations shared across a publisher.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Today</h3>
+        <p class="muted">Each user connects HubSpot, Google Analytics, Salesforce and the Parse.ly MCP to their own LLM app, again and again.</p>
+      </div>
+      <div class="card">
+        <h3>Shared</h3>
+        <p class="muted">One admin connects an integration once, and the whole team uses it.</p>
+      </div>
+    </div>
+    <p class="note">Or without a new UI: customers connect their systems in the Parse.ly dashboard, and our MCP exposes them through discovery tools. One MCP, every integration.</p>
+  </div>
+</section>
+
+<section class="slide slide--dark">
+  <div class="slide-inner">
+    <span class="label">What's next</span>
+    <h2>Not the end</h2>
+    <p class="subtitle">This solves security and data access, not everything. It's the right call for now.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>MCP Apps</h3>
+        <p class="muted">Real UI inside ChatGPT and Claude Desktop, not only text.</p>
+      </div>
+      <div class="card">
+        <h3>Shared integrations</h3>
+        <p class="muted">Analyze the central dashboard or the MCP-first version above.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const navContainer = document.getElementById('navDots');
+
+  slides.forEach((slide, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    dot.setAttribute('aria-label', `Slide ${i + 1}`);
+    dot.addEventListener('click', () => slide.scrollIntoView({ behavior: 'smooth' }));
+    navContainer.appendChild(dot);
+  });
+
+  const dots = navContainer.querySelectorAll('.nav-dot');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(slides).indexOf(entry.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.5 });
+
+  slides.forEach(slide => observer.observe(slide));
+</script>
+
+</body>
+</html>
