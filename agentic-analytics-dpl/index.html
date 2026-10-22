@@ -216,12 +216,12 @@
     </div>
     <div class="grid-3">
       <div class="card">
-        <h3>Athena tables already exist</h3>
-        <p class="muted">The Data Pipeline process already creates them over the customer's files. We read from them instead of building new ones.</p>
+        <h3>One Glue table per network</h3>
+        <p class="muted">Built from the customer's files, keeps their custom fields (<code>extra_data</code>). Holds no data, only where the files are.</p>
       </div>
       <div class="card">
-        <h3>No new provisioning</h3>
-        <p class="muted">Success Admin doesn't create Glue tables. Dash only knows which table belongs to each network.</p>
+        <h3>Provisioned by Dash</h3>
+        <p class="muted">Success Admin registers the network, a daily sync picks up new buckets and fields, the Django admin shows each one.</p>
       </div>
       <div class="card">
         <h3>Two MCP tools</h3>
@@ -249,7 +249,7 @@
       <div class="card">
         <h3>Glue</h3>
         <div class="stat">Free<small> at our size</small></div>
-        <p class="muted">Billed per 100,000 stored objects, not per read. The tables already exist.</p>
+        <p class="muted">Billed per 100,000 stored objects, not per read. We store dozens.</p>
       </div>
     </div>
   </div>
